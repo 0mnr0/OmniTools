@@ -1,0 +1,25 @@
+{
+  "name": "Omni Tools",
+  "description": "Just some features for Omni (top-academy)",
+  "version": "0.9.9",
+  "author": "savelijln0@gmail.com",
+  "manifest_version": 3,
+  "permissions": [
+		"webRequest"
+  ],
+  "background": {
+    "service_worker": "background/background.js"
+  },
+  "icons": {
+	"128": "OmniTools_128x128.png"
+  },
+  "content_scripts": [
+    {
+		"js": ["contentjs/main.js"],
+        "matches": ["https://omni.top-academy.ru/*"]
+    }
+  ],
+  "host_permissions": [
+    "https://*.top-academy.ru/*"
+  ]
+}
