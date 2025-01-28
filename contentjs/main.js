@@ -88,7 +88,7 @@ function FeedbackAi(){
 		
 		console.log(AIProvidesList[choiced_model_number],'.indexOf("JournalUI") >= 0: ', AIProvidesList[choiced_model_number].indexOf('JournalUI')>= 0)
 		if (AIProvidesList[choiced_model_number].indexOf('JournalUI') >= 0) {
-			sendRequest('POST', 'http://journalui.ru/ai.generateText', {prompt: promt}).then(res => {
+			sendRequest('POST', 'https://journalui.ru/ai.generateText', {prompt: promt}).then(res => {
 				feedbackareas[i].value = res.text;
 				pressedButton.textContent = 'Сгенерировать заново'
 				pressedButton.style.border='none'
