@@ -1,7 +1,7 @@
 {
   "name": "Omni Tools",
   "description": "Just some features for Omni (top-academy)",
-  "version": "0.9.9",
+  "version": "0.9.9.1",
   "author": "savelijln0@gmail.com",
   "manifest_version": 3,
   "permissions": [
