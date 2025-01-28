@@ -16,6 +16,7 @@ var UpdateFounded=false;
 var TeacherLogin = null;
 let FetchesCount = 0;
 let URLWaitingList = [];
+let MaxMark = 5;
  
 function FeedbackAi(){
     //Список моделей на сайте
@@ -66,9 +67,9 @@ function FeedbackAi(){
         let informationdiv = stundentinfodiv[buttonPosition]//Получение div под номером buttonPosition из списка
         let information = informationdiv.querySelectorAll('p')//Получение данных об ученике
  
-        let Grade = Math.round(Number(information[4].textContent.replace('Успеваемость: ',''))/120*1000)//Конвертация успреваемости в проценты (я знаю что этот расчёт просто имба)
+        let Grade = information[4].textContent.replace('Успеваемость: ','')
         if (Grade !== NaN && Grade !== null){
-            let PromtText = 'Привет! Я преподаватель в колледже и мне нужно оставить простой и краткий отзыв для ученика, желательно, не более 2-3 предложений. Прошу тебя помочь с написанием отзыва. Ниже приведена небольшая информация об ученике. Полное имя ученика: '+information[5].textContent.replace('ФИО: ','')+', средняя посещаемость ученика: '+information[3].textContent.replace('Посещаемость: ','')+', средняя успеваемость:'+Grade+'%. (Предмет:'+(information[6].textContent.replace('Предмет:',''))+')';
+            let PromtText = 'Привет! Я преподаватель в колледже и мне нужно составить простой и краткий отзыв для ученика (не более 2-3 предложений). Прошу тебя помочь с написанием отзыва, заранее спасибо. Вот некоторая информация о нем: Ученика звать - '+information[5].textContent.replace('ФИО: ','')+', средняя посещаемость: '+information[3].textContent.replace('Посещаемость: ','')+', а средняя успеваемость:'+Grade+' из '+MaxMark+'. (Предмет:'+(information[6].textContent.replace('Предмет:',''))+').';
             return PromtText
         } else {
             return false
@@ -195,7 +196,12 @@ function FeedbackAi(){
     AIReload.textContent = 'Перезапустить AITools';
     AIReload.addEventListener('click', function() {
         FeedbackAi()//Вызвать эту функцию заново
-    })
+    });
+	SendPacket("https://omni.top-academy.ru/auth/get-marks-selects", "GET", null).then(res=> {
+		MaxMark = (JSON.parse(res)).length;
+	}).catch(err => {
+		MaxMark = 5;
+	})
     document.querySelector('span.reviews-container').appendChild(AIReload)
 }
 function checkFeedbackOpened(){
