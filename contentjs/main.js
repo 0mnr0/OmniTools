@@ -69,7 +69,7 @@ function FeedbackAi(){
  
         let Grade = information[4].textContent.replace('Успеваемость: ','')
         if (Grade !== NaN && Grade !== null){
-            let PromtText = 'Привет! Я преподаватель в колледже и мне нужно составить простой и краткий отзыв для ученика (не более 2-3 предложений). Прошу тебя помочь с написанием отзыва, заранее спасибо. Вот некоторая информация о нем: Ученика звать - '+information[5].textContent.replace('ФИО: ','')+', средняя посещаемость: '+information[3].textContent.replace('Посещаемость: ','')+', а средняя успеваемость:'+Grade+' из '+MaxMark+'. (Предмет:'+(information[6].textContent.replace('Предмет:',''))+').';
+            let PromtText = 'Привет! Я преподаватель в колледже и мне нужно составить простой и краткий отзыв для ученика (не более 2-3 предложений). Прошу тебя помочь с написанием отзыва, заранее большое спасибо. Желательно написать отзыв без чисел с процентами и применить "креативность". Вот некоторая информация о нем: Ученика звать - '+information[5].textContent.replace('ФИО: ','')+', средняя посещаемость: '+information[3].textContent.replace('Посещаемость: ','')+', а средняя успеваемость:'+Grade+' из '+MaxMark+'. (Предмет: '+(information[6].textContent.replace('Предмет:',''))+').';
             return PromtText
         } else {
             return false
@@ -179,8 +179,8 @@ function FeedbackAi(){
 	
 	if (document.getElementById('JournalUIWarn') === null) {
 		let UIWarn = document.createElement('span');
-		UIWarn.textContent = 'Возможности GPT-4 зависят от сервера Journal UI (он не всегда пашет)'
-		UIWarn.style='padding: 5px; background: #c7731a; margin: 0px 20px 10px 10px; width: fit-content; border-radius: 200px; color: white'
+		UIWarn.textContent = 'Возможности нек-ых нейросетей зависят от сервера Journal UI (он не всегда пашет)'
+		UIWarn.style='padding: 5px; background: rgb(199 91 26 / 86%); margin: 0px 20px 10px 10px; width: fit-content; border-radius: 200px; color: white; font-size: smaller;'
 		UIWarn.id='JournalUIWarn'
 		document.querySelector('select#AISelection').after(UIWarn)
 	} else {
@@ -434,8 +434,19 @@ function CheckUpdates(){
     })
         .catch(error => {});
 }
- 
- 
+
+function InjectBasicStyles() {
+	let code = `
+	.reviews-modal img {object-fit: cover; transition: all .3s}
+	.reviews-modal img:hover {scale}
+	`
+	let st = document.createElement('style')
+	st.textContent = code;
+	document.body.after(st);
+} 
+InjectBasicStyles();
+
+
 function ProcessLoad(){
     if(IsHomeWorksOpened()){
         setTimeout(ShowImageIfAvaiable, 200)
