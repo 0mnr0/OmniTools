@@ -20,7 +20,7 @@ let MaxMark = 5;
  
 function FeedbackAi(){
     //Список моделей на сайте
-    let AINameList = ['ChatGPT 4 (Recommended)',
+    let AINameList = ['Gemini Flash 1.5 (Recommended)',
                       'OpenChat 3.5 (Recommended)',
                       'Mistral 7B',
                       'Llama 3 8B']
