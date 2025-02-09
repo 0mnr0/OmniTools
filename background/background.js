@@ -1,3 +1,52 @@
+const DOMAIN = "omni.top-academy.ru";
+const COOKIE_NAME = "city_id";
+
+// Функция десериализации PHP-данных
+function phpUnserialize(str) {
+    let match = str.match(/\{i:0;s:\d+:"([^"]+)";i:1;i:(\d+);}/);
+    return match ? { [match[1]]: parseInt(match[2]) } : null;
+}
+
+// Функция получения значения куки
+function getCityID(callback) {
+    chrome.cookies.get({ url: `https://${DOMAIN}`, name: COOKIE_NAME }, (cookie) => {
+        if (!cookie) {
+            console.log("Куки не найдены");
+            callback(null);
+            return;
+        }
+
+        let parsedData = phpUnserialize(decodeURIComponent(cookie.value));
+        let cityID = parsedData?.city_id || null;
+        console.log("CityID:", cityID);
+        callback(cityID);
+    });
+}
+
+// Обработчик сообщений от content.js
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === "getCityID") {
+        getCityID((cityID) => sendResponse({ cityID }));
+        return true; 
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 let Radarlaunched = false;
 
