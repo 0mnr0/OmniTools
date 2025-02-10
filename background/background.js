@@ -125,6 +125,24 @@ function DownRadar() {
 
 DownRadar()
 chrome.runtime.onInstalled.addListener(() => {
-	  console.log("Extension installed and monitoring responses for top-academy.ru!");
 	  setTimeout(DownRadar, 10000)
 });
+
+
+
+chrome.webRequest.onBeforeRequest.addListener(
+    function(details) {
+        if (details.url.includes("omni.top-academy.ru")) {
+            chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+                if (tabs.length > 0) {
+                    chrome.tabs.sendMessage(tabs[0].id, {
+                        url: details.url,
+                        requestBody: details.requestBody
+                    });
+                }
+            });
+        }
+    },
+    { urls: ["*://omni.top-academy.ru/*"] },
+    ["requestBody"]
+);

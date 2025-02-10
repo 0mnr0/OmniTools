@@ -5,98 +5,11 @@ var TeacherLogin = null;
 let FetchesCount = 0;
 let URLWaitingList = [];
 let MaxMark = 5;
-let CityID = null;
-const baseURL = "http://127.0.0.1:4890";
+
+//Without "/" on the end
+const baseURL = "https://journalui.ru";
 
 
-
-
-const fetchJournal = async function(URL, method, object,  overrideStringify) {
-    if (object === undefined) {
-        object = null;
-    }
-    try {
-        const options = {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        };
-
-        if (object !== null && overrideStringify !== true) {
-            options.body = JSON.stringify(object);
-        } else if (object !== null && overrideStringify === true){
-			options.body = object
-		}
-
-        let response = null;
-		try{
-			response = await fetch(URL, options)
-		} catch(e){
-			reject(response)
-		}
-        if (!response.ok) {
-            throw response;
-        }
-
-        let data = {};
-		try{
-			data.returnCode = await response.status
-			data = await response.json();
-		} catch (e) {}
-        return data;
-    } catch (error) {
-		error.status = error.status || 0;
-        throw (error);
-    }
-}
-
-const fetchData = async (URL, method, object) => {
-		const controller = new AbortController(); // Создаем AbortController
-		const signal = controller.signal;
-
-		// Запускаем тайм-аут на прерывание запроса (например, 5 минут)
-		const timeout = setTimeout(() => controller.abort(), 300000); 
-
-
-
-        if (object == undefined) { object = null; }
-
-        try {
-            let data = null;
-            const options = {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                signal
-            };
-
-            if (object !== null) {
-                options.body = JSON.stringify(object);
-            }
-
-            const response = await fetch(baseURL + URL, options);
-            
-            clearTimeout(timeout);
-
-            if (!response.ok) {
-                const error = new Error(`HTTP error! status: ${response.status}`);
-                error.status = response.status;
-                throw error;
-            }
-
-            data = await response.json();
-            data.returnCode = response.status;
-            return data;
-        } catch (error) {
-            clearTimeout(timeout); // Убираем тайм-аут при ошибке
-            error.status = error.status || 0;
-            throw error;
-        }
-};
-
- 
 function FeedbackAi(){
     //Список моделей на сайте
     let AINameList = ['Gemini Flash 1.5 (Recommended)',
@@ -493,11 +406,32 @@ function ShowImageIfAvaiable(){
 
 function InjectBasicStyles() {
 	let code = `
+	.students .cards {position: relative; top: -100px; padding-top: 100px;}
 	.reviews-modal img {object-fit: cover; transition: all .3s}
 	.reviews-modal img:hover {scale}
 	.students .card .card-image {position: relative; z-index: 3}
-	.students .card .card-image img {transition: all .6s ease; border-radius: 40px !important}
-	.students .card .card-image img:hover {scale: 2.75; border-radius: 10px !important}
+	.students .card .card-image img, .students .card .card-image video {transition: all .6s ease; border-radius: 40px !important}
+	.students .card .card-image img:hover, .students .card .card-image video:hover {scale: 2.75; border-radius: 10px !important}
+	.student-info .reviews-wrap .reviews-wrap__left .profileImg img, .student-info .reviews-wrap .reviews-wrap__left .profileImg video {transition: all .6s ease; border-radius: 60px !important; z-index: 4; position: relative;}
+	.student-info .reviews-wrap .reviews-wrap__left .profileImg img:hover, .student-info .reviews-wrap .reviews-wrap__left .profileImg video:hover {scale: 2; border-radius: 10px !important}
+	.presents .table td i.user-photo span img {display: none}
+	.presents .number .user-photo__presents {z-index: 3; transition: all .6s; background-position: center; position: relative; top: 0px ; left: 0px}
+	.presents .number .user-photo__presents:hover { scale: 2.25; z-index: 10; border-radius: 10px }
+	.presents .number video.customAvatar {width: 70px; height: 70px; aspect-ratio: 1/1; position: relative; border-radius: 40px; left: 0px; top: 0px; transition: all .6s ease; cursor: pointer}
+	.presents .number video.customAvatar:hover {scale: 2.25; z-index: 10; border-radius: 10px}
+	.presents .number video.customAvatar:active {scale: 7.5; position: relative; z-index: 100; left: 350px; border-radius: 5px !important}
+	.presents .number .user-photo__presents:active {scale: 7.5; position: relative; z-index: 100; left: 350px; border-radius: 5px !important}
+	
+	.presents .number__presents {display: flex; top: 20px; left: 20px; top: 0px}
+	.presents .number .user-photo__presents {margin-top: 0px; top: 0px; position: relative; left: 0px}
+	.presents .number__presents span {align-content: center; position: absolute; top: 50%; transform: translateY(-50%)}
+	
+	.students .card .card-image video {width: 75px; aspect-ratio: 1/1; height: 75px; object-fit: cover}
+	.student-info .mobile_profile .profileImg video.customAvatar {width: 100%; max-height: 160px; object-fit: cover}
+	.student-info .reviews-wrap .reviews-wrap__left .profileImg video.customAvatar {width: 116px; height: 116px; transition: all .6s; object-fit: cover;}
+	@media (max-width: 1600px) and (min-width: 768px) {
+		.student-info .reviews-wrap .reviews-wrap__left .profileImg video.customAvatar {width: 86px; height: 86px;}
+	} 
 	`
 	let st = document.createElement('style')
 	st.textContent = code;
@@ -521,31 +455,6 @@ function AccountLog (){
         console.log(TeacherLogin)
     })
 }
-
-
-function RefreshCityId() {
-	document.dispatchEvent(new CustomEvent("CityIDRequest"));
-}
-
-function requestCityID() {
-    chrome.runtime.sendMessage({ type: "getCityID" }, (response) => {
-        const cityID = response?.cityID || null;
-
-        document.dispatchEvent(new CustomEvent("CityIDResponse", {
-            detail: { cityID }
-        }));
-    });
-}
-
-document.addEventListener("CityIDRequest", requestCityID);
-document.addEventListener("CityIDResponse", (event) => {
-    console.log("Полученный CityID:", event.detail.cityID);
-	CityID = event.detail.cityID;
-});
-window.navigation.addEventListener("navigate", (event) => {
-    RefreshCityId();
-	setTimeout(DynamicThings, 100);
-})
 
 
  
@@ -575,39 +484,4 @@ window.NotImage = function (ID) {
 };
 ProcessLoad();
 setTimeout(AccountLog, 1000);
-RefreshCityId();
 
-
-
-function DynamicThings() {
-	let url = window.location.href;
-	console.log(url.indexOf("/students/list"), '>= 0: ', url.indexOf("/students/list") >= 0, CityID ,'!== null:',CityID !== null )
-	if (url.indexOf("/students/list") >= 0 && CityID !== null && document.querySelectorAll('.students .cards .cart-header > div').length > 0) { // List of students
-		let StudentList = null;
-		fetchJournal('https://omni.top-academy.ru/students/get-students', 'POST', {group: null}).then(res => {
-			let ProcessedList = [];
-			for (let i=0; i < res.length; i++) {
-				let Student = res[i];
-				ProcessedList.push(`${CityID}_${Student.id_stud}_${Student.fio_stud.replaceAll(" ","")}`)
-			}
-			fetchData('/teacherTools/get-student-list', 'POST', {studentList: ProcessedList}).then(uires => {
-				let result = uires.value;
-				for (let i = 0; i < result.length; i++) {
-					let CheckedStudentData = result[i];
-					if (CheckedStudentData.name !== null && CheckedStudentData.photo !== null) { 
-					
-						let StudentNames = document.querySelectorAll('.students .cards span.card-title');
-						StudentNames.forEach(name => {
-							if (name.textContent == CheckedStudentData.name) {
-								let img = name.parentElement.parentElement.querySelector('img')
-								img.src = baseURL+'/Data/JournalData/'+ProcessedList[i]+'/'+CheckedStudentData.photo;
-								console.log(`CustomAvatar for ${CheckedStudentData.name}: ${CheckedStudentData.photo}`)
-							}
-						})
-						
-					}
-				}
-			})
-		})
-	} else {setTimeout(DynamicThings, 1000);}
-} setTimeout(DynamicThings, 1000);
