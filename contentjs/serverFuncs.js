@@ -113,7 +113,6 @@ function isVideoFile(str) {
 
 document.addEventListener("CityIDRequest", requestCityID);
 document.addEventListener("CityIDResponse", (event) => {
-    console.log("Полученный CityID:", event.detail.cityID);
 	CityID = event.detail.cityID;
 });
 window.navigation.addEventListener("navigate", (event) => {
@@ -129,25 +128,29 @@ function ReplaceAnyAvatars() {
 	for (let i = 0; i < Object.keys(AvatarsData).length; i++) {
 		let KeyName = Object.keys(AvatarsData)[i];
 		let RightAvatar = AvatarsData[KeyName];
-		let VideoAvatar = document.createElement('video');
-		VideoAvatar.className = 'customAvatar';
-		VideoAvatar.muted = true;
-		VideoAvatar.autoplay = true;
-		VideoAvatar.loop = true;
-		VideoAvatar.src = RightAvatar;
-		
-		
+
 		if (!isVideoFile(RightAvatar)) {
 			document.querySelectorAll(`img[src="${KeyName}"]`).forEach(wrongAvatar => {
 				wrongAvatar.style.display = '';
-				wrongAvatar.src = RightAvatar;
+				if (wrongAvatar.src !== RightAvatar) {
+					wrongAvatar.src = RightAvatar;
+				}
 			})
-			console.log(`i.user-photo.user-photo__presents[style="background-image: url('${KeyName}')"]`);
 			document.querySelectorAll(`i.user-photo.user-photo__presents[style="background-image: url('${KeyName}')"]`).forEach(wrongAvatar => {
 				wrongAvatar.style.display='';
-				wrongAvatar.style = `background-image: url('${RightAvatar}')`;
+				if (wrongAvatar.style !== `background-image: url('${RightAvatar}')`) {
+					wrongAvatar.style = `background-image: url('${RightAvatar}')`;
+				}
 			})
 		} else {
+			
+			let VideoAvatar = document.createElement('video');
+			VideoAvatar.className = 'customAvatar';
+			VideoAvatar.muted = true;
+			VideoAvatar.autoplay = true;
+			VideoAvatar.loop = true;
+			VideoAvatar.src = RightAvatar;
+
 			document.querySelectorAll(`img[src="${KeyName}"]`).forEach(wrongAvatar => {
 				if (wrongAvatar.nextElementSibling && wrongAvatar.nextElementSibling.classList.contains('customAvatar')) {return}
 				wrongAvatar.style.display='none';
@@ -162,7 +165,8 @@ function ReplaceAnyAvatars() {
 	}
 	//
 }
-setInterval(ReplaceAnyAvatars, 1000)
+setInterval(ReplaceAnyAvatars, 1200);
+document.ReplaceAnyAvatars = ReplaceAnyAvatars;
 
 function LoadCustomAvatars(){
 		AvatarsData = {};
