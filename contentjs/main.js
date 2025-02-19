@@ -7,7 +7,8 @@ let URLWaitingList = [];
 let MaxMark = 5;
 
 //Without "/" on the end
-const baseURL = "https://journalui.ru";
+//const baseURL = "https://journalui.ru";
+const baseURL = "http://127.0.0.1:4890";
 
 
 function FeedbackAi(){
@@ -81,7 +82,7 @@ function FeedbackAi(){
 		
 		console.log(AIProvidesList[choiced_model_number],'.indexOf("JournalUI") >= 0: ', AIProvidesList[choiced_model_number].indexOf('JournalUI')>= 0)
 		if (AIProvidesList[choiced_model_number].indexOf('JournalUI') >= 0) {
-			sendRequest('POST', 'https://journalui.ru/ai.generateText', {prompt: promt}).then(res => {
+			sendRequest('POST', baseURL+'/ai.generateText', {prompt: promt}).then(res => {
 				feedbackareas[i].value = res.text;
 				pressedButton.textContent = 'Сгенерировать заново'
 				pressedButton.style.border='none'
@@ -281,6 +282,7 @@ function CreateStyleIfNotExists(name, content) {
  
  
 function DisplayRender(res, urlToHomework, placement) {
+	console.log("DisplayRender call")
     CreateStyleIfNotExists('hwPreview', `
                  #myDialog.home_work_modal .hw-md_item {width: 50%; position: relative}
                  .hwPreview {width: 50%; position: absolute; left: 100%; top: 0%; height: 100%}
@@ -298,11 +300,11 @@ function DisplayRender(res, urlToHomework, placement) {
     let content = '<span class="NoSucsessLoad"> Не удалось открыть файл (неизвестный тип файла) </span>'
  
     if (res.displayAs ==='html'){
-        content = res.content.replace('href="', 'href="https:\\\\journalui.ru\\HwPreview\\fileReaderCache\\')
+        content = res.content.replace('href="', `href="${baseURL}\\HwPreview\\fileReaderCache\\`)
     } else if (res.displayAs ==='image'){
         content = res.content
     } else if (res.displayAs ==='pdf'){
-        content = '<iframe class="pdfViewer" src="https:\\journalui.ru/homework/pdfPreview/'+res.AdditionalInfo+'"></iframe>'
+        content = `<iframe class="pdfViewer" src="${baseURL}/homework/pdfPreview/`+res.AdditionalInfo+'"></iframe>'
     }
  
     let DisplayingDiv = document.createElement('div')
@@ -325,26 +327,24 @@ function DisplayRender(res, urlToHomework, placement) {
  
 function CreateRemoteViewAPI (urlToHomework, placement) {
     // Скоро загружу обнову на сервер, и запрос будет доступен по ссылке (пишу на момент теста на моём любимом 127.0.0.1:4890)
-    // https://journalui.ru/teacherTools/hwPreviewTool
  
     // P.S. файлы по типу .py начну поддерживать скоро, обновление клиента (этого скрипта) не понадобиться (я надеюсь). А ещё добавлю пару проверок чтобы запрос был разрешён только с омни (код же открытый)
     // Дизайн наверное сделаю приятнее но чуть позже, сейчас времени нету
  
- 
-    if (document.querySelector(`.hwPreview[previewurl="${urlToHomework}"]`) === null && urlToHomework !== null && FetchesCount < 10 && URLWaitingList.indexOf(urlToHomework) == -1) {
+	console.log("CreateRemoteViewAPI called!")
+    if (document.querySelector(`.hwPreview[previewurl="${urlToHomework}"]`) === null && urlToHomework !== null && FetchesCount < 6 && URLWaitingList.indexOf(urlToHomework) == -1) {
+		console.log("CreateRemoteViewAPI inited!")
         URLWaitingList.push(urlToHomework);
         if (localStorage.getItem(`hwPreviewTool:${urlToHomework}`) !== null) {
             let res = localStorage.getItem(`hwPreviewTool:${urlToHomework}`)
-            console.log(`hwPreviewTool:${urlToHomework}`)
             res= JSON.parse(res);
-            console.log(`Pulling ${urlToHomework} to storage...`);
             DisplayRender(res, urlToHomework, placement);
         } else {
  
  
  
  
-            SendPacket("https://journalui.ru/teacherTools/hwPreviewTool", "POST", {url: urlToHomework}).then(res => {
+            SendPacket(`${baseURL}/teacherTools/hwPreviewTool`, "POST", {url: urlToHomework}).then(res => {
                 res = JSON.parse(res);
                 console.log(`Saving ${urlToHomework} to storage...`);
                 localStorage.setItem(`hwPreviewTool:${urlToHomework}`, JSON.stringify(res));
@@ -403,7 +403,7 @@ function ShowImageIfAvaiable(){
     setTimeout(ShowImageIfAvaiable, 1000)
 }
  
-
+ 
 function InjectBasicStyles() {
 	let code = `
 	.students .cards {position: relative; top: -100px; padding-top: 100px;}
@@ -432,6 +432,8 @@ function InjectBasicStyles() {
 	@media (max-width: 1600px) and (min-width: 768px) {
 		.student-info .reviews-wrap .reviews-wrap__left .profileImg video.customAvatar {width: 86px; height: 86px;}
 	} 
+	body.main main.content toolbar .pull-right>span {display: inline-block !important; position: relative}
+	body.main main.content toolbar .pull-right>span i.count {scale: 0.6; top: 25px; left: 10px}
 	`
 	let st = document.createElement('style')
 	st.textContent = code;
@@ -484,4 +486,5 @@ window.NotImage = function (ID) {
 };
 ProcessLoad();
 setTimeout(AccountLog, 1000);
+
 

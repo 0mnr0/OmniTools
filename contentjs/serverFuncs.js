@@ -200,3 +200,70 @@ function DynamicThings() {
 	} else {setTimeout(DynamicThings, 1000);}
 }
 
+
+
+//Iternal chars:
+//document.querySelector("body > main > toolbar > div:nth-child(3) > span.teaching-notifications.ng-hide").click()
+
+function CheckForConnection() {
+	function BuildAMessageForShed(listOfCities) {
+		if (listOfCities.length === 0) {
+			alert("Пустые данные списка ID Городов :(");
+			return;
+		}
+		
+		let MessageToBot = `{"useOmni": true, "cities": ${JSON.stringify(listOfCities)}}`;
+		console.log("MessageToBot:", MessageToBot);
+		
+		let Info = document.createElement("div")
+		Info.id="ShedBotDescription"
+		Info.style = `
+			position: absolute; font-size: larger; font-family: system-ui; font-weight: 550; padding: 10px; border: solid 1px #63d3bd;
+			z-index: 90;
+			top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 20px;
+		`
+		Info.innerHTML = `
+			<h2 style="font-size: xx-large; font-weight: bold"> Начните использовать бота! </h2>
+			<span> Теперь вы можете привязать многофункционального <a href="https://t.me/JournalSheduleBot" target="_blank"> бота</a>.</span>
+			<br><br>
+			<span> После нажатия кнопки <b>Старт</b> (или написали /start) отправьте боту это: </span><br>
+			<span style="background: black; display: block; width: 100%; padding: 0px 8px 5px; border-radius: 10px; font-weight: 650; color: #e5b356"> /ImTeacher ${MessageToBot} </span>
+			<button onclick="this.parentElement.remove(); document.querySelector('body.main md-backdrop.md-menu-backdrop').remove();"> Закрыть </button>
+		`
+		document.body.after(Info)
+	}
+	
+	if (window.location.href.indexOf("/#/profile") !== -1)
+    if (!document.getElementById("ExtractCitiesFor") && document.querySelector('.internal-wrap-global:not(.not-internal-wrap)')) {
+        let ext = document.createElement("button");
+		ext.id="ExtractCitiesFor";
+		ext.textContent = 'Подключиться к боту с расписанием';
+		ext.addEventListener("click", function(){
+			let citiesButton = document.querySelector(".changeUser button");
+			let Modal = null;
+			let Cities=[];
+			if (citiesButton) {
+				citiesButton.click();
+				setTimeout(function(){
+					Modal = document.querySelector("md-menu-content#cityes");
+					if (!Modal) {alert("Не удаётся получить список нужных данных :("); return}
+					Modal.querySelectorAll("md-menu-item button").forEach(btn => {
+						Cities.push(btn.getAttribute("ng-click").replaceAll("changeCity","").replaceAll("(","").replaceAll(")",""))
+					});
+					
+					
+					BuildAMessageForShed(Cities);
+					Modal.parentElement.remove()
+				}, 1000)
+			} else {
+				if (CityID !== null) {
+					Cities = [CityID];
+					BuildAMessageForShed(Cities)
+				} else {
+					alert("Не удалось определить данные. Cookie и querySelector дали пустые данные")
+				}
+			}
+		})
+		document.querySelector('.internal-wrap-global:not(.not-internal-wrap)').prepend(ext)
+    }
+}
