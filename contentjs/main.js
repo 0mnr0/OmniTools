@@ -403,7 +403,18 @@ function ShowImageIfAvaiable(){
     setTimeout(ShowImageIfAvaiable, 1000)
 }
  
- 
+let CreateTeacherStatsInterval = null;
+function CreateTeacherStats(){
+	let HiddenOrigElement = document.querySelector('body.main main.content toolbar .pull-right>span.teaching-notifications.ng-hide')
+	if (HiddenOrigElement !== null) {
+		HiddenOrigElement.setAttribute('title', 'Разблокировано с помощью Omni Tools');
+		clearInterval(CreateTeacherStatsInterval)
+		return
+	}
+}
+
+CreateTeacherStatsInterval = setInterval(CreateTeacherStats, 2000)
+
 function InjectBasicStyles() {
 	let code = `
 	.students .cards {position: relative; top: -100px; padding-top: 100px;}
