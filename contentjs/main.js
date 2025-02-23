@@ -253,18 +253,18 @@ function CreateFullscreenViewAPI(){
                 FullscreenView.id="FillScreenViewer"
                 FullscreenView.innerHTML=`
             <style>
-img#FullscreenDisplaying, video#FullscreenDisplaying { max-width: 100%; max-height: 100%; height: 80% !important; object-fit: cover; transition: all 1s;transform: translate(-50%, -50%);left: 50%;top: 50%;position: relative;height: auto;border-radius: 20px;z-index: 9000;display: block;-webkit-touch-callout: none; cursor: pointer; -webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
-.imgActiveImage{ transition: all 1s; border-radius: 20px; width: 100%; max-height: 100px; object-fit: cover; cursor: pointer; }
+img.FullscreenDisplaying, video.FullscreenDisplaying { max-width: 100%; max-height: 100%; height: 80% !important; object-fit: cover; transition: all 1s;transform: translate(-50%, -50%);left: 50%;top: 50%;position: absolute;height: auto;border-radius: 20px;z-index: 9000;display: block;-webkit-touch-callout: none; cursor: pointer; -webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
+.imgActiveImage { transition: all 1s; border-radius: 20px; width: 100%; max-height: 100px; object-fit: cover; cursor: pointer; }
 .imgActiveImage:hover{ max-height: 150px; }
 div#FullscreenView {width: 100%; height: 0%; background: #252525de; position: absolute; transition: all .6s; top: 0px; z-index: 102; display: none; }
 </style>
             <div id="FullscreenView">
-				<img class="FullscreenDisplaying" onerror="this.style='display: none'" onload="this.style='display: block'>
-				<video class="FullscreenDisplaying" onerror="this.style='display: none'" onloadeddata="this.style='display: block'>
+				<img class="FullscreenDisplaying" onerror="this.style='display: none'" onload="this.style='display: block'">
+				<video class="FullscreenDisplaying" autoplay loop controls onerror="this.style='display: none'" onloadeddata="this.style='display: block'"></video>
 			</div>
 			`;
                 document.querySelector("body").after(FullscreenView)
-                FullscreenView.querySelector("#FullscreenView").addEventListener('click' ,function(){CloseImageOnFullscreen()}) 
+                FullscreenView.querySelector("#FullscreenView").addEventListener('click' ,function(){CloseImageOnFullscreen(FullscreenView)}) 
 }
  
 function IsHomeWorksOpened(){
@@ -418,7 +418,7 @@ function ShowImageIfAvaiable(){
                         var ImgPreviewDiv = document.createElement('div');
                         ImgPreviewDiv.innerHTML=(`
 <img class='imgActiveImage' src=`+downloadUrls[i]+` id="ActiveImage`+i+`" onload="this.style.display='block'" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
-<video class='imgActiveImage' src=`+downloadUrls[i]+` id="ActiveVideo`+i+`" onload="this.style.display='block'" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
+<video class='imgActiveImage' src=`+downloadUrls[i]+` autoplay muted loop id="ActiveVideo`+i+`" onload="this.style.display='block'" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
 `);
                         PreviewPlaces[i].after(ImgPreviewDiv)
 						let img = document.querySelector(`img#ActiveImage${i}`)
@@ -514,14 +514,10 @@ function AccountLog (){
 
  
 setInterval(checkFeedbackOpened, 1000);
-window.CloseImageOnFullscreen = function () {
-	if (CanOpenImage){
-		CanOpenImage=false;
-		document.getElementById('FullscreenView').style.height='0%'
-		setTimeout(function() {document.getElementById('FullscreenView').style.display='none'}, 510);
-		setTimeout(CanOpenImage=true, 500);
-	}
-	
+window.CloseImageOnFullscreen = function (element) {
+		element.style.height='0%'
+		setTimeout(function() {element.remove()}, 510);
+		setTimeout(function() { CanOpenImage=true; } , 500);
 };
 window.OpenImageOnFullscreen = function (URL, video) {
 	if (CanOpenImage){
