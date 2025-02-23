@@ -454,9 +454,10 @@ CreateTeacherStatsInterval = setInterval(CreateTeacherStats, 2000)
 
 function InjectBasicStyles() {
 	let code = `
+	.students .allGroup-select > div:not(.cards) {z-index: 4; position: relative}
 	body.main main.content md-sidenav {transition: all .2s}
 	#myDialog.home_work_modal .hw-md_content {color: black}
-	.students .cards {position: relative; top: -100px; padding-top: 100px;}
+	.students .cards {position: relative; top: -100px; padding-top: 100px; z-index: 2}
 	.reviews-modal img {object-fit: cover; transition: all .3s}
 	.reviews-modal img:hover {scale}
 	.students .card .card-image {position: relative; z-index: 3}
