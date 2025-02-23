@@ -1,4 +1,5 @@
 let CityID = null;
+baseURL = "https://journalui.ru";
 let AvatarsData = {};
 
 

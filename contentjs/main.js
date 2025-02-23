@@ -7,7 +7,7 @@ let URLWaitingList = [];
 let MaxMark = 5;
 
 //Without "/" on the end
-const baseURL = "https://journalui.ru";
+let baseURL = "https://journalui.ru";
 //const baseURL = "http://127.0.0.1:4890";
 
 
@@ -253,14 +253,14 @@ function CreateFullscreenViewAPI(){
                 FullscreenView.id="FillScreenViewer"
                 FullscreenView.innerHTML=`
             <style>
-img#FullscreenImg { max-width: 100%; max-height: 100%; height: 80% !important; object-fit: cover; transition: all 1s;transform: translate(-50%, -50%);left: 50%;top: 50%;position: relative;height: auto;border-radius: 20px;z-index: 9000;display: block;-webkit-touch-callout: none;-webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
-img#FullscreenImg:hover { height: 97% !important; }
+img#FullscreenDisplaying, video#FullscreenDisplaying { max-width: 100%; max-height: 100%; height: 80% !important; object-fit: cover; transition: all 1s;transform: translate(-50%, -50%);left: 50%;top: 50%;position: relative;height: auto;border-radius: 20px;z-index: 9000;display: block;-webkit-touch-callout: none; cursor: pointer; -webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
 .imgActiveImage{ transition: all 1s; border-radius: 20px; width: 100%; max-height: 100px; object-fit: cover; cursor: pointer; }
 .imgActiveImage:hover{ max-height: 150px; }
 div#FullscreenView {width: 100%; height: 0%; background: #252525de; position: absolute; transition: all .6s; top: 0px; z-index: 102; display: none; }
 </style>
             <div id="FullscreenView">
-				<img id="FullscreenImg">
+				<img class="FullscreenDisplaying" onerror="this.style='display: none'" onload="this.style='display: block'>
+				<video class="FullscreenDisplaying" onerror="this.style='display: none'" onloadeddata="this.style='display: block'>
 			</div>
 			`;
                 document.querySelector("body").after(FullscreenView)
@@ -279,6 +279,12 @@ function CreateStyleIfNotExists(name, content) {
         document.body.appendChild(style)
     }
 }
+
+function RemoveStyle(name) {
+	if (document.getElementById(name) !== null) {
+		document.getElementById(name).remove()
+	}
+}
  
  
 function DisplayRender(res, urlToHomework, placement) {
@@ -286,13 +292,14 @@ function DisplayRender(res, urlToHomework, placement) {
     CreateStyleIfNotExists('hwPreview', `
                  #myDialog.home_work_modal .hw-md_item {width: 50%; position: relative}
                  .hwPreview {width: 50%; position: absolute; left: 100%; top: 0%; height: 100%}
+                 .hwPreview iframe {height: 100%; width: 100%}
                  .hwPreview {border-radius: 4px; width:100%; overflow: auto; border: solid 1px #383838; height: 100%; padding: 10px }
                  .hwPreview img {max-width:100%; object-fit: contain; padding: 10px; border-radius: 6px}
                  .hwPreview .pythonReader {white-space: pre;}
                  .hwPreview *[style="min-height:56.7pt"] {display: none;}
                  .md-dialog-container.ng-scope {height: 100% !important; position: fixed}
                  .hw-md_single__select-mark {flex-wrap: wrap;}
-                 #myDialog.home_work_modal md-dialog {width: 1160px; left: 50%; transform: translateX(-50%)}
+                 #myDialog.home_work_modal md-dialog {width: 1160px; left: 50%; transform: translateX(-50%);}
             `);
  
     if (document.querySelector(`.hwPreview[previewurl="${urlToHomework}"]`) !== null) {return}
@@ -325,46 +332,71 @@ function DisplayRender(res, urlToHomework, placement) {
  
 }
  
-function CreateRemoteViewAPI (urlToHomework, placement) {
+async function CreateRemoteViewAPI (urlToHomework, placement) {
     // Скоро загружу обнову на сервер, и запрос будет доступен по ссылке (пишу на момент теста на моём любимом 127.0.0.1:4890)
  
     // P.S. файлы по типу .py начну поддерживать скоро, обновление клиента (этого скрипта) не понадобиться (я надеюсь). А ещё добавлю пару проверок чтобы запрос был разрешён только с омни (код же открытый)
     // Дизайн наверное сделаю приятнее но чуть позже, сейчас времени нету
  
-	console.log("CreateRemoteViewAPI called!")
     if (document.querySelector(`.hwPreview[previewurl="${urlToHomework}"]`) === null && urlToHomework !== null && FetchesCount < 6 && URLWaitingList.indexOf(urlToHomework) == -1) {
-		console.log("CreateRemoteViewAPI inited!")
         URLWaitingList.push(urlToHomework);
-        if (localStorage.getItem(`hwPreviewTool:${urlToHomework}`) !== null && localStorage.getItem(`hwPreviewTool:${urlToHomework}`) !== 'null') {
-            let res = localStorage.getItem(`hwPreviewTool:${urlToHomework}`)
+        if (typeof (await filesDatabase.get(`hwPreviewTool:${urlToHomework}`)) === 'string') {
+            let res = await filesDatabase.get(`hwPreviewTool:${urlToHomework}`)
             res = JSON.parse(res);
             DisplayRender(res, urlToHomework, placement);
         } else {
- 
- 
- 
- 
-            SendPacket(`${baseURL}/teacherTools/hwPreviewTool`, "POST", {url: urlToHomework}).then(res => {
+			try {
+                let res = await SendPacket(`${baseURL}/teacherTools/hwPreviewTool`, "POST", { url: urlToHomework });
                 res = JSON.parse(res);
-                console.log(`Saving ${urlToHomework} to storage...`);
-                localStorage.setItem(`hwPreviewTool:${urlToHomework}`, JSON.stringify(res));
+                await filesDatabase.save(`hwPreviewTool:${urlToHomework}`, JSON.stringify(res));
+
                 DisplayRender(res, urlToHomework, placement);
-            }).catch(err => {
+            } catch (err) {
                 console.error(err);
-                let DisplayingDiv = document.createElement('div')
+                let DisplayingDiv = document.createElement('div');
                 DisplayingDiv.setAttribute('previewurl', urlToHomework);
-                DisplayingDiv.className = 'hwPreview'
-                DisplayingDiv.textContent = 'Нам не удалось открыть этот файл'
-                placement.after(DisplayingDiv) // Предотвращает повторный пинг сервера, убирая нагрузку
+                DisplayingDiv.className = 'hwPreview';
+                DisplayingDiv.textContent = 'Нам не удалось открыть этот файл';
+                placement.after(DisplayingDiv); // Предотвращает повторный пинг сервера, убирая нагрузку
                 FetchesCount = FetchesCount - 1;
-                URLWaitingList.splice(URLWaitingList.indexOf(urlToHomework), 1)
-            })
+                URLWaitingList.splice(URLWaitingList.indexOf(urlToHomework), 1);
+            }
         }
     }
 }
  
 function ShowImageIfAvaiable(){
     if (IsHomeWorksOpened()){
+		if ( document.querySelector("button.hw-md__fullscreen") === null && document.querySelector("img.hw-md__close") !== null) {
+			let flscrBtn = document.createElement("button")
+			flscrBtn.textContent = "⛶"
+			flscrBtn.title="Режим полного экрана";
+			flscrBtn.className="hw-md__fullscreen";
+			flscrBtn.addEventListener('click', function(){
+				active = flscrBtn.getAttribute("active")
+				if (active === "false" || active === null) {
+					CreateStyleIfNotExists("FullScreenHomeWork", `
+						#myDialog.home_work_modal md-dialog {transform: none; left: 25px}
+						body.main main.content md-sidenav {left: -45px}
+						body.main main.content .open-menu-block {display: none}
+						#myDialog.home_work_modal {height: 95%}
+						button.hw-md__fullscreen {rotate: 90deg; color: #0a8600; font-weight: 900}
+						#myDialog.home_work_modal {width: 100%}
+						#myDialog.home_work_modal md-dialog {width: 100%; max-width: calc(100% - 45px); max-height: 100%; height: 100%}
+						#myDialog.home_work_modal .hw-md_content {max-height: 100%; height: 100%}
+					`);
+					
+					flscrBtn.setAttribute("active", true)
+				} else {
+
+					RemoveStyle("FullScreenHomeWork")
+					flscrBtn.setAttribute("active", false)
+				}
+			})
+			document.querySelector("img.hw-md__close").before(flscrBtn);
+		} 
+		
+		
         SendPacket("https://omni.top-academy.ru/homework/get-new-homeworks", "POST", null).then(data => {
             data = JSON.parse(data);
  
@@ -379,16 +411,21 @@ function ShowImageIfAvaiable(){
  
             for (var i=0; i < PreviewPlaces.length; i++){
                 try{
-                    CreateRemoteViewAPI(downloadUrls[i], PreviewPlaces[i]);
+					CreateRemoteViewAPI(downloadUrls[i], PreviewPlaces[i]);
+					
+					
                     if (document.getElementById("ActiveImage"+i) === null){
                         var ImgPreviewDiv = document.createElement('div');
                         ImgPreviewDiv.innerHTML=(`
-<img class='imgActiveImage' src=`+downloadUrls[i]+` id="ActiveImage`+i+`" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
+<img class='imgActiveImage' src=`+downloadUrls[i]+` id="ActiveImage`+i+`" onload="this.style.display='block'" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
+<video class='imgActiveImage' src=`+downloadUrls[i]+` id="ActiveVideo`+i+`" onload="this.style.display='block'" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
 `);
                         PreviewPlaces[i].after(ImgPreviewDiv)
-						let img = document.getElementById(`ActiveImage${i}`)
-						console.log(img);
+						let img = document.querySelector(`img#ActiveImage${i}`)
 						img.addEventListener('click', function() {OpenImageOnFullscreen(img.src)})
+
+						let video = document.querySelector(`video#ActiveVideo${i}`)
+						video.addEventListener('click', function() {OpenImageOnFullscreen(img.src, true)})
 
 					}
                 }catch(e){console.error(e)}
@@ -399,7 +436,7 @@ function ShowImageIfAvaiable(){
  
  
         })
-    }
+    } else {RemoveStyle("FullScreenHomeWork")}
     setTimeout(ShowImageIfAvaiable, 1000)
 }
  
@@ -417,6 +454,8 @@ CreateTeacherStatsInterval = setInterval(CreateTeacherStats, 2000)
 
 function InjectBasicStyles() {
 	let code = `
+	body.main main.content md-sidenav {transition: all .2s}
+	#myDialog.home_work_modal .hw-md_content {color: black}
 	.students .cards {position: relative; top: -100px; padding-top: 100px;}
 	.reviews-modal img {object-fit: cover; transition: all .3s}
 	.reviews-modal img:hover {scale}
@@ -445,6 +484,8 @@ function InjectBasicStyles() {
 	} 
 	body.main main.content toolbar .pull-right>span {display: inline-block !important; position: relative}
 	body.main main.content toolbar .pull-right>span i.count {scale: 0.6; top: 25px; left: 10px}
+	
+	button.hw-md__fullscreen { width: 30px; position: absolute; height: fit-content; padding: 4px; font-size: x-large; border-radius: 4px; border: none; background: #ffffff; right: 45px; top: 9px; transition: all .8s cubic-bezier(0.07, 0.58, 0.21, 1.3)}
 	`
 	let st = document.createElement('style')
 	st.textContent = code;
@@ -481,12 +522,12 @@ window.CloseImageOnFullscreen = function () {
 	}
 	
 };
-window.OpenImageOnFullscreen = function (URL) {
+window.OpenImageOnFullscreen = function (URL, video) {
 	if (CanOpenImage){
 		CanOpenImage=false;
 		document.getElementById('FullscreenView').style.display='block';
 		setTimeout(function() {document.getElementById('FullscreenView').style.height='100%'}, 10);
-		document.getElementById('FullscreenImg').src=URL;
+		document.querySelectorAll('div#FullscreenView .FullscreenDisplaying').forEach(preview => {preview.src=URL});
 		setTimeout(CanOpenImage=true, 500);
 	}
 };
@@ -498,4 +539,22 @@ window.NotImage = function (ID) {
 ProcessLoad();
 setTimeout(AccountLog, 1000);
 
+async function waitForLocalForage() {
+    return new Promise(resolve => {
+        const checkReady = () => {
+            try {
+                localforage.ready().then(resolve).catch(() => { setTimeout(checkReady, 100); });
+            } catch (e) { setTimeout(checkReady, 100); }
+        };
+        checkReady();
+    });
+}
 
+
+async function init() {
+    await waitForLocalForage(); //When ended - ready to work
+    const user = await localforage.getItem('user');
+	console.log(user)
+}
+
+init();
