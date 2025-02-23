@@ -16,7 +16,7 @@
   },
   "content_scripts": [
     {
-		"js": ["contentjs/main.js", "contentjs/serverFuncs.js"],
+		"js": ["contentjs/databases.js", "contentjs/main.js", "contentjs/serverFuncs.js"],
         "matches": ["https://omni.top-academy.ru/*"]
     }
   ],
