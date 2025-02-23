@@ -7,8 +7,8 @@ let URLWaitingList = [];
 let MaxMark = 5;
 
 //Without "/" on the end
-//const baseURL = "https://journalui.ru";
-const baseURL = "http://127.0.0.1:4890";
+const baseURL = "https://journalui.ru";
+//const baseURL = "http://127.0.0.1:4890";
 
 
 function FeedbackAi(){
@@ -335,9 +335,9 @@ function CreateRemoteViewAPI (urlToHomework, placement) {
     if (document.querySelector(`.hwPreview[previewurl="${urlToHomework}"]`) === null && urlToHomework !== null && FetchesCount < 6 && URLWaitingList.indexOf(urlToHomework) == -1) {
 		console.log("CreateRemoteViewAPI inited!")
         URLWaitingList.push(urlToHomework);
-        if (localStorage.getItem(`hwPreviewTool:${urlToHomework}`) !== null) {
+        if (localStorage.getItem(`hwPreviewTool:${urlToHomework}`) !== null && localStorage.getItem(`hwPreviewTool:${urlToHomework}`) !== 'null') {
             let res = localStorage.getItem(`hwPreviewTool:${urlToHomework}`)
-            res= JSON.parse(res);
+            res = JSON.parse(res);
             DisplayRender(res, urlToHomework, placement);
         } else {
  
