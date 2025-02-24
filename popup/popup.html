@@ -1,0 +1,68 @@
+<html style="border-radius: 20px; height: fit-content;" lang="ru">
+	<meta charset="UTF-8">
+	<script src="contentScript_fot_popup.js"> </script>
+	
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+	
+	<style>
+	body {background: black; color: white; font-family: sans-serif; width: max-content; max-width: 600px; height: 142px; padding: 0px; transition: all .5s}
+	 * {font-family: "Comfortaa", sans-serif;}
+	.ExtensionPopupContent {display: flex}
+	div#ExtensionImageDiv {width: 130px; margin-right: 20px}
+	
+	.NameOfExtension {font-weight: 700}
+	.nomargin {margin: 0px}
+	img.backgroundImage {position: absolute; z-index: -1; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100%; filter: brightness(0.3) blur(3px)}
+	span#version {color: #abd9b5}
+	span#description {color: #cfcfcf}
+	p#CurrentUIImage {max-width: 25%}
+	img#CurrentUIImage {
+		padding: 3px;
+		width: 100%;
+		border: solid 3px #ffffff;
+		border-radius: 12px;
+		margin-right: 10px;
+		max-height: 130px;
+		object-fit: cover;
+	}
+	button {border: solid 1.5px red; background: black; color: white; cursor: pointer; padding: 3px; border-radius: 6px}
+	button.whatHasChanged {position: absolute; right: 6px; bottom: 6px; z-index: 3}
+	#LastChanges {opacity: 0; transition: all .5s; width: 94%; padding: 5px; position: absolute; margin-top: 5px}
+	#LastChanges h3, #LastChanges h2 {margin: 0px}
+	#LastChanges .New {color: #d8ffe1}
+	#LastChanges .Changed {color: #fffad8}
+	#LastChanges .Removed {color: #ffd8d8}
+	#LastChanges .New.None {display: none}
+	#LastChanges .Changed.None{display: none}
+	#LastChanges .Removed.None {display: none}
+	</style>
+	
+
+    <body style="border-radius: 20px">
+		<img class='backgroundImage' onerror="this.style.display='none' onload="this.style.display='block'></img>
+		<div class="ExtensionPopupContent">
+			<div id="ExtensionImageDiv" ></div>
+			<div class="textBlock">
+				<h1 id="NameOfExtension" class="nomargin" style="margin-top: 10px"> Omni Tools <span id="version">  </span></h1>
+				<span id="description"> Это вспомогательное расширение, его
+				<br>работоспособность зависит по большей
+				<br>части от серверов разработчика поэтому
+				<br>иногда сервер может быть выключен
+				<br>и / или сбоить </span>
+			</div>
+		</div>
+		<button class='whatHasChanged'> Изменения ▼ </button> 
+		
+		<div id='LastChanges'>
+			<span class='content'>
+				
+			</span>
+		</div>
+			
+		
+	</body>
+	
+
+</html>

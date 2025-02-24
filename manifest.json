@@ -1,7 +1,7 @@
 {
   "name": "Omni Tools",
   "description": "Just some features for Omni (top-academy)",
-  "version": "1.2.1",
+  "version": "1.3",
   "author": "savelijln0@gmail.com",
   "manifest_version": 3,
   "permissions": [
@@ -20,6 +20,10 @@
         "matches": ["https://omni.top-academy.ru/*"]
     }
   ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon" : "OmniTools_128x128.png"
+  },
   "host_permissions": [
     "https://*.top-academy.ru/*"
   ]

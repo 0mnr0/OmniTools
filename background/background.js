@@ -29,6 +29,9 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         getCityID((cityID) => sendResponse({ cityID }));
         return true; 
     }
+	if (message.type === "VersionBumper") {
+        sendResponse({ status: chrome.runtime.getManifest() });
+    }
 });
 
 
