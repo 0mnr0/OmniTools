@@ -119,7 +119,7 @@ document.addEventListener("CityIDResponse", (event) => {
 window.navigation.addEventListener("navigate", (event) => {
     RefreshCityId();
 	ReplaceAnyAvatars();
-	//setTimeout(DynamicThings, 100);
+	setTimeout(DynamicThings, 100);
 })
 RefreshCityId();
 
@@ -195,11 +195,11 @@ LoadCustomAvatars();
 
 function DynamicThings() {
 	let url = window.location.href;
-	console.log(url.indexOf("/students/list"), '>= 0: ', url.indexOf("/students/list") >= 0, CityID ,'!== null:',CityID !== null )
-	if (url.indexOf("/students/list") >= 0 && CityID !== null && document.querySelectorAll('.students .cards .cart-header > div').length > 0) { // List of students
-		return
-	} else {setTimeout(DynamicThings, 1000);}
+	if (url.indexOf("/login/index") >= 0) { // List of students
+		filesDatabase.clear()
+	}
 }
+DynamicThings()
 
 
 
