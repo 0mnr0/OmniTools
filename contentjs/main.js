@@ -1,5 +1,4 @@
 var CurrentHomeworks=null;
-var CanOpenImage=true;
 var UpdateFounded=false;
 var TeacherLogin = null;
 let FetchesCount = 0;
@@ -258,13 +257,13 @@ img.FullscreenDisplaying, video.FullscreenDisplaying { max-width: 100%; max-heig
 .imgActiveImage:hover{ max-height: 150px; }
 div#FullscreenView {width: 100%; height: 0%; background: #252525de; position: absolute; transition: all .6s; top: 0px; z-index: 102; display: none; }
 </style>
-            <div id="FullscreenView">
+            <div id="FullscreenView" >
 				<img class="FullscreenDisplaying" onerror="this.style='display: none'" onload="this.style='display: block'">
 				<video class="FullscreenDisplaying" autoplay loop controls onerror="this.style='display: none'" onloadeddata="this.style='display: block'"></video>
 			</div>
 			`;
                 document.querySelector("body").after(FullscreenView)
-                FullscreenView.querySelector("#FullscreenView").addEventListener('click' ,function(){CloseImageOnFullscreen(FullscreenView)}) 
+                FullscreenView.querySelector("#FullscreenView").addEventListener('click' ,function(){CloseImageOnFullscreen(FullscreenView.querySelector("#FullscreenView"))}) 
 }
  
 function IsHomeWorksOpened(){
@@ -380,10 +379,13 @@ function ShowImageIfAvaiable(){
 						body.main main.content md-sidenav {left: -45px}
 						body.main main.content .open-menu-block {display: none}
 						#myDialog.home_work_modal {height: 95%}
-						button.hw-md__fullscreen {rotate: 90deg; color: #0a8600; font-weight: 900}
+						button.hw-md__fullscreen {rotate: 180deg; color: #0a8600; font-weight: 900}
 						#myDialog.home_work_modal {width: 100%}
 						#myDialog.home_work_modal md-dialog {width: 100%; max-width: calc(100% - 45px); max-height: 100%; height: 100%}
 						#myDialog.home_work_modal .hw-md_content {max-height: 100%; height: 100%}
+						#myDialog.home_work_modal .hw-md__tabs_modal {margin-top: -50px; opacity: 0; z-index: 1; width: fit-content}
+						#myDialog.home_work_modal md-dialog h4 {z-index: 2; width: fit-content}
+						#myDialog.home_work_modal .hw-md_content {border-top: solid 1px #63d3bd}
 					`);
 					
 					flscrBtn.setAttribute("active", true)
@@ -417,8 +419,8 @@ function ShowImageIfAvaiable(){
                     if (document.getElementById("ActiveImage"+i) === null){
                         var ImgPreviewDiv = document.createElement('div');
                         ImgPreviewDiv.innerHTML=(`
-<img class='imgActiveImage' src=`+downloadUrls[i]+` id="ActiveImage`+i+`" onload="this.style.display='block'" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
-<video class='imgActiveImage' src=`+downloadUrls[i]+` autoplay muted loop id="ActiveVideo`+i+`" onload="this.style.display='block'" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
+<img class='imgActiveImage' src=`+downloadUrls[i]+` style="max-height: 0px" id="ActiveImage`+i+`" onload="this.style=''; this.style.display='block'" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
+<video class='imgActiveImage' src=`+downloadUrls[i]+` style="max-height: 0px" autoplay muted loop id="ActiveVideo`+i+`" onloadeddata="this.style=''; this.style.display='block'" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
 `);
                         PreviewPlaces[i].after(ImgPreviewDiv)
 						let img = document.querySelector(`img#ActiveImage${i}`)
@@ -454,6 +456,9 @@ CreateTeacherStatsInterval = setInterval(CreateTeacherStats, 2000)
 
 function InjectBasicStyles() {
 	let code = `
+	#myDialog.home_work_modal .hw-md__tabs_modal {transition: all .3s}
+	#myDialog.home_work_modal .hw-md_single_stud-work__answer-text:empty {display: none}
+	#myDialog.home_work_modal .hw-md_single_stud-work__answer-text {padding: 15px 10px; border-radius: 10px; border: solid 1px black}
 	.students .allGroup-select > div:not(.cards) {z-index: 4; position: relative}
 	body.main main.content md-sidenav {transition: all .2s}
 	#myDialog.home_work_modal .hw-md_content {color: black}
@@ -516,17 +521,13 @@ function AccountLog (){
 setInterval(checkFeedbackOpened, 1000);
 window.CloseImageOnFullscreen = function (element) {
 		element.style.height='0%'
-		setTimeout(function() {element.remove()}, 510);
-		setTimeout(function() { CanOpenImage=true; } , 500);
 };
 window.OpenImageOnFullscreen = function (URL, video) {
-	if (CanOpenImage){
-		CanOpenImage=false;
+	
+		//document.querySelectorAll("#FullscreenView").forEach(viewer => {viewer.remove()})
 		document.getElementById('FullscreenView').style.display='block';
 		setTimeout(function() {document.getElementById('FullscreenView').style.height='100%'}, 10);
 		document.querySelectorAll('div#FullscreenView .FullscreenDisplaying').forEach(preview => {preview.src=URL});
-		setTimeout(CanOpenImage=true, 500);
-	}
 };
 window.NotImage = function (ID) {
 	if (document.getElementById(ID) !== null){
