@@ -130,38 +130,40 @@ function ReplaceAnyAvatars() {
 		let KeyName = Object.keys(AvatarsData)[i];
 		let RightAvatar = AvatarsData[KeyName];
 
-		if (!isVideoFile(RightAvatar)) {
-			document.querySelectorAll(`img[src="${KeyName}"]`).forEach(wrongAvatar => {
-				wrongAvatar.style.display = '';
-				if (wrongAvatar.src !== RightAvatar) {
-					wrongAvatar.src = RightAvatar;
-				}
-			})
-			document.querySelectorAll(`i.user-photo.user-photo__presents[style="background-image: url('${KeyName}')"]`).forEach(wrongAvatar => {
-				wrongAvatar.style.display='';
-				if (wrongAvatar.style !== `background-image: url('${RightAvatar}')`) {
-					wrongAvatar.style = `background-image: url('${RightAvatar}')`;
-				}
-			})
-		} else {
-			
-			let VideoAvatar = document.createElement('video');
-			VideoAvatar.className = 'customAvatar';
-			VideoAvatar.muted = true;
-			VideoAvatar.autoplay = true;
-			VideoAvatar.loop = true;
-			VideoAvatar.src = RightAvatar;
+		if (document.querySelector("span.reviews-container") === null) { 
+			if (!isVideoFile(RightAvatar)) {
+				document.querySelectorAll(`:not(.reviews-modal-comments .reviews-container) img[src="${KeyName}"]`).forEach(wrongAvatar => {
+					wrongAvatar.style.display = '';
+					if (wrongAvatar.src !== RightAvatar) {
+						wrongAvatar.src = RightAvatar;
+					}
+				})
+				document.querySelectorAll(`:not(.reviews-modal-comments .reviews-container) i.user-photo.user-photo__presents[style="background-image: url('${KeyName}')"]`).forEach(wrongAvatar => {
+					wrongAvatar.style.display='';
+					if (wrongAvatar.style !== `background-image: url('${RightAvatar}')`) {
+						wrongAvatar.style = `background-image: url('${RightAvatar}')`;
+					}
+				})
+			} else {
+				
+				let VideoAvatar = document.createElement('video');
+				VideoAvatar.className = 'customAvatar';
+				VideoAvatar.muted = true;
+				VideoAvatar.autoplay = true;
+				VideoAvatar.loop = true;
+				VideoAvatar.src = RightAvatar;
 
-			document.querySelectorAll(`img[src="${KeyName}"]`).forEach(wrongAvatar => {
-				if (wrongAvatar.nextElementSibling && wrongAvatar.nextElementSibling.classList.contains('customAvatar')) {return}
-				wrongAvatar.style.display='none';
-				wrongAvatar.after(VideoAvatar);
-			})
-			document.querySelectorAll(`i.user-photo.user-photo__presents[style="background-image: url('${KeyName}')"]`).forEach(wrongAvatar => {
-				if (wrongAvatar.nextElementSibling && wrongAvatar.nextElementSibling.classList.contains('customAvatar')) {return}
-				wrongAvatar.style.display='none';
-				wrongAvatar.after(VideoAvatar);
-			})
+				document.querySelectorAll(`img[src="${KeyName}"]`).forEach(wrongAvatar => {
+					if (wrongAvatar.nextElementSibling && wrongAvatar.nextElementSibling.classList.contains('customAvatar')) {return}
+					wrongAvatar.style.display='none';
+					wrongAvatar.after(VideoAvatar);
+				})
+				document.querySelectorAll(`i.user-photo.user-photo__presents[style="background-image: url('${KeyName}')"]`).forEach(wrongAvatar => {
+					if (wrongAvatar.nextElementSibling && wrongAvatar.nextElementSibling.classList.contains('customAvatar')) {return}
+					wrongAvatar.style.display='none';
+					wrongAvatar.after(VideoAvatar);
+				})
+			}
 		}
 	}
 	//
