@@ -58,11 +58,11 @@ window.onload = function() {
 	})
 }
 
-const height = "380px";
+const height = "400px";
 
 const Changes = `
 <h2 id="changesCurrentVersion"><b> Omni Tools </b></h2>
-<span style="font-size: 10px; margin-top: 0px"> 1.2.1 -> 1.3 </span>
+<span style="font-size: 10px; margin-top: 0px"> 1.2.1 -> 1.3.1 </span>
 <br><br><br>
 
 <span class="New">
@@ -76,6 +76,7 @@ const Changes = `
 
 <span class="Changed">
 <b> Изменено / исправлено: </b><br>
+~ Исправлено отображение кастомных автарок в нек-ых меню<br>
 ~ Теперь кэширование предпросмотра работает эффективнее<br>
 -- (Кэш реализован через IndexedDB вместо localStorage)<br>
 </span><br>
