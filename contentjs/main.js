@@ -256,6 +256,7 @@ img.FullscreenDisplaying, video.FullscreenDisplaying { max-width: 100%; max-heig
 .imgActiveImage { transition: all 1s; border-radius: 20px; width: 100%; max-height: 100px; object-fit: cover; cursor: pointer; }
 .imgActiveImage:hover{ max-height: 150px; }
 div#FullscreenView {width: 100%; height: 0%; background: #252525de; position: absolute; transition: all .6s; top: 0px; z-index: 102; display: none; }
+img#FullscreenImg {object-fit: contain}
 </style>
             <div id="FullscreenView" >
 				<img class="FullscreenDisplaying" onerror="this.style='display: none'" onload="this.style='display: block'">
@@ -456,6 +457,7 @@ CreateTeacherStatsInterval = setInterval(CreateTeacherStats, 2000)
 
 function InjectBasicStyles() {
 	let code = `
+	.presents .number video.customAvatar {object-fit: cover}
 	#myDialog.home_work_modal .hw-md__tabs_modal {transition: all .3s}
 	#myDialog.home_work_modal .hw-md_single_stud-work__answer-text:empty {display: none}
 	#myDialog.home_work_modal .hw-md_single_stud-work__answer-text {padding: 15px 10px; border-radius: 10px; border: solid 1px black}
