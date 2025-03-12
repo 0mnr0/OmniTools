@@ -252,11 +252,10 @@ function CreateFullscreenViewAPI(){
                 FullscreenView.id="FillScreenViewer"
                 FullscreenView.innerHTML=`
             <style>
-img.FullscreenDisplaying, video.FullscreenDisplaying { max-width: 100%; max-height: 100%; height: 80% !important; object-fit: cover; transition: all 1s;transform: translate(-50%, -50%);left: 50%;top: 50%;position: absolute;height: auto;border-radius: 20px;z-index: 9000;display: block;-webkit-touch-callout: none; cursor: pointer; -webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
+img.FullscreenDisplaying, video.FullscreenDisplaying { max-width: 95%; max-height: 90%; object-fit: cover; transition: all 1s;transform: translate(-50%, -50%);left: 50%;top: 50%;position: absolute;height: auto;border-radius: 20px;z-index: 9000;display: block;-webkit-touch-callout: none; cursor: pointer; -webkit-user-select: none;-khtml-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
 .imgActiveImage { transition: all 1s; border-radius: 20px; width: 100%; max-height: 100px; object-fit: cover; cursor: pointer; }
 .imgActiveImage:hover{ max-height: 150px; }
 div#FullscreenView {width: 100%; height: 0%; background: #252525de; position: absolute; transition: all .6s; top: 0px; z-index: 102; display: none; }
-img#FullscreenImg {object-fit: contain}
 </style>
             <div id="FullscreenView" >
 				<img class="FullscreenDisplaying" onerror="this.style='display: none'" onload="this.style='display: block'">
