@@ -478,6 +478,7 @@ function InjectBasicStyles() {
 	.presents .number video.customAvatar:hover {scale: 2.25; z-index: 10; border-radius: 10px}
 	.presents .number video.customAvatar:active {scale: 7.5; position: relative; z-index: 100; left: 350px; border-radius: 5px !important}
 	.presents .number .user-photo__presents:active {scale: 7.5; position: relative; z-index: 100; left: 350px; border-radius: 5px !important}
+	md-backdrop.md-opaque {height: 100%}
 	
 	.presents .number__presents {display: flex; top: 20px; left: 20px; top: 0px}
 	.presents .number .user-photo__presents {margin-top: 0px; top: 0px; position: relative; left: 0px}
