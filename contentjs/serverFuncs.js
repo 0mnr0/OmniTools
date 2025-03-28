@@ -1,6 +1,6 @@
 let CityID = null;
-baseURL = "https://journalui.ru";
-if (typeof DebugServer !== 'undefined' && DebugServer) {baseURL = "http://127.0.0.1:4890"}
+baseURL = "https:\\\\journalui.ru";
+if (typeof DebugServer !== 'undefined' && DebugServer) {baseURL = "http:\\\\127.0.0.1:4890"}
 let AvatarsData = {};
 
 
