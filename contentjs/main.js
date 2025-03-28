@@ -296,7 +296,7 @@ function DisplayRender(res, urlToHomework, placement) {
                  #myDialog.home_work_modal .hw-md_item {width: 50%; position: relative}
                  .hwPreview {width: 50%; position: absolute; left: 100%; top: 0%; height: 100%}
                  .hwPreview iframe {height: 100%; width: 100%}
-                 .hwPreview {border-radius: 4px; width:100%; overflow: auto; border: solid 1px #383838; height: 100%; padding: 10px }
+                 .hwPreview {border-radius: 10px; width:100%; overflow: auto; border: solid 1px #383838; height: 100%; padding: 10px }
                  .hwPreview img {max-width:100%; object-fit: contain; padding: 10px; border-radius: 6px}
                  .hwPreview .pythonReader {white-space: pre;}
                  .hwPreview *[style="min-height:56.7pt"] {display: none;}
@@ -379,13 +379,14 @@ function ShowImageIfAvaiable(){
 				active = flscrBtn.getAttribute("active")
 				if (active === "false" || active === null) {
 					CreateStyleIfNotExists("FullScreenHomeWork", `
+						body.main main.content toolbar {width: 100%; left: 0px}
 						#myDialog.home_work_modal md-dialog {transform: none; left: 25px}
 						body.main main.content md-sidenav {left: -45px}
 						body.main main.content .open-menu-block {display: none}
 						#myDialog.home_work_modal {height: 95%}
 						button.hw-md__fullscreen {rotate: 180deg; color: #0a8600; font-weight: 900}
 						#myDialog.home_work_modal {width: 100%}
-						#myDialog.home_work_modal md-dialog {width: 100%; max-width: calc(100% - 45px); max-height: 100%; height: 100%}
+						#myDialog.home_work_modal md-dialog {width: 100% !important; max-width: calc(100% - 45px); max-height: 100%; height: 100%}
 						#myDialog.home_work_modal .hw-md_content {max-height: 100%; height: 100%}
 						#myDialog.home_work_modal .hw-md__tabs_modal {margin-top: -50px; opacity: 0; z-index: 1; width: fit-content}
 						#myDialog.home_work_modal md-dialog h4 {z-index: 2; width: fit-content}
@@ -460,6 +461,7 @@ CreateTeacherStatsInterval = setInterval(CreateTeacherStats, 2000)
 
 function InjectBasicStyles() {
 	let code = `
+	body.main main.content toolbar {transition: all .2s}
 	.presents .number video.customAvatar {object-fit: cover}
 	#myDialog.home_work_modal .hw-md__tabs_modal {transition: all .3s}
 	#myDialog.home_work_modal .hw-md_single_stud-work__answer-text:empty {display: none}
