@@ -295,9 +295,9 @@ function DisplayRender(res, urlToHomework, placement) {
     CreateStyleIfNotExists('hwPreview', `
                  #myDialog.home_work_modal .hw-md_item {width: 50%; position: relative}
                  .hwPreview {width: 50%; position: absolute; left: 100%; top: 0%; height: 100%}
-                 .hwPreview iframe {height: 100%; width: 100%}
-                 .hwPreview {border-radius: 10px; width:100%; overflow: auto; border: solid 1px #383838; height: 100%; padding: 10px }
-                 .hwPreview img {max-width:100%; object-fit: contain; padding: 10px; border-radius: 6px}
+                 .hwPreview iframe { border-radius: 6px; height: 100%; width: 100% }
+                 .hwPreview {border-radius: 14px; width:100%; overflow: auto; border: solid 1px #383838; height: 100%; padding: 10px }
+                 .hwPreview img {max-width:100%; object-fit: contain; border-radius: 8px}
                  .hwPreview .pythonReader {white-space: pre;}
                  .hwPreview *[style="min-height:56.7pt"] {display: none;}
                  .md-dialog-container.ng-scope {height: 100% !important; position: fixed}
@@ -461,6 +461,8 @@ CreateTeacherStatsInterval = setInterval(CreateTeacherStats, 2000)
 
 function InjectBasicStyles() {
 	let code = `
+
+    .hwPreview iframe { border-radius: 6px; }
 	body.main main.content toolbar {transition: all .2s}
 	.presents .number video.customAvatar {object-fit: cover}
 	#myDialog.home_work_modal .hw-md__tabs_modal {transition: all .3s}
@@ -564,3 +566,9 @@ async function init() {
 }
 
 init();
+
+
+
+// P.S. Я знаю, найдутся люди которые это прочтут. Я сейчас студент и написал первое расширение для Omni ещё в 16, большое кол-во кода я просто скопировал сюда.
+// Т.к. я стараюсь искренне хочу существование этого расширения без каких - либо оплат я взял "слабенький" сервер поэтому на нём часто заканчивается место. Но, недавно я написал функции само-очистки так что после этого патча должно быть лучше
+// Приношу извинения за неудобства
