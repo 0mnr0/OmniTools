@@ -379,6 +379,7 @@ function ShowImageIfAvaiable(){
 				active = flscrBtn.getAttribute("active")
 				if (active === "false" || active === null) {
 					CreateStyleIfNotExists("FullScreenHomeWork", `
+						main.content .groups {display: none}
 						body.main main.content toolbar {width: 100%; left: 0px}
 						#myDialog.home_work_modal md-dialog {transform: none; left: 25px}
 						body.main main.content md-sidenav {left: -45px}
