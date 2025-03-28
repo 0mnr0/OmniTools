@@ -6,8 +6,12 @@ let URLWaitingList = [];
 let MaxMark = 5;
 
 //Without "/" on the end
-let baseURL = "https://journalui.ru";
-//const baseURL = "http://127.0.0.1:4890";
+const https = "https:\\\\";
+const http = "http:\\\\";
+let baseURL = `${https}journalui.ru`;
+let DebugServer = localStorage.debugServer === 'true';
+if (DebugServer) {baseURL = `${http}127.0.0.1:4890`}
+console.warn("Detected baseURL:", baseURL)
 
 
 function FeedbackAi(){
