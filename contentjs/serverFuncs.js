@@ -141,8 +141,9 @@ function ReplaceAnyAvatars() {
 				})
 				document.querySelectorAll(`:not(.reviews-modal-comments .reviews-container) i.user-photo.user-photo__presents[style="background-image: url('${KeyName}')"]`).forEach(wrongAvatar => {
 					wrongAvatar.style.display='';
-					if (wrongAvatar.style !== `background-image: url('${RightAvatar}')`) {
-						wrongAvatar.style = `background-image: url('${RightAvatar}')`;
+					console.log("RightAvatar:",RightAvatar);
+					if (wrongAvatar.style !== `background-image: url('${RightAvatar.replaceAll("\\", "/")}')`) {
+						wrongAvatar.style = `background-image: url('${RightAvatar.replaceAll("\\", "/")}')`;
 					}
 				})
 			} else {
