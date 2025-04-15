@@ -62,18 +62,17 @@ const height = "400px";
 
 const Changes = `
 <h2 id="changesCurrentVersion"><b> Omni Tools </b></h2>
-<span style="font-size: 10px; margin-top: 0px"> 1.3.1 -> 1.4 </span>
+<span style="font-size: 10px; margin-top: 0px"> 1.4 -> 1.5 </span>
 <br><br><br>
 
 <span class="New">
 <b> Новое: </b><br>
-+ Небольшая оптимизация отображения дз в полном экране<br>
++ Запоминание и кастомизация промптов <br>
 </span><br>
 
 <span class="Changed">
 <b> Изменено / исправлено: </b><br>
-~ Исправлены не работающие пред просмотры дз в нек-ых случаях<br>
-~ Подкорректирована работа "полного экрана"<br>
+~ Исправлено отображение кастомных аватарок в нек-ых случаях<br>
 </span><br>
 
 
