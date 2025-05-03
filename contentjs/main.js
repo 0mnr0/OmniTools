@@ -137,9 +137,9 @@ function GetAllPrompts() {
 
 async function FeedbackAi() {
     //Список моделей на сайте
-    let AINameList = ["Gemini Flash 1.5 (Recommended)", "OpenChat 3.5 (Recommended)", "Mistral 7B", "Llama 3 8B"];
+    let AINameList = ["Gemini Flash 1.5 (Recommended)", "DeepSeek (Recommended)", "Qwen3", "Gemma 3"];
     //Список используемых нейросетей
-    let AIProvidesList = ["JournalUI: Server", "openchat/openchat-7b:free", "snowflake/snowflake-arctic-instruct", "mistralai/mistral-7b-instruct:free"];
+    let AIProvidesList = ["JournalUI: Server", "deepseek/deepseek-prover-v2:free", "qwen/qwen3-4b:free", "google/gemma-3-27b-it:free"];
 
     //Функция отправки запроса с ожиданием ответа
     function sendRequest(method, url, senddata) {
@@ -223,7 +223,7 @@ async function FeedbackAi() {
 
         console.log(AIProvidesList[choiced_model_number], '.indexOf("JournalUI") >= 0: ', AIProvidesList[choiced_model_number].indexOf("JournalUI") >= 0);
         if (AIProvidesList[choiced_model_number].indexOf("JournalUI") >= 0) {
-            sendRequest("POST", baseURL + "/ai.generateText", { prompt: promt })
+            sendRequest("POST", baseURL + "/teacherTools/ai.generateText", { prompt: promt })
                 .then((res) => {
                     feedbackareas[i].value = res.text;
                     pressedButton.textContent = "Сгенерировать заново";
