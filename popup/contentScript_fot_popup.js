@@ -58,21 +58,21 @@ window.onload = function() {
 	})
 }
 
-const height = "400px";
+const height = "330px";
 
 const Changes = `
 <h2 id="changesCurrentVersion"><b> Omni Tools </b></h2>
-<span style="font-size: 10px; margin-top: 0px"> 1.4 -> 1.5 </span>
+<span style="font-size: 10px; margin-top: 0px"> 1.5 -> 1.5.1 </span>
 <br><br><br>
 
 <span class="New">
 <b> Новое: </b><br>
-+ Запоминание и кастомизация промптов <br>
++ Обновление моделей, не зависящих от моего сервера <br>
 </span><br>
 
 <span class="Changed">
 <b> Изменено / исправлено: </b><br>
-~ Исправлено отображение кастомных аватарок в нек-ых случаях<br>
+~ Обновление пути во избежании ошибок следующих обновлений сервера<br>
 </span><br>
 
 
