@@ -137,8 +137,8 @@ RefreshCityId();
 
 
 function ReplaceAnyAvatars() {
-	function CreateBirthDayBadge(element) {
-		if (element.parentElement && element.parentElement.querySelector('img.birthdayBadge') === null) {
+	function CreateBirthDayBadge(element, isBirthDay) {
+		if (isBirthDay && element.parentElement && element.parentElement.querySelector('img.birthdayBadge') === null) {
 			let birthdayBadge = document.createElement('img');
 			birthdayBadge.className = 'birthdayBadge';
 			birthdayBadge.title='По нашим данным у ученика сегодня день рождения';
@@ -152,20 +152,21 @@ function ReplaceAnyAvatars() {
 		let KeyName = Object.keys(AvatarsData)[i];
 		let RightAvatar = AvatarsData[KeyName];
 		const isBirthDay = RightAvatar.indexOf('?isBirthday=true') > 0;
+		console.log(RightAvatar + " | " + isBirthDay);
 		if (isBirthDay) { RightAvatar = RightAvatar.replaceAll('?isBirthday=true', '') }
 
 		if (document.querySelector("span.reviews-container") === null) { 
 			if (!isVideoFile(RightAvatar)) {
 				document.querySelectorAll(`:not(.reviews-modal-comments .reviews-container) img[src="${KeyName}"]`).forEach(wrongAvatar => {
 					wrongAvatar.style.display = '';
-					CreateBirthDayBadge(wrongAvatar);
+					CreateBirthDayBadge(wrongAvatar, isBirthDay);
 					if (wrongAvatar.src !== RightAvatar) {
 						wrongAvatar.src = RightAvatar;
 					}
 				})
 				document.querySelectorAll(`:not(.reviews-modal-comments .reviews-container) i.user-photo.user-photo__presents[style="background-image: url('${KeyName}')"]`).forEach(wrongAvatar => {
 					wrongAvatar.style.display='';
-					CreateBirthDayBadge(wrongAvatar);
+					CreateBirthDayBadge(wrongAvatar, isBirthDay);
 					if (wrongAvatar.style !== `background-image: url('${RightAvatar.replaceAll("\\", "/")}')`) {
 						wrongAvatar.style = `background-image: url('${RightAvatar.replaceAll("\\", "/")}')`;
 					}
@@ -189,7 +190,7 @@ function ReplaceAnyAvatars() {
 					wrongAvatar.style.display='none';
 					wrongAvatar.after(VideoAvatar);
 				})
-				CreateBirthDayBadge(VideoAvatar);
+				CreateBirthDayBadge(VideoAvatar, isBirthDay);
 			}
 		}
 	}
@@ -216,10 +217,15 @@ function LoadCustomAvatars(){
 					let StudentData = res[i];
 					if (UIStudent.photo !== null) {
 						let isBirthday = false;
-						if (typeof UIStudent.birthday === 'string') console.log('index:', UIStudent.birthday.indexOf(currentDate)+ " >= 0");
+						
+						if (typeof UIStudent.birthday === 'string') {
+							console.log(currentDate, UIStudent.birthday+'.indexOf("'+currentDate+'"): '+(UIStudent.birthday.indexOf(currentDate)));
+						}
 						if (typeof UIStudent.birthday === 'string' && UIStudent.birthday.indexOf(currentDate) >= 0) {
 							isBirthday = true;
 						}
+						console.log(currentDate);
+
 						AvatarsData[StudentData.photo_pas] = baseURL+'/Data/JournalData/'+ProcessedList[i]+'/'+UIStudent.photo + ( isBirthday ? "?isBirthday=true" : "" );
 					}
 				}
@@ -251,7 +257,6 @@ function CheckForConnection() {
 		}
 		
 		let MessageToBot = `{"useOmni": true, "cities": ${JSON.stringify(listOfCities)}}`;
-		console.log("MessageToBot:", MessageToBot);
 		
 		let Info = document.createElement("div")
 		Info.id="ShedBotDescription"
