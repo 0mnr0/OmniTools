@@ -140,6 +140,7 @@ function ReplaceAnyAvatars() {
 	function CreateBirthDayBadge(element, isBirthDay) {
 		if (isBirthDay && element.parentElement && element.parentElement.querySelector('img.birthdayBadge') === null) {
 			let birthdayBadge = document.createElement('img');
+			console.log(birthdayBadge);
 			birthdayBadge.className = 'birthdayBadge';
 			birthdayBadge.title='По нашим данным у ученика сегодня день рождения';
 			birthdayBadge.src = 'https://github.com/0mnr0/WallpaperInJournal/blob/main/UIData/badges_images/birthday.png?raw=true';

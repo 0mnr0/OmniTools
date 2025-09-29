@@ -604,7 +604,7 @@ function DisplayRender(res, urlToHomework, placement) {
                  .hwPreview img {max-width:100%; object-fit: contain; border-radius: 8px}
                  .hwPreview .pythonReader {white-space: pre;}
                  .hwPreview *[style="min-height:56.7pt"] {display: none;}
-                 .md-dialog-container.ng-scope {height: 100% !important; position: fixed}
+                 .md-dialog-container.ng-scope {height: 100% !important; position: fixed; top: 0px !important}
                  .hw-md_single__select-mark {flex-wrap: wrap;}
                  #myDialog.home_work_modal md-dialog {width: 1160px; left: 50%; transform: translateX(-50%);}
             `
@@ -830,6 +830,35 @@ function InjectBasicStyles() {
 	}
 	img.birthdayBadge:hover, .students .card .card-image img.birthdayBadge:hover, .student-info .reviews-wrap .reviews-wrap__left .profileImg img.birthdayBadge:hover {
 		scale: 1.6;
+	}
+	.presents .table td i.user-photo span img.birthdayBadge {
+		transition: all .3s;
+		display: block !important;
+		left: 10px
+	}
+	
+	tr.presents_stud td i.user-photo span {
+		display: flex !important; 
+		flex-direction: row-reverse;
+		position: relative;
+		display: block;
+		width: auto;
+		overflow: visible;
+		top: 100%;
+		margin-top: -80%;
+		left: 0px;
+	}
+	
+	@media (max-width: 1300px) {
+		.wrapper-students table.table tr.presents_stud .number .user-photo span img.birthdayBadge {
+			position: relative !important;
+			top: 15px;
+			left: -5px;
+		}
+		
+		.wrapper-students table.table tr.presents_stud .number { z-index: 5 }
+		.presents .number .user-photo__presents:hover {scale: 1.1}
+		.presents .number .user-photo__presents:active {scale: 1.2}
 	}
 	`;
     let st = document.createElement("style");
