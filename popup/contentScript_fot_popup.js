@@ -62,7 +62,7 @@ const height = "330px";
 
 const Changes = `
 <h2 id="changesCurrentVersion"><b> Omni Tools </b></h2>
-<span style="font-size: 10px; margin-top: 0px"> 1.5 -> 1.5.1 </span>
+<span style="font-size: 10px; margin-top: 0px"> 1.5.1 -> 1.5.2 </span>
 <br><br><br>
 
 <span class="New">
