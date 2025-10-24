@@ -138,7 +138,7 @@ RefreshCityId();
 
 function ReplaceAnyAvatars() {
 	function CreateBirthDayBadge(element) {
-		if (element.parentElement.querySelector('img.birthdayBadge') === null) {
+		if (element.parentElement && element.parentElement.querySelector('img.birthdayBadge') === null) {
 			let birthdayBadge = document.createElement('img');
 			birthdayBadge.className = 'birthdayBadge';
 			birthdayBadge.title='По нашим данным у ученика сегодня день рождения';
@@ -178,7 +178,6 @@ function ReplaceAnyAvatars() {
 				VideoAvatar.autoplay = true;
 				VideoAvatar.loop = true;
 				VideoAvatar.src = RightAvatar;
-				CreateBirthDayBadge(VideoAvatar);
 
 				document.querySelectorAll(`img[src="${KeyName}"]`).forEach(wrongAvatar => {
 					if (wrongAvatar.nextElementSibling && wrongAvatar.nextElementSibling.classList.contains('customAvatar')) {return}
@@ -190,6 +189,7 @@ function ReplaceAnyAvatars() {
 					wrongAvatar.style.display='none';
 					wrongAvatar.after(VideoAvatar);
 				})
+				CreateBirthDayBadge(VideoAvatar);
 			}
 		}
 	}
