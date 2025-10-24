@@ -818,6 +818,19 @@ function InjectBasicStyles() {
 	body.main main.content toolbar .pull-right>span i.count {scale: 0.6; top: 25px; left: 10px}
 	
 	button.hw-md__fullscreen { width: 30px; position: absolute; height: fit-content; padding: 4px; font-size: x-large; border-radius: 4px; border: none; background: #ffffff; right: 45px; top: 9px; transition: all .8s cubic-bezier(0.07, 0.58, 0.21, 1.3)}
+	
+	img.birthdayBadge, .students .card .card-image img.birthdayBadge { 
+		width: 30px !important;
+		height: 30px !important;
+		top: 0px;
+		right: 0px;
+		position: absolute;
+		z-index: -1;
+		filter: drop-shadow(0px 0px 2px black);
+	}
+	img.birthdayBadge:hover, .students .card .card-image img.birthdayBadge:hover, .student-info .reviews-wrap .reviews-wrap__left .profileImg img.birthdayBadge:hover {
+		scale: 1.6;
+	}
 	`;
     let st = document.createElement("style");
     st.textContent = code;

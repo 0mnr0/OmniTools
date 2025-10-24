@@ -2,7 +2,17 @@ let CityID = null;
 baseURL = "https:\\\\journalui.ru";
 if (typeof DebugServer !== 'undefined' && DebugServer) {baseURL = "http:\\\\127.0.0.1:4890"}
 let AvatarsData = {};
+let currentDate = ""
 
+function getFormattedDate() {
+  const date = new Date();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Месяцы с 0 по 11
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `-${month}-${day}`;
+}
+
+currentDate = getFormattedDate();
 
 
 
@@ -91,7 +101,7 @@ const fetchData = async (URL, method, object) => {
         }
 };
 
- 
+
 
 
 
@@ -127,21 +137,35 @@ RefreshCityId();
 
 
 function ReplaceAnyAvatars() {
+	function CreateBirthDayBadge(element) {
+		if (element.parentElement.querySelector('img.birthdayBadge') === null) {
+			let birthdayBadge = document.createElement('img');
+			birthdayBadge.className = 'birthdayBadge';
+			birthdayBadge.title='По нашим данным у ученика сегодня день рождения';
+			birthdayBadge.src = 'https://github.com/0mnr0/WallpaperInJournal/blob/main/UIData/badges_images/birthday.png?raw=true';
+			element.parentElement.appendChild(birthdayBadge);
+		}
+	}
+	
+	
 	for (let i = 0; i < Object.keys(AvatarsData).length; i++) {
 		let KeyName = Object.keys(AvatarsData)[i];
 		let RightAvatar = AvatarsData[KeyName];
+		const isBirthDay = RightAvatar.indexOf('?isBirthday=true') > 0;
+		if (isBirthDay) { RightAvatar = RightAvatar.replaceAll('?isBirthday=true', '') }
 
 		if (document.querySelector("span.reviews-container") === null) { 
 			if (!isVideoFile(RightAvatar)) {
 				document.querySelectorAll(`:not(.reviews-modal-comments .reviews-container) img[src="${KeyName}"]`).forEach(wrongAvatar => {
 					wrongAvatar.style.display = '';
+					CreateBirthDayBadge(wrongAvatar);
 					if (wrongAvatar.src !== RightAvatar) {
 						wrongAvatar.src = RightAvatar;
 					}
 				})
 				document.querySelectorAll(`:not(.reviews-modal-comments .reviews-container) i.user-photo.user-photo__presents[style="background-image: url('${KeyName}')"]`).forEach(wrongAvatar => {
 					wrongAvatar.style.display='';
-					console.log("RightAvatar:",RightAvatar);
+					CreateBirthDayBadge(wrongAvatar);
 					if (wrongAvatar.style !== `background-image: url('${RightAvatar.replaceAll("\\", "/")}')`) {
 						wrongAvatar.style = `background-image: url('${RightAvatar.replaceAll("\\", "/")}')`;
 					}
@@ -154,6 +178,7 @@ function ReplaceAnyAvatars() {
 				VideoAvatar.autoplay = true;
 				VideoAvatar.loop = true;
 				VideoAvatar.src = RightAvatar;
+				CreateBirthDayBadge(VideoAvatar);
 
 				document.querySelectorAll(`img[src="${KeyName}"]`).forEach(wrongAvatar => {
 					if (wrongAvatar.nextElementSibling && wrongAvatar.nextElementSibling.classList.contains('customAvatar')) {return}
@@ -171,6 +196,9 @@ function ReplaceAnyAvatars() {
 	//
 }
 setInterval(ReplaceAnyAvatars, 1200);
+setInterval(() => {
+	currentDate = getFormattedDate();
+}, 20000)
 document.ReplaceAnyAvatars = ReplaceAnyAvatars;
 
 function LoadCustomAvatars(){
@@ -187,7 +215,12 @@ function LoadCustomAvatars(){
 					let UIStudent = result[i];
 					let StudentData = res[i];
 					if (UIStudent.photo !== null) {
-						AvatarsData[StudentData.photo_pas] = baseURL+'/Data/JournalData/'+ProcessedList[i]+'/'+UIStudent.photo;
+						let isBirthday = false;
+						if (typeof UIStudent.birthday === 'string') console.log('index:', UIStudent.birthday.indexOf(currentDate)+ " >= 0");
+						if (typeof UIStudent.birthday === 'string' && UIStudent.birthday.indexOf(currentDate) >= 0) {
+							isBirthday = true;
+						}
+						AvatarsData[StudentData.photo_pas] = baseURL+'/Data/JournalData/'+ProcessedList[i]+'/'+UIStudent.photo + ( isBirthday ? "?isBirthday=true" : "" );
 					}
 				}
 			})
