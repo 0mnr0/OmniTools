@@ -137,9 +137,9 @@ function GetAllPrompts() {
 
 async function FeedbackAi() {
     //Список моделей на сайте
-    let AINameList = ["Gemini Flash 1.5 (Recommended)", "DeepSeek (Recommended)", "Qwen3", "Gemma 3"];
+    let AINameList = ["Auto (Recommended)", "Google Gemma (Recommended)", "DeepSeek", "Qwen3"];
     //Список используемых нейросетей
-    let AIProvidesList = ["JournalUI: Server", "deepseek/deepseek-prover-v2:free", "qwen/qwen3-4b:free", "google/gemma-3-27b-it:free"];
+    let AIProvidesList = ["JournalUI: Server", "google/gemma-3-27b-it:free", "deepseek/deepseek-chat-v3-0324:free", "qwen/qwen3-coder:free"];
 
     //Функция отправки запроса с ожиданием ответа
     function sendRequest(method, url, senddata) {
@@ -148,7 +148,7 @@ async function FeedbackAi() {
                 fetch(url, {
                     method: "POST",
                     headers: {
-                        Authorization: `Bearer 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`,
+                        Authorization: `Bearer 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`,
                         "HTTP-Referer": `https://docs.google.com/`,
                         "Content-Type": "application/json",
                     },
@@ -184,8 +184,8 @@ async function FeedbackAi() {
 
         let Grade = information[4].textContent.replace("Успеваемость: ", "");
         if (Grade !== NaN && Grade !== null) {
-            let PromtText =
-                'Привет! Я преподаватель в колледже и мне нужно составить простой и краткий отзыв для ученика (не более 2-3 предложений). Прошу тебя помочь с написанием отзыва, заранее большое спасибо. Желательно написать отзыв без чисел с процентами и применить "креативность". Вот некоторая информация о нем: Ученика звать - ' +
+			let PromtText =
+'Привет! Я преподаватель в колледже и мне нужно составить простой и краткий отзыв для ученика (не более 2-3 предложений). Прошу тебя помочь с написанием отзыва, заранее большое спасибо. Напиши отзыв от имени учителя, без приветствий, начальных вступлений и без конечного вывода, не растягивая отзыв. Пиши просто: короткие фразы, без усложнений. Избегай ИИ-клише: не используй штампы типа «погрузитесь», «раскрой потенциал», «решение нового уровня». Не парься про идеальную грамматику: можно без заглавных, без сложных конструкций. Избегай часто используемых общих слов и фраз! :) Желательно написать отзыв без чисел с процентами и применить "креативность". Вот некоторая информация о нем: Ученика звать - ' +
                 information[5].textContent.replace("ФИО: ", "") +
                 ", средняя посещаемость: " +
                 information[3].textContent.replace("Посещаемость: ", "") +
@@ -376,7 +376,7 @@ async function FeedbackAi() {
 
     if (document.getElementById("JournalUIWarn") === null) {
         let UIWarn = document.createElement("span");
-        UIWarn.textContent = "Возможности нек-ых нейросетей зависят от сервера Journal UI (он не всегда пашет)";
+        UIWarn.textContent = "Возможности нек-ых нейросетей зависят от сервера Journal UI";
         UIWarn.style = "padding: 5px; background: rgb(199 91 26 / 86%); margin: 0px 20px 10px 10px; width: fit-content; border-radius: 200px; color: white; font-size: smaller;";
         UIWarn.id = "JournalUIWarn";
         document.querySelector("select#AISelection").after(UIWarn);
