@@ -787,14 +787,14 @@ function runSendingAction(isTutorial) {
 			
 			
 			let maxSendingDataLength = sendingList.length;
-			if (maxSendingDataLength === 0) {notEnoughDataToStart(); return}
+			if (maxSendingDataLength === 0) {notEnoughDataToStart(); ended=true; return}
 			let failedCount = 0;
 			let okCount = 0;
 			let currentIndex = 0;
 			
 			try{
 				function StartSendingDatas() {
-					if (canceled) {return}
+					if (canceled) {ended=true; return}
 					if (currentIndex >= maxSendingDataLength-1 || (failedCount + okCount) >= maxSendingDataLength-1) {
 						onEndSending();
 						infoElement.textContent = `Операция окончена. Обновляем список заданий на проверку...`
