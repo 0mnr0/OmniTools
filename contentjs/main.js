@@ -1,3 +1,4 @@
+let RateAndSendUsage = false;
 var CurrentHomeworks = null;
 var UpdateFounded = false;
 var TeacherLogin = null;
@@ -6,6 +7,7 @@ let URLWaitingList = [];
 let MaxMark = 5;
 
 //Without "/" on the end
+const log = console.log;
 const https = "https:\\\\";
 const http = "http:\\\\";
 let baseURL = `${https}journalui.ru`;
@@ -14,6 +16,8 @@ if (DebugServer) {
     baseURL = `${http}127.0.0.1:4890`;
 }
 
+
+let PreviewPlaces = [];
 
 const DB_NAME = 'PromptDatabase';
 const STORE_NAME = 'prompts';
@@ -641,11 +645,6 @@ function DisplayRender(res, urlToHomework, placement) {
 }
 
 async function CreateRemoteViewAPI(urlToHomework, placement) {
-    // Скоро загружу обнову на сервер, и запрос будет доступен по ссылке (пишу на момент теста на моём любимом 127.0.0.1:4890)
-
-    // P.S. файлы по типу .py начну поддерживать скоро, обновление клиента (этого скрипта) не понадобиться (я надеюсь). А ещё добавлю пару проверок чтобы запрос был разрешён только с омни (код же открытый)
-    // Дизайн наверное сделаю приятнее но чуть позже, сейчас времени нету
-
     if (document.querySelector(`.hwPreview[previewurl="${urlToHomework}"]`) === null && urlToHomework !== null && FetchesCount < 6 && URLWaitingList.indexOf(urlToHomework) == -1) {
         URLWaitingList.push(urlToHomework);
         if (typeof (await filesDatabase.get(`hwPreviewTool:${urlToHomework}`)) === "string") {
@@ -660,7 +659,6 @@ async function CreateRemoteViewAPI(urlToHomework, placement) {
 
                 DisplayRender(res, urlToHomework, placement);
             } catch (err) {
-                console.error(err);
                 let DisplayingDiv = document.createElement("div");
                 DisplayingDiv.setAttribute("previewurl", urlToHomework);
                 DisplayingDiv.className = "hwPreview";
@@ -673,10 +671,193 @@ async function CreateRemoteViewAPI(urlToHomework, placement) {
     }
 }
 
+
+function runSendingAction(isTutorial) {
+	let RateAndSendList = {...CurrentHomeworks};
+	
+	let infoPopup = document.createElement('div');
+	infoPopup.className = "infoPopup";
+	infoPopup.innerHTML = `
+		<style>
+			div.infoPopup {position: absolute; top: 0px; height: 100%; width: 100%; left: 0px; backdrop-filter: blur(10px) brightness(0.8); z-index: 900000;}			
+			div.infoPopup div.warning {position: absolute; min-width: 180px; top: 50%; transform: translate(-50%, -50%); flex-direction: column; font-family: 'Roboto'; height: fit-content; width: fit-content; left: 50%; background: white; display: flex; gap: 12px; color: black; padding: 16px; border-radius: 16px; display: none}			
+			div.infoPopup div.content {position: absolute; min-width: 180px; top: 50%; transform: translate(-50%, -50%); flex-direction: column; font-family: 'Roboto'; height: fit-content; width: fit-content; left: 50%; background: white; display: flex; gap: 12px; color: black; padding: 16px; border-radius: 16px}			
+			div.infoPopup div.content span.progressbar { width: 100%; border: solid 1px #000; margin-bottom: 20px; height: 16px; border-radius: 10px; overflow: hidden; }			
+			div.infoPopup div.content span.progress { transition: all .2s; background: #6dd1a5; display: block; height: 100%; width: 0%; border-radius: 2px }			
+			div.infoPopup div h2 { font-size: x-large; font-weight: 600 }				
+			div.infoPopup div.content button.cancel { border-radius: 10px; border: none; padding: 10px 30px; background: #f2bbbb; cursor: pointer; width: 100%; }				
+			div.infoPopup div.warning button.ok { border-radius: 10px; border: none; padding: 10px 30px; background: #f2bbbb; cursor: pointer; width: 100%; }				
+		</style>
+		
+		<div class="warning">
+			<h2> Что такое Rate&Send? </h2>
+			<span style="margin: 20px 0px; display: block"> При включении этого режима вы должны проверить и поставить оценки сразу для нескольких работ. После нажатия кнопки "Отправить" все оценки будут выставлены разом. Преимущество функции в том, что отправка нес-их оценок сразу не инициирует перезагрузку окна.
+			<br><br><b style="font-weight: 600"> Эта функция пока что не поддерживает отклонение домашних заданий и комментарии в отправке. </b><br><br>Функция работает ТОЛЬКО с домашними работами. Пожалуйста не используйте ее в других разделах
+			</span>
+			<button class="ok"> Закрыть </button>
+		</div>
+				
+		
+		<div class="content">
+			<h2> ${document.querySelectorAll('.hw-md_single__select-mark md-radio-button.ng-scope.md-checked').length >= 10 ? "Пошло, поехало!" : "Секунду..."} </h2>
+			<span class="info"> Выставляем оценки: 0 / 0 </span>
+			<span class="progressbar"><span class="progress"></span></span>
+			
+			
+			<button class="cancel"> Отмена </button>
+		</div>
+	
+	`	
+	document.body.after(infoPopup);
+	let tutorialDiv = infoPopup.querySelector('div.warning');
+	if (isTutorial) {
+		infoPopup.querySelector('div.content').style.display='none';
+		tutorialDiv.querySelector('button').addEventListener('click', () => {
+			infoPopup.remove();
+		})
+		tutorialDiv.style.display='block';
+		return
+	}
+	
+	
+	let infoElement = infoPopup.querySelector('div.content span.info');
+	let progress = infoPopup.querySelector('div.content span.progress');
+	let ended = false;
+	let canceled = false;
+	let btnCancel = infoPopup.querySelector('div.content button.cancel');
+	btnCancel.addEventListener('click', () => {
+		canceled = true;
+		btnCancel.disabled = true;
+		if (ended) {
+			infoPopup.remove();
+		}
+	})
+	
+	function onEndSending() {
+		ended = true;
+		btnCancel.disabled = false;
+		btnCancel.textContent = "Выйти"
+	}
+	
+	function getRandId(max, min){
+		return Math.floor(Math.random() * (1 + max - min)) + min
+	}
+	
+	
+	function notEnoughDataToStart() {
+		infoElement.textContent = "Для начала - проставьте оценки. Желательно несколько! :)"
+		onEndSending();
+	}
+	
+	function UpdateProgressText(okCount, totalCount, failCount) {
+		infoElement.textContent = `Выставляем оценки: ${okCount} / ${totalCount}    ${failCount > 0 ? ` | (Неуспешно - ${failCount})` : ''}`
+	}
+	
+	
+	
+	let maxPlaces = PreviewPlaces.length;
+	if (maxPlaces > 0) {
+		try {
+			infoElement.textContent = 'Формируем данные для отправки...';
+			
+			let localPreviews = [];
+			let sendingList = [];
+			for (let i = 0; i < maxPlaces; i++) {
+				if (canceled) {continue}
+				let radios = PreviewPlaces[i].parentElement.querySelector('md-radio-group');
+				let parsedMark = radios.querySelector('.ng-scope.md-checked'); parsedMark = parsedMark !== null ? parsedMark.innerText : null;
+				if (parsedMark !== null) {
+					let hwobj = RateAndSendList[i];
+					hwobj.mark = parsedMark;
+					hwobj.marks = {};
+					hwobj.marks[`${getRandId(1000, 25000)}`] = {
+								"id": `${hwobj.id_domzad}`,
+								"mark": parsedMark,
+								"ospr": "0",
+								"stud": `${hwobj.id_stud}`
+							}
+					sendingList.push(hwobj)
+					localPreviews.push(PreviewPlaces[i])
+				}
+			};
+			
+			
+			
+			
+			let maxSendingDataLength = sendingList.length;
+			if (maxSendingDataLength === 0) {notEnoughDataToStart(); return}
+			let failedCount = 0;
+			let okCount = 0;
+			let currentIndex = 0;
+			
+			try{
+				function StartSendingDatas() {
+					if (canceled) {return}
+					if (currentIndex >= maxSendingDataLength-1 || (failedCount + okCount) >= maxSendingDataLength-1) {
+						onEndSending();
+						infoElement.textContent = `Операция окончена. Обновляем список заданий на проверку...`
+						ended = true;
+						let closeButton = localPreviews[localPreviews.length-1];
+						if (closeButton !== null && closeButton !== undefined) {closeButton = closeButton.parentElement.querySelector('button.hw-md_single__btn')}
+						if (closeButton !== null && closeButton !== undefined) {closeButton.click()}
+						setTimeout( () => { infoPopup.remove() }, 1200);
+						
+						return;
+					}
+					const SendObject = { "HomeworkForm": sendingList[currentIndex] }
+					
+					SendPacket("https://omni.top-academy.ru/homework/save-homework", "POST", SendObject).then((data) => {
+						okCount++;
+						currentIndex++;
+						progress.style.width = ((currentIndex/maxSendingDataLength)*100)+'%';
+						UpdateProgressText(okCount, maxSendingDataLength, failedCount);
+						setTimeout(() => { StartSendingDatas() }, 100);
+					}).catch(err => {
+						failedCount++;
+						currentIndex++;
+						progress.style.width = ((currentIndex/maxSendingDataLength)*100)+'%';
+						UpdateProgressText(okCount, maxSendingDataLength, failedCount);
+						StartSendingDatas()
+						console.warn(err);
+					})
+			
+				}
+				StartSendingDatas(0)
+			} catch(e) {
+				failedCount++;
+				if (currentIndex >= maxSendingDataLength || (failedCount + okCount) >= maxSendingDataLength) {
+					onEndSending();
+					infoElement.textContent = `Операция окончена. Для обновления списка заданий пожалуйста откройте окно с домашними заданиями заново.`
+					ended = true;
+					let closeButton = document.querySelector('#myDialog.home_work_modal .hw-md__close');
+					if (closeButton) { setTimeout(() => { closeButton.click() }, 2000); }
+				} else {
+					StartSendingDatas()
+				}
+			}
+			
+			
+		} catch(e) {
+			onEndSending();
+			infoElement.textContent = `Что-то пошло не так :(. `+e
+			ended = true;			
+		}
+	} else {
+		notEnoughDataToStart();
+	}
+	
+	
+
+}
+
+
+let previousGetNewHwIsParsing = false;
 function ShowImageIfAvaiable() {
     if (IsHomeWorksOpened()) {
-        if (document.querySelector("button.hw-md__fullscreen") === null && document.querySelector("img.hw-md__close") !== null) {
-            let flscrBtn = document.createElement("button");
+		let flscrBtn = document.querySelector("button.hw-md__fullscreen");
+		let closeBtn = document.querySelector("img.hw-md__close");
+        if (flscrBtn === null && closeBtn !== null) {
+            flscrBtn = document.createElement("button");
             flscrBtn.textContent = "⛶";
             flscrBtn.title = "Режим полного экрана";
             flscrBtn.className = "hw-md__fullscreen";
@@ -699,6 +880,7 @@ function ShowImageIfAvaiable() {
 						#myDialog.home_work_modal .hw-md__tabs_modal {margin-top: -50px; opacity: 0; z-index: 1; width: fit-content}
 						#myDialog.home_work_modal md-dialog h4 {z-index: 2; width: fit-content}
 						#myDialog.home_work_modal .hw-md_content {border-top: solid 1px #63d3bd}
+						.hw-md__divComfortCheck {right: 80px !important; top: 8px !important; gap: 2px; padding: 4px 6px}
 					`
                     );
 
@@ -710,56 +892,98 @@ function ShowImageIfAvaiable() {
             });
             document.querySelector("img.hw-md__close").before(flscrBtn);
         }
+		
+		if (document.querySelector("div.hw-md__divComfortCheck") === null && flscrBtn !== null && CurrentHomeworks !== null) {
+            let comfortDiv = document.createElement("div");
+            comfortDiv.title = "Сначала поставьте оценки для работ. А затем - отправьте всё, что отметили. Не работает с отклоняемыми работами";
+            comfortDiv.className = "hw-md__divComfortCheck";
+			comfortDiv.style='display: flex; min-height: 37px; padding: 4px 4px; cursor: pointer; align-items: center; z-index: 5; border: solid 1px #22aa90; border-radius: 3px; width: fit-content; position: absolute; top: 40px; right: 10px'
+			comfortDiv.innerHTML = `
+			<input type="checkbox" id="RateAndSend" style="margin-top: 0px; padding: 6px 0px; cursor: pointer; margin-right: 2px; "></input>  
+			<label for="RateAndSend" style="cursor: pointer"> Режим Rate&Send! </label>
+			<span style="background: #22aa90; padding: 6px 4px; border-radius: 2px; margin-left: 4px; color: white; text-align: center; min-width: 20px;" id="whatIsIt"> ? </span>
+			<span style="background: #22aa90; padding: 6px 4px; border-radius: 2px; margin-left: 4px; color: white; display: none" id="RateAnsSendActionButton"> 🚀 Отправить </span>
+			`
+			flscrBtn.before(comfortDiv);
+			let RateInput = comfortDiv.querySelector('input');
+			let RateButton = comfortDiv.querySelector('span#RateAnsSendActionButton');
+			let whatIsItButton = comfortDiv.querySelector('span#whatIsIt');
+			RateAndSendUsage = false; RemoveStyle('RateAndSendUsage')
+			RateInput.addEventListener('click', () => {
+				RateAndSendUsage = RateInput.checked;
+				if (RateAndSendUsage) {
+					CreateStyleIfNotExists('RateAndSendUsage',`
+						#myDialog.home_work_modal md-dialog .btn {filter: saturate(0); position: relative; z-index: -1; pointer-events: none}
+						#myDialog.home_work_modal .flex-center {z-index: 1; position: relative;}
+						span#RateAnsSendActionButton {display: block !important}
+						span#whatIsIt {display: none !important}			
 
-        SendPacket("https://omni.top-academy.ru/homework/get-new-homeworks", "POST", null).then((data) => {
-            data = JSON.parse(data);
+						#myDialog.home_work_modal .hw-md_stud-work__btns-more {z-index: 10; position: relative; filter: none}
+						#myDialog.home_work_modal .hw-md_stud-work__btns-more button {filter: none; pointer-events: all; z-index: 1}						
+					`)
+				} else {
+					RemoveStyle('RateAndSendUsage')
+				}
+			});
+			
+			
+			RateButton.addEventListener('click', () => { runSendingAction(false) })
+			whatIsItButton.addEventListener('click', () => { runSendingAction(true) })
+        }
 
-            CurrentHomeworks = data.homework.reverse();
-            const downloadUrls = CurrentHomeworks.map((obj) => obj.download_url_stud);
-            const PreviewPlaces = document.querySelectorAll(".hw-md_single_stud-work__outer");
 
-            if (document.getElementById("FillScreenViewer") === null) {
-                CreateFullscreenViewAPI();
-            }
+		if (!previousGetNewHwIsParsing) {
+			previousGetNewHwIsParsing = true;
+			SendPacket("https://omni.top-academy.ru/homework/get-new-homeworks", "POST", null).then((data) => {
+				previousGetNewHwIsParsing = false;
+				data = JSON.parse(data);
 
-            for (var i = 0; i < PreviewPlaces.length; i++) {
-                try {
-                    CreateRemoteViewAPI(downloadUrls[i], PreviewPlaces[i]);
+				CurrentHomeworks = data.homework.reverse();
+				const downloadUrls = CurrentHomeworks.map((obj) => obj.download_url_stud);
+				PreviewPlaces = document.querySelectorAll(".hw-md_single_stud-work__outer");
 
-                    if (document.getElementById("ActiveImage" + i) === null) {
-                        var ImgPreviewDiv = document.createElement("div");
-                        ImgPreviewDiv.innerHTML =
-                            `
-<img class='imgActiveImage' src=` +
-                            downloadUrls[i] +
-                            ` style="max-height: 0px" id="ActiveImage` +
-                            i +
-                            `" onload="this.style=''; this.style.display='block'" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
-<video class='imgActiveImage' src=` +
-                            downloadUrls[i] +
-                            ` style="max-height: 0px" autoplay muted loop id="ActiveVideo` +
-                            i +
-                            `" onloadeddata="this.style=''; this.style.display='block'" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
-`;
-                        PreviewPlaces[i].after(ImgPreviewDiv);
-                        let img = document.querySelector(`img#ActiveImage${i}`);
-                        img.addEventListener("click", function () {
-                            OpenImageOnFullscreen(img.src);
-                        });
+				if (document.getElementById("FillScreenViewer") === null) {
+					CreateFullscreenViewAPI();
+				}
 
-                        let video = document.querySelector(`video#ActiveVideo${i}`);
-                        video.addEventListener("click", function () {
-                            OpenImageOnFullscreen(img.src, true);
-                        });
-                    }
-                } catch (e) {
-                    console.error(e);
-                }
-            }
-        });
-    } else {
-        RemoveStyle("FullScreenHomeWork");
-    }
+				for (var i = 0; i < PreviewPlaces.length; i++) {
+					try {
+						CreateRemoteViewAPI(downloadUrls[i], PreviewPlaces[i]);
+
+						if (document.getElementById("ActiveImage" + i) === null) {
+							var ImgPreviewDiv = document.createElement("div");
+							ImgPreviewDiv.innerHTML =
+								`
+	<img class='imgActiveImage' src=` +
+								downloadUrls[i] +
+								` style="max-height: 0px" id="ActiveImage` +
+								i +
+								`" onload="this.style=''; this.style.display='block'" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
+	<video class='imgActiveImage' src=` +
+								downloadUrls[i] +
+								` style="max-height: 0px" autoplay muted loop id="ActiveVideo` +
+								i +
+								`" onloadeddata="this.style=''; this.style.display='block'" onerror="this.style.display='none'" style="border-radius:20px; width:100%; cursor:pointer;">
+	`;
+							PreviewPlaces[i].after(ImgPreviewDiv);
+							let img = document.querySelector(`img#ActiveImage${i}`);
+							img.addEventListener("click", function () {
+								OpenImageOnFullscreen(img.src);
+							});
+
+							let video = document.querySelector(`video#ActiveVideo${i}`);
+							video.addEventListener("click", function () {
+								OpenImageOnFullscreen(img.src, true);
+							});
+						}
+					} catch (e) { previousGetNewHwIsParsing = false; }
+				}
+			});
+		}
+	} else {
+		PreviewPlaces = [];
+		RemoveStyle("FullScreenHomeWork");
+	}
     setTimeout(ShowImageIfAvaiable, 1000);
 }
 
@@ -860,6 +1084,28 @@ function InjectBasicStyles() {
 		.presents .number .user-photo__presents:hover {scale: 1.1}
 		.presents .number .user-photo__presents:active {scale: 1.2}
 	}
+	
+	body.main .loader {
+		top: 50%;
+		left: 50%;
+		position: fixed;
+		width: fit-content;
+		transform: translate(50%, 50%);
+		height: fit-content;
+		z-index: 123123;
+	}
+
+	loading {
+		width: auto;
+		position: absolute;
+		display: block;
+		height: auto;
+		top: 0px;
+		left: 0px;
+		z-index: 0;
+	}
+	
+	
 	`;
     let st = document.createElement("style");
     st.textContent = code;

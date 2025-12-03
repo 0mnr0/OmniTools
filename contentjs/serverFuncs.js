@@ -140,7 +140,6 @@ function ReplaceAnyAvatars() {
 	function CreateBirthDayBadge(element, isBirthDay) {
 		if (isBirthDay && element.parentElement && element.parentElement.querySelector('img.birthdayBadge') === null) {
 			let birthdayBadge = document.createElement('img');
-			console.log(birthdayBadge);
 			birthdayBadge.className = 'birthdayBadge';
 			birthdayBadge.title='По нашим данным у ученика сегодня день рождения';
 			birthdayBadge.src = 'https://github.com/0mnr0/WallpaperInJournal/blob/main/UIData/badges_images/birthday.png?raw=true';
@@ -153,7 +152,6 @@ function ReplaceAnyAvatars() {
 		let KeyName = Object.keys(AvatarsData)[i];
 		let RightAvatar = AvatarsData[KeyName];
 		const isBirthDay = RightAvatar.indexOf('?isBirthday=true') > 0;
-		console.log(RightAvatar + " | " + isBirthDay);
 		if (isBirthDay) { RightAvatar = RightAvatar.replaceAll('?isBirthday=true', '') }
 
 		if (document.querySelector("span.reviews-container") === null) { 
@@ -218,15 +216,9 @@ function LoadCustomAvatars(){
 					let StudentData = res[i];
 					if (UIStudent.photo !== null) {
 						let isBirthday = false;
-						
-						if (typeof UIStudent.birthday === 'string') {
-							console.log(currentDate, UIStudent.birthday+'.indexOf("'+currentDate+'"): '+(UIStudent.birthday.indexOf(currentDate)));
-						}
 						if (typeof UIStudent.birthday === 'string' && UIStudent.birthday.indexOf(currentDate) >= 0) {
 							isBirthday = true;
 						}
-						console.log(currentDate);
-
 						AvatarsData[StudentData.photo_pas] = baseURL+'/Data/JournalData/'+ProcessedList[i]+'/'+UIStudent.photo + ( isBirthday ? "?isBirthday=true" : "" );
 					}
 				}
