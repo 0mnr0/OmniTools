@@ -62,17 +62,18 @@ const height = "330px";
 
 const Changes = `
 <h2 id="changesCurrentVersion"><b> Omni Tools </b></h2>
-<span style="font-size: 10px; margin-top: 0px"> 1.5.1 -> 1.5.2 </span>
+<span style="font-size: 10px; margin-top: 0px"> 1.5.2 -> 1.6.0 </span>
 <br><br><br>
 
 <span class="New">
 <b> Новое: </b><br>
-+ Обновление моделей, не зависящих от моего сервера <br>
++ Добавлена функция Rate&Send <br>
++ Исправлено отображение .py, .ino, .pdf файлов <br>
 </span><br>
 
 <span class="Changed">
 <b> Изменено / исправлено: </b><br>
-~ Обновление пути во избежании ошибок следующих обновлений сервера<br>
++ Обновление моделей, не зависящих от моего сервера <br>
 </span><br>
 
 

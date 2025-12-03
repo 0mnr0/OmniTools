@@ -627,6 +627,8 @@ function DisplayRender(res, urlToHomework, placement) {
     } else if (res.displayAs === "pdf") {
         content = `<iframe class="pdfViewer" src="${baseURL}/homework/pdfPreview/` + res.AdditionalInfo + '"></iframe>';
     }
+	
+	content = content.replaceAll('\n', '<br>')
 
     let DisplayingDiv = document.createElement("div");
     DisplayingDiv.setAttribute("previewurl", urlToHomework);
