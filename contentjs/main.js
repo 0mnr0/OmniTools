@@ -730,6 +730,7 @@ function runSendingAction(isTutorial) {
 	btnCancel.addEventListener('click', () => {
 		canceled = true;
 		btnCancel.disabled = true;
+		btnCancel.textContent = "Отменяем...";
 		if (ended) {
 			infoPopup.remove();
 		}
@@ -794,7 +795,7 @@ function runSendingAction(isTutorial) {
 			
 			try{
 				function StartSendingDatas() {
-					if (canceled) {ended=true; return}
+					if (canceled) {ended=true; onEndSending(); return}
 					if (currentIndex >= maxSendingDataLength-1 || (failedCount + okCount) >= maxSendingDataLength-1) {
 						onEndSending();
 						infoElement.textContent = `Операция окончена. Обновляем список заданий на проверку...`
