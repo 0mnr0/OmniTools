@@ -1076,18 +1076,6 @@ function InjectBasicStyles() {
 		left: 0px;
 	}
 	
-	@media (max-width: 1300px) {
-		.wrapper-students table.table tr.presents_stud .number .user-photo span img.birthdayBadge {
-			position: relative !important;
-			top: 15px;
-			left: -5px;
-		}
-		
-		.wrapper-students table.table tr.presents_stud .number { z-index: 5 }
-		.presents .number .user-photo__presents:hover {scale: 1.1}
-		.presents .number .user-photo__presents:active {scale: 1.2}
-	}
-	
 	body.main .loader {
 		top: 50%;
 		left: 50%;
@@ -1108,6 +1096,78 @@ function InjectBasicStyles() {
 		z-index: 0;
 	}
 	
+	.table-wrapper.wrapper-students table td.name p.timeMissUp {
+		top: -14px;
+		position: relative
+	}
+	
+	.table-wrapper.wrapper-students span.timeMiss {
+		position: absolute;
+		padding: 4px 8px;
+		white-space: nowrap;
+		color: white;
+		font-weight: 500;
+		border-radius: 10px;
+		font-size: 14px;
+		left: 5px;
+		bottom: 3px
+	}
+	
+	
+	.table-wrapper.wrapper-students span.timeMiss.miss15 {
+		background: #a38800;
+	}
+	.table-wrapper.wrapper-students span.timeMiss.miss30 {
+		background: #af6900;
+	}
+	.table-wrapper.wrapper-students span.timeMiss.missunk {
+		background: #b54300;
+	}
+	.table-wrapper.wrapper-students span.timeMiss.colorUnknown {
+		background: #595959;
+	}
+	
+	ul.pars li.tab.active {
+		pointer-events: none;
+		cursor: pointer;
+	}
+	
+	
+	@media (max-width: 1300px) {
+		.wrapper-students table.table tr.presents_stud .number .user-photo span img.birthdayBadge {
+			position: relative !important;
+			top: 15px;
+			left: -5px;
+		}
+		
+		.wrapper-students table.table tr.presents_stud .number { z-index: 5 }
+		.presents .number .user-photo__presents:hover {scale: 1.1}
+		.presents .number .user-photo__presents:active {scale: 1.2}
+		
+		.wrapper-students table.table tr.presents_stud.timeMissUp {
+			
+		}
+		
+		.wrapper-students table.table tr.presents_stud.timeMissBlock {
+			padding-top: 75px;
+		}
+		
+		.table-wrapper.wrapper-students span.timeMiss {
+			width: 100%;
+			-webkit-line-clamp: 3;
+			left: 0px;
+			bottom: 65px;
+			white-space: normal;
+			height: 48px;
+		}
+	}
+	
+	
+	@media (min-width: 1900px) {
+		.table-wrapper.wrapper-students span.timeMiss {
+			bottom: 12px
+		}
+	}
 	
 	`;
     let st = document.createElement("style");
