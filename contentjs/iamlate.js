@@ -37,8 +37,7 @@ function RunPresentsCode() {
 	let tabList = document.querySelectorAll('.presents .pars li');
 	let activeTab = document.querySelector('.presents .pars li.active');
 	let today = new Date().toLocaleDateString('en-CA')
-	
-	console.log(activeTab)
+
 	if (activeTab === null || groupName === null) return; // Not Loaded Yet.
 	
 	let currentPos = -1;
@@ -93,7 +92,7 @@ function LoadMissedTable(groupId, presentsRes) {
 		
 		let studentDisplayedList = document.querySelectorAll(".table-wrapper.wrapper-students tbody tr.presents_stud")
 		
-		for (let i = 0; i < 3; i++) {
+		for (let i = 0; i < studentDisplayedList.length; i++) {
 			let parsedStudent = presentsRes.students[i];
 			let displayedStudent = studentDisplayedList[i];
 			
