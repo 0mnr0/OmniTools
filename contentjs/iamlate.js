@@ -70,7 +70,7 @@ function RunPresentsCode() {
 			let groupId = res.cur_group;
 			lastSelectedGroup = groupId;
 			lastParsedPresents = res;
-			LoadMissedTable(groupId, res);
+			LoadMissedTable(Number(groupId), res);
 		})
 		.catch((error) => {
 			missPresentsLoaded = false;
@@ -87,7 +87,7 @@ function RunPresentsCode() {
 function LoadMissedTable(groupId, presentsRes) {
 	fetchData(`/api/late/get`, 'POST', {
 		cityId: cityId, // cityId
-		groupId: 1495   // groupId
+		groupId: groupId   // groupId
 	}).then(res => {
 		if (!res.success) return;
 		
