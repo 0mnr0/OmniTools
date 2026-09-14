@@ -114,6 +114,7 @@ function LoadMissedTable(groupId, presentsRes) {
 
 function GenerateLateMark(StudInfo) {
 	let lateMark = document.createElement('span');
+	if (StudInfo.late === "?") StudInfo.late = "unk"; // client-side patch
 	lateMark.className = "timeMiss miss"+StudInfo.late
 	
 	let vals = {
