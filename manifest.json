@@ -1,27 +1,46 @@
 {
   "name": "Omni Tools",
   "description": "Just some features for Omni (top-academy)",
-  "version": "1.7.0",
+  "version": "2.0.0",
   "author": "savelijln0@gmail.com",
   "manifest_version": 3,
   "permissions": [
 		"cookies",
+		"storage",
 		"webRequest"
   ],
   "background": {
-    "service_worker": "background/background.js"
+	  "service_worker": "background/background.js",
+	  "type": "module"
   },
   "icons": {
 	"128": "OmniTools_128x128.png"
   },
   "content_scripts": [
     {
-		"js": ["contentjs/databases.js", "contentjs/main.js", "contentjs/serverFuncs.js", "contentjs/onStartupParser.js", "contentjs/iamlate.js", "contentjs/settings.js"],
+		"js": [
+			"scripts/libs/flubber.js",
+			"scripts/libs/M3Loader.js",
+			"scripts/libs/LightCore.js",
+			"scripts/libs/UniqueColor.js",
+			"scripts/libs/toaster.js",
+			"scripts/libs/purify.min.js",
+			"scripts/libs/DBStore.js",
+			"scripts/darkTheme.js",
+			"scripts/parsers.js",
+			"scripts/codeBunch.js",
+			"scripts/HomeworkPreview.js",
+			"scripts/styles.js",
+			"scripts/homeworkPage.js",
+			"scripts/pageHook.js",
+			"scripts/Settings.js"
+		],
+		"css": ["etc/static.css"],
         "matches": ["https://omni.top-academy.ru/*"]
     }
   ],
   "action": {
-    "default_popup": "popup/popup.html",
+    "default_popup": "popup/settings.html",
     "default_icon" : "OmniTools_128x128.png"
   },
   "host_permissions": [

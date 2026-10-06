@@ -1,3 +1,7 @@
+import IDBSettings from "./DBStore.js";
+IDBSettings.registerBridge();
+
+
 const DOMAIN = "omni.top-academy.ru";
 const COOKIE_NAME = "city_id";
 
@@ -20,8 +24,6 @@ function getCityID(callback) {
         callback(cityID);
     });
 }
-
-
 
 
 const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
@@ -77,13 +79,6 @@ const Settings = {
 
 
 
-async function loadPacks() {
-  const url = chrome.runtime.getURL("etc/packs.json");
-  const response = await fetch(url);
-  const data = await response.json();
-  return data
-}
-
 const DefaultValues = {
 	// SettingName: value,
 };
@@ -93,7 +88,6 @@ const DefaultValues = {
 
 
 async function SetupDefault () {
-	const BuiltinPacks = await loadPacks();
 	const UserSettings = await Settings.getAll();
 	
 	const DefaultValuesKeys = Object.keys(DefaultValues);
@@ -111,31 +105,35 @@ SetupDefault();
 
 
 
-BrowserContext.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
-	if (msg.type === "OTools.events.SettingsChange") {
-	    const tabs = await BrowserContext.tabs.query({});
-	    await SetupDefault();
-	  	  
-	  
-	    for (const tab of tabs) {
-			try {
-			    await BrowserContext.tabs.sendMessage(tab.id, {
-					type: "OTools.events.SettingsChange"
-			    });
-			} catch(e) {
-				log(e)
+BrowserContext.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+	if (msg.type === "OmniTools.events.SettingsChange") {
+		console.log("Settings changed!");
+	    (async () => {
+			const tabs = await BrowserContext.tabs.query({});
+			await SetupDefault();
+
+			for (const tab of tabs) {
+				try {
+					await BrowserContext.tabs.sendMessage(tab.id, {
+						type: "OmniTools.events.SettingsChange"
+					});
+				} catch (e) {
+					log(e);
+				}
 			}
-	    }
+		})();
+		return false;
 	}
 	
-	if (message.type === "getCityID") {
+	if (msg.type === "getCityID") {
         getCityID((cityID) => sendResponse({ cityID }));
         return true; 
     }
 	
-	if (message.type === "VersionBumper") {
+	if (msg.type === "VersionBumper") {
         sendResponse({ status: BrowserContext.runtime.getManifest() });
+		return false;
     }
-	
-	
+
+	return false;
 });
