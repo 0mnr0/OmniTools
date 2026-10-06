@@ -258,6 +258,8 @@ const darkThemeCssContent = `
 	div.CustomHWDiv div.content div.hwBlock div.info div.HwActions span[ico] {
 		color: white !important;
 	}
+	
+	body div.CustomHWDiv div.topPanel div.backGuestures > img {filter: none }
 `
 
 const IFrameDarkCssPatch = `

@@ -32,6 +32,10 @@ styles.textContent = `
 	width: 0;
 	height: 0;
 }
+
+.md-dialog-container {
+	height: 100% !important;
+}
  
 .input-file input[type=file]:focus + span {
 	box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
@@ -152,6 +156,7 @@ div.CustomHWDiv div.topPanel div.backGuestures img {
 	background: transparent;
 	scale: 1.1;
 	padding: 2px;
+	filter: invert(1);
 	border-radius: 5px
 }
 
