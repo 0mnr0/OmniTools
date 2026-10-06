@@ -33,10 +33,7 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 	function updateProgressTitle() {
 		let taskProgress = (progressData.task / progressData.totalTasks) * 100;
 		let hwProgress = (progressData.homework / progressData.total) * 100;
-		previewProgress.setAttribute("title", `
-			Загрузка предпросмотра учеников: ${Math.round(hwProgress)}% \n
-			Загрузка предпросмотра преподавателей: ${Math.round(taskProgress)}%
-		`);
+		previewProgress.setAttribute("title", `Загрузка предпросмотра учеников: ${Math.round(hwProgress)}%\nЗагрузка предпросмотра преподавателей: ${Math.round(taskProgress)}%`);
 	}
 
 	function bumpTaskCounter() {

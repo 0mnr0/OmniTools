@@ -12,6 +12,10 @@ function downloadFile(url, fileName) {
   document.body.removeChild(a);
 }
 
+function getIcon(path) {
+	return BrowserContext.runtime.getURL(path)
+}
+
 const IFrameMetaPatch = `
 <meta charset="utf-8">
 `

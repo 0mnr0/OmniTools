@@ -39,6 +39,20 @@
         "matches": ["https://omni.top-academy.ru/*"]
     }
   ],
+  "web_accessible_resources": [
+	  {
+		"resources": [
+			"icons/general.svg",
+			"icons/search.svg",
+			"icons/fullscreen.svg",
+			"icons/fullscreen_close.svg",
+			"icons/cancel.svg",
+			"icons/close.svg"
+		],
+		"matches": ["https://omni.top-academy.ru/*"]
+	  }
+  ],
+
   "action": {
     "default_popup": "popup/settings.html",
     "default_icon" : "OmniTools_128x128.png"

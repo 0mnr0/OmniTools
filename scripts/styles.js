@@ -89,7 +89,20 @@ div.CustomHWDiv {
 	border-radius: 16px;
 	background: white;
 	display: flex;
-	flex-direction: column
+	flex-direction: column;
+	transition: all .2s;
+}
+
+div.CustomHWDiv.fullscreen {
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0px;
+    padding-bottom: 0px;
+}
+
+html.no-scrollbar {
+	overflow: hidden !important;
 }
 
 div.CustomHWDiv m3loader {
@@ -129,10 +142,22 @@ div.CustomHWDiv div.topPanel div.backGuestures {
 	position: absolute;
 	top: 0px;
     right: 0px;
-	height: 18px;
+	height: 22px;
 	gap: 10px;
 }
 
+div.CustomHWDiv div.topPanel div.backGuestures img {
+	cursor: pointer;
+	transition: all .2s;
+	background: transparent;
+	scale: 1.1;
+	padding: 2px;
+	border-radius: 5px
+}
+
+div.CustomHWDiv div.topPanel div.backGuestures img:hover {
+	background: #80808040;
+}
 
 div.CustomHWDiv div.topPanel img#close {
     position: relative;
@@ -149,6 +174,7 @@ div.CustomHWDiv div.topPanel img#close {
 div.CustomHWDiv div.content {
 	border-top: 1px solid gray;
 	padding-top: 10px;
+	padding-right: 10px;
 	width: 100%;
 	overflow: auto
 }
@@ -426,7 +452,8 @@ div.CustomHWDiv div.content div.hwBlock div.denialDivide {
 
 div.CustomHWDiv div.hwPreview.hideBlock {
     width: 0%;
-	padding: 0px;
+    padding: 0px !important;
+    border: none !important;
 }
 
 div.CustomHWDiv div.hwPreview {
@@ -434,12 +461,19 @@ div.CustomHWDiv div.hwPreview {
     width: 100%;
     transition: all .5s ease-out;
     interpolate-size: allow-keywords;
+	border: solid 1px #808080b0;
+	border-radius: 12px;
     overflow: hidden;
     max-width: 33%;
 }
 
 div.CustomHWDiv div.hwPreview.teacherPreview {
 	padding-right: 0px;	
+	padding-left: 3px;	
+}
+
+div.CustomHWDiv div.hwPreview.studentPreview.asClient {
+    padding-right: 0px;
 }
 
 div.CustomHWDiv div.hwPreview.asClient {
@@ -473,15 +507,14 @@ div.CustomHWDiv div.hwPreview m3loader span {
 div.CustomHWDiv div.hwPreview iframe.HTMLContent {
 	width: 100%; 
 	height: 100%;
-	border: solid 1px #808080b0;
 	border-radius: 12px;
 	padding: 6px
 }
 
-div.CustomHWDiv div.hwPreview.teacherPreview iframe.HTMLContent, div.CustomHWDiv div.hwPreview.teacherPreview.asClient {
+div.CustomHWDiv div.hwPreview.teacherPreview {
     border-right: solid 3px orangered;
 }
-div.CustomHWDiv div.hwPreview.studentPreview iframe.HTMLContent, div.CustomHWDiv div.hwPreview.studentPreview.asClient {
+div.CustomHWDiv div.hwPreview.studentPreview {
 	border-left: solid 3px green;
 }
 

@@ -78,7 +78,8 @@ function OpenCustomHomeworkWindow() {
 				
 				<div class="backGuestures">
 					<span id="back"> Вернуться </span>			
-					<img id="close" src="/img/home-work/close.png">
+					<img id="fullscreen" src="${getIcon('/icons/fullscreen.svg')}">
+					<img id="close" src="${getIcon('/icons/cancel.svg')}">
 				</div>
 			</div>
 			
@@ -103,6 +104,19 @@ function OpenCustomHomeworkWindow() {
 	closeBtn.onclick = () => {
 		Win.destroy();
 		lastData = {};
+	}
+	
+	let fullscreenBtn = Win.find('div.topPanel div img#fullscreen')
+	fullscreenBtn.onclick = () => {
+		if (Win.classList.contains("fullscreen")) {
+			Win.classList.remove("fullscreen");
+			document.head.parentElement.classList.remove("no-scrollbar");
+			fullscreenBtn.src = getIcon("/icons/fullscreen.svg");
+		} else {
+			Win.classList.add("fullscreen");
+			document.head.parentElement.classList.add("no-scrollbar");
+			fullscreenBtn.src = getIcon("/icons/fullscreen_close.svg");
+		}
 	}
 	
 	let backBtn = Win.find('div.topPanel div span#back')
