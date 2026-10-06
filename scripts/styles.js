@@ -226,6 +226,7 @@ div.CustomHWDiv div.content div.hwBlock.busy {
 
 div.CustomHWDiv div.content div.hwBlock div.info {
 	width: 100%;
+	min-width: 33%;
 }
 
 div.CustomHWDiv div.content div.hwBlock div.info > block1, div.CustomHWDiv div.content div.hwBlock div.info > block2 {
@@ -451,29 +452,21 @@ div.CustomHWDiv div.content div.hwBlock div.denialDivide {
 }
 
 div.CustomHWDiv div.hwPreview.hideBlock {
+	min-width: 0%;
     width: 0%;
     padding: 0px !important;
     border: none !important;
 }
 
 div.CustomHWDiv div.hwPreview {
-    padding: 0px 10px;
     width: 100%;
     transition: all .5s ease-out;
     interpolate-size: allow-keywords;
-	border: solid 1px #808080b0;
-	border-radius: 12px;
+    border: solid 1px #808080b0;
+    border-radius: 12px;
     overflow: hidden;
-    max-width: 33%;
-}
-
-div.CustomHWDiv div.hwPreview.teacherPreview {
-	padding-right: 0px;	
-	padding-left: 3px;	
-}
-
-div.CustomHWDiv div.hwPreview.studentPreview.asClient {
-    padding-right: 0px;
+    max-width: 50%;
+	min-width: 33%;
 }
 
 div.CustomHWDiv div.hwPreview.asClient {
@@ -483,12 +476,14 @@ div.CustomHWDiv div.hwPreview.asClient {
     border-radius: 12px;
     border: none;
     width: 100%;
-    padding: 20px;
-    padding-left: 10px;
 }
 
-div.CustomHWDiv div.hwPreview.studentPreview {
-	padding-left: 0px
+div.CustomHWDiv div.hwPreview.teacherPreview.asClient {
+    padding-right: 12px;
+}
+
+div.CustomHWDiv div.hwPreview.studentPreview.asClient {
+    padding-left: 12px;
 }
 
 div.CustomHWDiv div.hwPreview.asClient img#IMAGEContent, div.CustomHWDiv div.hwPreview.asClient video#VIDEOContent {
@@ -501,7 +496,7 @@ div.CustomHWDiv div.hwPreview.asClient img#IMAGEContent, div.CustomHWDiv div.hwP
 
 div.CustomHWDiv div.hwPreview m3loader span {
 	top: 130%;
-	colotr: #1c8974
+	color: #1c8974
 }
 
 div.CustomHWDiv div.hwPreview iframe.HTMLContent {
