@@ -268,9 +268,6 @@ div.CustomHWDiv .topLine select#reviewTypes {
 }
 
 
-div.CustomHWDiv div.content div.hwBlock div.info span.theme {
-    margin-bottom: 12px;
-}
 div.CustomHWDiv div.content div.hwBlock div.info .b500 {
     font-weight: 500
 }
@@ -278,6 +275,7 @@ div.CustomHWDiv div.content div.hwBlock div.info .b500 {
 div.CustomHWDiv div.content div.hwBlock div.info div.HwActions {
     display: flex;
     flex-direction: column;
+    margin: 16px 0px;
 }
 
 div.CustomHWDiv div.content div.hwBlock div.info div.HwActions > div {
@@ -330,7 +328,7 @@ div.CustomHWDiv div.content div.hwBlock div.info span[ico]::before {
 }
 
 div.CustomHWDiv div.content div.SetMark, div.CustomHWDiv div.content div.Comment {
-    margin-top: 16px;
+    padding-top: 16px;
 }
 
 div.CustomHWDiv div.content div.SetMark h4, div.CustomHWDiv div.content div.Comment h4 {
@@ -358,18 +356,24 @@ div.CustomHWDiv div.content div.Comment textarea {
 }
 
 div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span {
-    width: 33px;
-    height: 33px;
+    width: auto;
+    height: 38px;
+    aspect-ratio: 1/1;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0px;
-    padding: 0px;
-    font-size: 110%;
+    font-size: 125%;
     border: solid 1px gray;
     font-weight: 300;
     border-radius: 10px;
     cursor: pointer;
+    padding: 4px;
+}
+
+div.CustomHWDiv div.content div.hwBlock div.info span b,
+div.CustomHWDiv div.content div.hwBlock div.info div.HwActions span[ico] {
+	color: black;
 }
 
 .noselect {

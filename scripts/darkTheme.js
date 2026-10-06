@@ -6,6 +6,7 @@ const darkThemeCssContent = `
 		--accent-text: #fff5ec;
 		--accent-red: #ff8080;
 		--accent-input-bg: #232323;
+		--accent-toolbar-0: #54b18d;
 		--accent-toolbar-1: #438f72;
 		--accent-toolbar-2: #2e7359;
 	}
@@ -36,11 +37,16 @@ const darkThemeCssContent = `
 		color: var(--accent-text);
 	}
 	
+	.internal-wrap-global .btn {
+		background: var(--accent-toolbar-1) !important;
+	}
+	
 	.md-open-menu-container md-menu-content, 
 	.dossier.row, .dossier.row .header,
 	.dossier.row .dossier__rating .rating__item,
 	.dossier.row .dossier__graph .graph__item,
-	.dossier.row .dossier__graph .dossier__subjects {
+	.dossier.row .dossier__graph .dossier__subjects,
+	.home_work-table .hw_buttons.hw_new {
 		background: var(--accent-0);
 	}
 	
@@ -50,7 +56,9 @@ const darkThemeCssContent = `
 	.presents .table>thead>tr>th {
 		background: var(--accent-2) !important;
 	}
-	.internal-wrap-global md-select {
+	
+	.internal-wrap-global md-select, .presents .presents__lesson-topic .presents__lesson-topic-controls textarea
+	{
 		background: var(--accent-1);
 		color: var(--accent-text);
 	}
@@ -184,7 +192,8 @@ const darkThemeCssContent = `
 		background: var(--accent-1);
 	}
 	
-	.students .card .card-fio span {
+	.students .card .card-fio span, 
+	md-input-container.md-input-focused .md-input, md-input-container.md-input-resized .md-input, md-input-container .md-input.ng-invalid.ng-dirty {
 		color: var(--accent-text);
 	}
 	
@@ -211,8 +220,15 @@ const darkThemeCssContent = `
 		background: var(--accent-2);
 	}
 	
-	div.CustomHWDiv .topLine select#reviewTypes {
-		
+	.tabs-global ul li a, .presents .pars li a, .presents .groups li a{
+		background: var(--accent-toolbar-2) !important;
+		color: var(--accent-text) !important;
+		filter: brightness(1.02)
+	}
+	
+	.presents .pars li.active a, .presents .groups li.active a, .tabs-global ul li a.active {
+		background: var(--accent-toolbar-0) !important;
+		color: var(--accent-text) !important;
 	}
 	
 	.content__author .content-inner input {
@@ -230,6 +246,17 @@ const darkThemeCssContent = `
 	
 	body div.CustomHWDiv div.content div.hwBlock div.info div.HwActions .StudentResponse.visible {
 		border-color: white
+	}
+	
+	div.CustomHWDiv div.content div.hwBlock div.info div.HwActions,
+	div.CustomHWDiv div.content div.hwBlock div.info span.theme,
+	div.CustomHWDiv div.content div.hwBlock div.info span.group {
+		color: #ffffffb5;
+	}
+	
+	div.CustomHWDiv div.content div.hwBlock div.info span b,
+	div.CustomHWDiv div.content div.hwBlock div.info div.HwActions span[ico] {
+		color: white !important;
 	}
 `
 
