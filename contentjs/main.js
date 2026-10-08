@@ -138,15 +138,7 @@ function GetAllPrompts() {
   });
 }
 
-
-async function FeedbackAi() {
-    //Список моделей на сайте
-    let AINameList = ["Auto (Recommended)", "Google Gemma (Recommended)", "DeepSeek", "Qwen3"];
-    //Список используемых нейросетей
-    let AIProvidesList = ["JournalUI: Server", "google/gemma-3-27b-it:free", "deepseek/deepseek-chat-v3-0324:free", "qwen/qwen3-coder:free"];
-
-    //Функция отправки запроса с ожиданием ответа
-    function sendRequest(method, url, senddata) {
+function sendRequest(method, url, senddata) {
         try {
             return new Promise((resolve, reject) => {
                 fetch(url, {
@@ -168,12 +160,21 @@ async function FeedbackAi() {
                     .catch((error) => reject(error));
             });
         } catch (e) {
-            alert(e);
+            console.warn(e);
         }
     }
 
-    let feedbackareas = document.querySelectorAll("textarea.textarea-rev"); //Поиск всех textarea для подстановки текста из ИИ
-    let stundentinfodiv = document.querySelectorAll(".col-md-12 .col-md-6:nth-child(1)"); //Поиск div с описанием студента
+async function FeedbackAi() {
+    //Список моделей на сайте
+    let AINameList = ["Auto (Recommended)", "Google Gemma (Recommended)", "DeepSeek", "Qwen3"];
+    //Список используемых нейросетей
+    let AIProvidesList = ["JournalUI: Server", "google/gemma-3-27b-it:free", "deepseek/deepseek-chat-v3-0324:free", "qwen/qwen3-coder:free"];
+
+    //Функция отправки запроса с ожиданием ответа
+    
+
+    let feedbackareas = document.querySelectorAll(".review-workspace .review-editor md-input-container textarea.md-input"); //Поиск всех textarea для подстановки текста из ИИ
+    let stundentinfodiv = document.querySelectorAll("section.review-card-panel div.review-card-section div.review-metrics"); //Поиск div с описанием студента
 
     while (document.getElementById("AIButton") !== null) {
         document.getElementById("AIButton").remove();
@@ -184,22 +185,19 @@ async function FeedbackAi() {
 
     function PromtPrepare(buttonPosition) {
         let informationdiv = stundentinfodiv[buttonPosition]; //Получение div под номером buttonPosition из списка
-        let information = informationdiv.querySelectorAll("p"); //Получение данных об ученике
+        let information = informationdiv.querySelectorAll("div.review-metric"); //Получение данных об ученике
 
-        let Grade = information[4].textContent.replace("Успеваемость: ", "");
-        if (Grade !== NaN && Grade !== null) {
-			let PromtText =
-'Привет! Я преподаватель в колледже и мне нужно составить простой и краткий отзыв для ученика (не более 2-3 предложений). Прошу тебя помочь с написанием отзыва, заранее большое спасибо. Напиши отзыв от имени учителя, без приветствий, начальных вступлений и без конечного вывода, не растягивая отзыв. Пиши просто: короткие фразы, без усложнений. Избегай ИИ-клише: не используй штампы типа «погрузитесь», «раскрой потенциал», «решение нового уровня». Не парься про идеальную грамматику: можно без заглавных, без сложных конструкций. Избегай часто используемых общих слов и фраз! :) Желательно написать отзыв без чисел с процентами и применить "креативность". Вот некоторая информация о нем: Ученика звать - ' +
-                information[5].textContent.replace("ФИО: ", "") +
-                ", средняя посещаемость: " +
-                information[3].textContent.replace("Посещаемость: ", "") +
-                ", а средняя успеваемость:" +
-                Grade +
-                " из " +
-                MaxMark +
-                ". (Предмет: " +
-                information[6].textContent.replace("Предмет:", "") +
-                ").";
+		for (let i = 0; i < information.length; i++) {
+			console.log(information);
+		}
+		
+        //let Grade = information[4].textContent.replace("Успеваемость: ", "");
+		let PromtText =
+			'Привет! Я преподаватель в колледже и мне нужно составить простой и краткий отзыв для ученика (не более 2-3 предложений). Прошу тебя помочь с написанием отзыва, заранее большое спасибо. Напиши отзыв от имени учителя, без приветствий, начальных вступлений и без конечного вывода, не растягивая отзыв. Пиши просто: короткие фразы, без усложнений. Избегай ИИ-клише: не используй штампы типа «погрузитесь», «раскрой потенциал», «решение нового уровня». Не парься про идеальную грамматику: можно без заглавных, без сложных конструкций. Избегай часто используемых общих слов и фраз! :) Желательно написать отзыв без чисел, если надо - привести проценты. Вот некоторая информация о нем: Ученика зовут - '
+             
+        if (false) {
+			   
+				
             return PromtText;
         } else {
             return false;
@@ -371,17 +369,14 @@ async function FeedbackAi() {
     //Применение
     AISelection.innerHTML = selectionInner;
     if (document.getElementById("AISelection") === null) {
-        if (document.getElementById("JournalUIWarn") === null &&  document.querySelector("span.reviews-container")) {
-            document.querySelector("span.reviews-container").before(AISelection);
-        } else {
-            document.getElementById("JournalUIWarn").after(AISelection);
-        }
+		let placement = document.querySelector("div.students.tasks div.internal-wrap-global aside.review-queue-panel div.review-mode-tabs");
+        placement.after(AISelection);
     }
 
     if (document.getElementById("JournalUIWarn") === null) {
         let UIWarn = document.createElement("span");
         UIWarn.textContent = "Возможности нек-ых нейросетей зависят от сервера Journal UI";
-        UIWarn.style = "padding: 5px; background: rgb(199 91 26 / 86%); margin: 0px 20px 10px 10px; width: fit-content; border-radius: 200px; color: white; font-size: smaller;";
+        UIWarn.style = "padding: 8px; background: rgb(199 91 26 / 86%); margin: 0px 10px; width: fit-content; border-radius: 12px; color: white; font-size: smaller;";
         UIWarn.id = "JournalUIWarn";
         document.querySelector("select#AISelection").after(UIWarn);
     } else {
@@ -495,8 +490,8 @@ async function FeedbackAi() {
 
 
 function checkFeedbackOpened() {
-    if (document.querySelector("md-dialog.reviews-modal.reviews-modal-comments.layout-padding") !== null && document.getElementById("AIButton") === null) {
-        setTimeout(FeedbackAi, 1000);
+    if (document.querySelector("section.review-card-panel div.review-card div.review-card-scroll") !== null && document.getElementById("AIButton") === null) {
+        setTimeout(setGenAi, 1000);
     }
 }
 
@@ -1113,6 +1108,9 @@ function InjectBasicStyles() {
 		bottom: 3px
 	}
 	
+	div.review-card, div.review-card section.review-editor {
+		position: relative;
+	}
 	
 	.table-wrapper.wrapper-students span.timeMiss.miss15 {
 		background: #a38800;
@@ -1130,6 +1128,55 @@ function InjectBasicStyles() {
 	ul.pars li.tab.active {
 		pointer-events: none;
 		cursor: pointer;
+	}
+	
+	div.review-card section.review-editor button#AIGenButton {
+		position: absolute;
+		top: -36px;
+		right: 78px;
+		border-radius: 10px;
+		padding: 8px 15px;
+		color: white;
+		background: #22aa90;
+		transition: all .25s;
+		border: solid 2px #4acdb5;
+	}
+	
+	div.review-card section.review-editor button#AIGenButton:not(.ready):not(.workingOnIt):not(.somethingIsWrong):hover {
+		background: #309380;
+		border-color: #309380;
+	}
+	
+	div.review-card section.review-editor button#AIGenButton.ready {
+		background: #3bab59;
+		pointer-events: none;
+		border-color: #3bab59;
+	}
+	
+	div.review-card section.review-editor button#AIGenButton.workingOnIt {
+		pointer-events: none;
+		animation: workingOnIt infinite 2s ease-in-out;
+		border-color: #22aa90;
+	}
+	
+	div.review-card section.review-editor button#AIGenButton.somethingIsWrong {
+		pointer-events: none;
+		background: #af1919;
+		border-color: #af1919;
+	}
+	
+	@keyframes workingOnIt {
+		0% {
+			filter: grayscale(0);
+		}
+		
+		50% {
+			filter: grayscale(1);
+		}
+		
+		100% {
+			filter: grayscale(0);
+		}
 	}
 	
 	
