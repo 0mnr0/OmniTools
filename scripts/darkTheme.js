@@ -3,6 +3,7 @@ const darkThemeCssContent = `
 		--accent-0: #1c1c1c;
 		--accent-1: #181818;
 		--accent-2: #252525;
+		--accent-5: #4f4f4f;
 		--accent-text: #fff5ec;
 		--accent-red: #ff8080;
 		--accent-input-bg: #232323;
@@ -26,19 +27,59 @@ const darkThemeCssContent = `
 		color: var(--accent-text);
 	}
 	
+	
+	.review-workspace {
+		background: var(--accent-1);
+		color: var(--accent-text);
+	}
+	
 	.lead-form-card, #myDialog.home_work_modal md-dialog,
 	.hw-md_delete .md-dialog-content, body div.CustomHWDiv,
 	div.CustomHWDiv .topLine.filters select#groupSelector,
 	div.CustomHWDiv .topLine.filters input#searchName,
 	.lead-form-card__title, .lead-form-field select, .lead-form-field input,
 	div.CustomHWDiv .topLine select#reviewTypes,
-	div.CustomHWDiv div.content div.Comment textarea {
+	md-dialog#signal-layout, .review-card-panel,
+	.sertificates.profile_page > div,
+	md-select-header input[type=search],
+	
+	.review-workspace .review-mode-tabs, .review-workspace .review-queue-item,
+	.review-workspace .review-editor md-input-container textarea.md-input, 
+	.review-workspace .review-card, .review-lessons-table th:first-child,
+	.review-workspace .review-queue-panel, .review-workspace .review-editor,
+	.review-lessons-table th, .review-lessons-table td, .review-lessons-table thead th,
+	.md-select-menu-container.md-active md-select-menu,
+	div.CustomHWDiv div.content div.Comment textarea
+	{
 		background: var(--accent-2);
 		color: var(--accent-text);
 	}
 	
-	.internal-wrap-global .btn {
-		background: var(--accent-toolbar-1) !important;
+	md-dialog#signal-layout *,
+	.sertificates.profile_page > div md-input-container input, 
+	.review-workspace .review-metrics .review-metric span,
+	.review-workspace .review-metrics .review-metric strong,
+	.review-workspace .review-queue-header h3,
+	.review-workspace .review-card-section h3,
+	.review-workspace .review-queue-student,
+	.review-student-main h2
+	{
+		color: var(--accent-text);
+	}
+	
+	
+	.review-workspace .review-card .review-student-tags span,
+	.review-workspace .review-metrics .review-metric
+	{
+		background: var(--accent-5);
+		color: var(--accent-text);
+	}
+	
+	.review-workspace .review-deadline strong { 
+		filter: brightness(2);
+	}
+	.review-workspace .review-queue-header h3 {
+		opacity: 0.85;
 	}
 	
 	.md-open-menu-container md-menu-content, 
@@ -46,8 +87,13 @@ const darkThemeCssContent = `
 	.dossier.row .dossier__rating .rating__item,
 	.dossier.row .dossier__graph .graph__item,
 	.dossier.row .dossier__graph .dossier__subjects,
+	.profile_page,
 	.home_work-table .hw_buttons.hw_new {
 		background: var(--accent-0);
+	}
+	
+	.review-workspace .review-queue-item.is-selected {
+		filter: brightness(1.15);
 	}
 	
 	.modal-teaching-notifications#signal-layout {
@@ -55,6 +101,14 @@ const darkThemeCssContent = `
 	}
 	.presents .table>thead>tr>th {
 		background: var(--accent-2) !important;
+	}
+	
+	.internal-wrap-global .btn {
+		background: var(--accent-toolbar-1) !important;
+	}
+	
+	.sertificates.profile_page .internal-wrap-global md-select {
+		background: transparent;
 	}
 	
 	.internal-wrap-global md-select, .presents .presents__lesson-topic .presents__lesson-topic-controls textarea
@@ -71,6 +125,10 @@ const darkThemeCssContent = `
 		color: gray;
 	}
 	
+	.review-workspace .review-metrics .review-metric strong {
+		font-weight: 700
+	}
+	
 	body md-select .md-select-value.md-select-placeholder {
 		color: #ffffff90;
 	}
@@ -82,6 +140,11 @@ const darkThemeCssContent = `
 	}
 	.tabs-global ul li a:after {
 		display: none		
+	}
+	
+	md-dialog#signal-layout input::placeholder,
+	.sertificates.profile_page > div input::placeholder {
+		color: gray;
 	}
 	
 	md-dialog#dialog_students_traffic.layout-padding._md,
@@ -201,6 +264,33 @@ const darkThemeCssContent = `
 		background: var(--accent-2);
 	}
 	
+	.hw-md_single md-dialog-content, .hw-md_single {
+		background:  var(--accent-2);
+		color: var(--accent-text);
+	}
+	
+	.hw-md_single .hw-md_single__back img {
+		filter: invert(1);
+	}
+	
+	.hw-md_single .hw-md_single_stud__group,
+	.hw-md_single .hw-md_single_theme, 
+	.hw-md_single .font-w-400, 
+	.hw-md_single .hw-md_single_teacher__file-count,
+	.hw-md_single .color-grey {
+		color: var(--accent-text);
+		opacity: 0.65;
+	}
+	
+	.hw-md_single .hw-md_single_teacher__comment#custom-style {
+		color: var(--accent-text);
+	}
+	
+	md-dialog md-dialog-content:not([layout=row])>:first-child:not(.md-subheader) {
+		color: var(--accent-text);
+		opacity: 0.8;
+	}
+	
 	.student-info .all_comments .studentComment-wrapper textarea, .students .input-field-stud.stud_search input[type="search"] {
 		background: var(--accent-2);
 		color: var(--accent-text);
@@ -235,6 +325,26 @@ const darkThemeCssContent = `
 		color: gray;
 	}
 	
+	md-select-menu.md-default-theme md-content, md-select-menu md-content, 
+	.selectdemoSelectHeader input[type=search] {
+		background: var(--accent-2);
+		color: var(--accent-text);
+	}
+	
+	md-select-menu.md-default-theme md-content md-option, md-select-menu md-content md-option,
+	md-select-menu.md-default-theme md-content md-option:not([disabled]):focus, md-select-menu md-content md-option:not([disabled]):focus, md-select-menu.md-default-theme md-content md-option:not([disabled]):hover, md-select-menu md-content md-option:not([disabled]):hover
+	{
+		color: var(--accent-text);
+	}
+	
+	md-select-menu.md-default-theme md-content md-option:hover, md-select-menu md-content md-option:hover,
+	md-select-menu.md-default-theme md-content md-option:not([disabled]):focus, md-select-menu md-content md-option:not([disabled]):focus, md-select-menu.md-default-theme md-content md-option:not([disabled]):hover, md-select-menu md-content md-option:not([disabled]):hover
+	{
+		background: var(--accent-5) !important;
+	}
+
+	
+	
 	.dossier__students_who_need_help.ng-scope {margin-top: 40px; color: var(--accent-text)}
 	.table-video-reports thead tr td, .table-video-reports thead tr, .table-video-reports tbody tr td {border: solid 1px #438f72}
 	.table-video-reports tbody tr td {background: var(--accent-2);}
@@ -258,8 +368,6 @@ const darkThemeCssContent = `
 	div.CustomHWDiv div.content div.hwBlock div.info div.HwActions span[ico] {
 		color: white !important;
 	}
-	
-	body div.CustomHWDiv div.topPanel div.backGuestures > img {filter: none }
 `
 
 const IFrameDarkCssPatch = `
@@ -289,6 +397,13 @@ const CSSImprove = `
 		overflow: hidden;
 	}
 	
+	.has_header md-content md-select-header input {
+		left: 0px;
+		width: calc(100% - 16px);
+		padding: 4px 8px;
+	}
+	
+	.hw-md_single_stud-work__answer-text { max-width: 100%; line-break: anywhere }
 	.internal-wrap-global md-input-container .md-placeholder, .internal-wrap-global md-input-container label {transition: all .2s}
 	
 	
