@@ -58,23 +58,20 @@ window.onload = function() {
 	})
 }
 
-const height = "330px";
+const height = "240px";
 
 const Changes = `
 <h2 id="changesCurrentVersion"><b> Omni Tools </b></h2>
-<span style="font-size: 10px; margin-top: 0px"> 1.5.2 -> 1.6.0 </span>
+<span style="font-size: 10px; margin-top: 0px"> 1.7.0 -> 1.7.1 </span>
 <br><br><br>
 
-<span class="New">
+<span class="New None">
 <b> Новое: </b><br>
-+ Добавлена функция Rate&Send <br>
-+ Исправлено отображение .py, .ino, .pdf файлов <br>
 </span><br>
 
 <span class="Changed">
 <b> Изменено / исправлено: </b><br>
-+ [1.6.1] Испрвалена отмена в Rate&Send <br>
-+ Обновление моделей, не зависящих от моего сервера <br>
++ Обновлена работа ИИ для отзывов <br>
 </span><br>
 
 
