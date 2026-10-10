@@ -141,6 +141,10 @@ const GetDatapack = {
 						<p data-i18n="DarkTheme.Desc"></p>
 					</div>
 					<div class="SettingLine">
+						${GetSwitch('FullScreenHomeworkCard')} 
+						<p data-i18n="FullScreenHomeworkCard.Desc"></p>
+					</div>
+					<div class="SettingLine">
 						${GetSwitch('LoadingIndicatorFix')} 
 						<p data-i18n="LoadingIndicatorFix.Desc"></p>
 					</div>

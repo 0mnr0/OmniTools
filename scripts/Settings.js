@@ -98,6 +98,28 @@ async function UpdateSettings() {
 			height: 0px;
 		}`;
 	}	
+	
+	if (newSettings.FullScreenHomeworkCard) {
+		cssContent += `
+			div.CustomHWDiv div.content {
+				height: 100%;
+			}
+		
+			body div.CustomHWDiv div.content div.hwBlock {
+				min-height: 100%;
+				margin-bottom: 5px;
+				padding-top: 0px;
+			}
+			
+			div.CustomHWDiv div.content div.hwBlock div.Tools {
+				margin-top: auto;
+			}
+		`
+
+	}
+	
+	
+	
 	SettingsCssContent.textContent = cssContent;
 	CurrentSettings = newSettings;
 }
