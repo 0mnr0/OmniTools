@@ -354,6 +354,16 @@ div.CustomHWDiv div.content div.hwBlock div.info div.HwActions span[ico] {
     cursor: pointer;
 }
 
+div.CustomHWDiv div.content div.hwBlock div.info div.HwActions span[ico].FileRestored {
+    cursor: help;
+	font-weight: 400;
+	font-style: italic
+}
+
+div.CustomHWDiv div.content div.hwBlock div.info span[ico].FileRestored::before {
+	cursor: pointer
+}
+
 div.CustomHWDiv div.content div.hwBlock div.info div.HwActions span.FileStud[disabled] {
 	pointer-events: none;
 	filter: grayscale(1);

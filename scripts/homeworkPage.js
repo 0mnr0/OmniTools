@@ -361,20 +361,21 @@ function RefreshHomeworkView() {
 
 function LoadNextCards(count) {
 	if (!lastData.Win) return;
-	let contentList = lastData.Win.find('div.content');
 
 	let batch = PendingHW.splice(0, count);
 	if (batch.length === 0) return;
 
-	let PreviewList = batch.map(hw => CreateHomeworkCard(hw, contentList));
+	let PreviewList = batch.map(hw => CreateHomeworkCard(hw));
 	RunHomeworkPreview(PreviewList, lastData.Win);
 }
 
-function CreateHomeworkCard(hw, contentList) {
+function CreateHomeworkCard(hw, overwriteCard=null) {
 		let ApplyOrDeny = (ActiveReview.type === "requests") && hw.bad_dz === "0";
 		
 		let marksData = GenMarks();
-		let unableToDownload = hw.st_filename === null;
+		let unableToDownload = hw.download_url_stud === null;
+		let AbleToDownloadFirstFile = (hw.st_filename !== null) && (hw.download_url_stud !== hw.st_filename);
+		
 		let block = `
 				<json technical style="display: none" title="This block was especially created for another enthusiasts">${JSON.stringify(hw)}</json>
 				
@@ -392,10 +393,20 @@ function CreateHomeworkCard(hw, contentList) {
 							<span class="FileTeach b500" ico url="${hw.file_teach}"> Задание преподавателя </span>
 							<span class="Given" second> <b 500> Дата выдачи: </b> ${toNormalDateS(hw.teach_date)} </span>
 						</div>
-						<div ${unableToDownload ? `title="Ученик не проложил файлы"` : ''}>
-							<span class="FileStud b500" ico url="${hw.st_filename}" ${unableToDownload ? `disabled` : ""}> Работа студента </span>
+						<div ${unableToDownload ? `title="Ученик не приложил файлы"` : ''}>
+							<span class="FileStud b500" ico url="${hw.download_url_stud}" ${unableToDownload ? `disabled` : ""}> Работа студента </span>
 							<span second> <b class="500"> Дата загрузки: </b> ${toNormalDateS(hw.stud_date)} </span>
 						</div>
+						${
+							AbleToDownloadFirstFile ? `
+								<div>
+									<span class="FileStud b500 FileRestored" ico url="${hw.st_filename}"
+									title="Эта работа может сохраниться даже после того как ученик пересдал работу"
+									> Первоначальная работа студента </span>
+								</div>
+							` : ''
+							
+						}
 						
 						<div class="StudentResponse ${unableToDownload ? "visible" : ""}">
 							${hw.answer_text}
@@ -449,7 +460,7 @@ function CreateHomeworkCard(hw, contentList) {
 				</div>
 		`
 		
-		let Homework = document.createElement('div');
+		let Homework = overwriteCard === null ? document.createElement('div') : overwriteCard;
 		Homework.className = "hwBlock"
 		Homework.setAttribute("id", hw.id);
 		Homework.setAttribute("id_domzad", hw.id_domzad);
@@ -470,6 +481,7 @@ function CreateHomeworkCard(hw, contentList) {
 		let fileInput = Homework.find("div.fileInput form input#fileUploader");
 		let fileInputTitle = Homework.find("div.fileInput form label.input-file span");
 		let ResetFileUploader = Homework.find("div.fileInput span.fileUploaderReset");
+		let RestoredFile = Homework.find('div.HwActions span.FileRestored');
 		
 		
 		Homework.find('div.HwActions span.FileTeach').onclick = () => {
@@ -482,10 +494,16 @@ function CreateHomeworkCard(hw, contentList) {
 		
 		Homework.find('div.HwActions span.FileStud').onclick = () => {
 			lastData.M3.setUnreachable(false);
-			downloadFile(hw.st_filename);
+			downloadFile(hw.download_url_stud);
 			setTimeout(() => {
 				lastData.M3.setUnreachable(true);
 			}, 500);
+		}
+		
+		if (RestoredFile) {
+			RestoredFile.onclick = () => {
+				downloadFile(hw.st_filename);
+			}
 		}
 		
 		ResetFileUploader.style.display = 'none';
@@ -541,7 +559,12 @@ function CreateHomeworkCard(hw, contentList) {
 						
 					if (workDenial) { // DENY
 						let result = await SendWorkDenial(hw.id, textArea.value, uploadId);
-						if (result.ok && result.body === "true") {
+						console.log(result);
+						if (result.ok && (result.data === "true" || result.data === true)) {
+							RemoveCard(Homework);
+							Toast.create(result.data, 3500, {});
+						} else if (result.ok) {
+							Toast.create(result.data, 3500, {});
 							RemoveCard(Homework);
 						}
 						return;
@@ -579,13 +602,30 @@ function CreateHomeworkCard(hw, contentList) {
 				})
 			}
 			HomeworkApply.onclick = () => {
+				SetCardStatus(Homework, BUSY)
 				fetcher('https://omni.top-academy.ru/homework/approve-request', 'POST', {
 					id: `${hw.id}`,
 					type: 1
 				}).then(res => {
-					onAppealResult(res, true);
+					let appliedWorkPayload = res.data.homework;
+					fetcher('https://omni.top-academy.ru/homework/get-new-homeworks', "POST", null).then(newRes => {
+						Toast.create("Успешно!", 3500, {});
+						filterRequestObject(
+							Homework,
+							newRes.data.requests,
+							`${appliedWorkPayload.id_domzadstud}`,
+							`${appliedWorkPayload.id_domzad}`,
+							`${appliedWorkPayload.id_stud}`
+						);
+						SetCardStatus(Homework, FREE)
+						
+					}).catch(err => {
+						console.warn(err);
+						SetCardStatus(Homework, FREE)
+					})
 				}).catch(err => {
 					onAppealResult(res, false);
+					SetCardStatus(Homework, FREE)
 				})
 			}
 		}
@@ -611,20 +651,99 @@ function CreateHomeworkCard(hw, contentList) {
 			}
 		})
 		
-		return {url: hw.st_filename, teach_url: hw.file_teach, block: Homework}
+		return {url: hw.download_url_stud, teach_url: hw.file_teach, block: Homework}
 	
 	// RunHomeworkPreview(PreviewList, lastData.Win);
 	// lastData.M3.setUnreachable(true);
-}	
+}
+
+function filterRequestObject(TargetCard, requestList, dzId, localDzId, idStud) {
+	
+	
+	console.log(requestList)
+	console.log("Searching:", dzId, localDzId, idStud); 
+	
+	const foundRequest = requestList.find(request => 
+		request.id === dzId && 
+		request.id_domzad === localDzId && 
+		request.id_stud === idStud
+	) || null;
+	
+	const entry = HWEntries.find(e => e.card && e.card.block === TargetCard);
+	
+	if (!foundRequest || !entry) {
+		Toast.create("Не удалось получить новую карточку :(, пожалуйста перезапустите это окошко.", 3500, {});
+		return
+	};
+	
+	ReplaceEntryData(entry, foundRequest);
+	entry.card.block.remove();
+	entry.card = null;
+	RefreshHomeworkView();
+}
+
+
+
+function ReplaceEntryData(entry, newHw) {
+	const list = ActiveReview.data?.[ActiveReview.type];
+	const idx = list ? list.indexOf(entry.hw) : -1;
+	if (idx !== -1) list[idx] = newHw;
+	entry.hw = newHw;
+}
 
 function RemoveCard(Card) {
-	HWEntries = HWEntries.filter(e => !e.card || e.card.block !== Card);
+	const entry = HWEntries.find(e => e.card && e.card.block === Card);
+	if (entry) {
+		HWEntries = HWEntries.filter(e => e !== entry);
 
+		// Удаление из закэшированного списка данных объект
+		const list = ActiveReview.data?.[ActiveReview.type];
+		if (list) {
+			const idx = list.indexOf(entry.hw);
+			if (idx !== -1) list.splice(idx, 1);
+		}
+	}
+
+	RefreshReviewCounters();
 	Card.classList.add('closed');
 	setTimeout(() => {
 		Card.remove();
 		RefreshHomeworkView();
 	}, 1000);
+}
+
+function RefreshReviewCounters() {
+	const Win = lastData.Win;
+	if (!Win || !ActiveReview.data) return;
+
+	const reviewTypes = Win.find('div.topPanel select#reviewTypes');
+	const groupList   = Win.find('div.topLine.filters select#groupSelector');
+	const nameInput   = Win.find('div.topLine.filters input#searchName');
+
+	// Совсем ничего не осталось
+	if (ReviewIsEmpty(ActiveReview.data)) {
+		NothingToCheck(Win);
+		reviewTypes.style.display = 'none';
+		return;
+	}
+
+	// Пересобираем селектор типов
+	LoadReviewTypes(ActiveReview.data, reviewTypes);
+
+	// Если текущий тип пуст - перейти на другой
+	if (!ActiveReview.data[ActiveReview.type]?.length) {
+		SwitchReviewType(GetStartReviewType(ActiveReview.data), groupList, nameInput);
+	}
+	reviewTypes.value = ActiveReview.type;
+
+	// Пересобираем группы, сохраняя выбранную
+	const selected = HWFilter.group;
+	LoadFilterGroups(ActiveReview.data, groupList);
+	if (selected && [...groupList.options].some(o => o.value === selected)) {
+		groupList.value = selected;
+	} else {
+		HWFilter.group = "";
+	}
 }
 
 function GetMark(card) {
