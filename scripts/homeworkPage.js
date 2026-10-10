@@ -78,6 +78,7 @@ function OpenCustomHomeworkWindow() {
 				
 				<div class="backGuestures">
 					<span id="back"> Вернуться </span>			
+					<img id="filter" src="${getIcon('/icons/filter.svg')}">
 					<img id="fullscreen" src="${getIcon('/icons/fullscreen.svg')}">
 					<img id="close" src="${getIcon('/icons/cancel.svg')}">
 				</div>
@@ -119,9 +120,23 @@ function OpenCustomHomeworkWindow() {
 		}
 	}
 	
+	let filterBtn = Win.find('div.topPanel div img#filter');
+	let filterDiv = Win.find('div.topPanel div.topLine.filters');
+	lastData.filterBtn = filterBtn;
+	let filterVisible = false;
+	filterBtn.onclick = () => {
+		if (filterVisible) {
+			filterDiv.classList.remove('visible');
+			filterBtn.classList.remove('open');
+		} else {
+			filterDiv.classList.add('visible');
+			filterBtn.classList.add('open');			
+		}
+		filterVisible = !filterVisible;
+	}
+	
 	let backBtn = Win.find('div.topPanel div span#back')
 	backBtn.onclick = () => {
-		console.log("lastData.InjectedPanel:", lastData.InjectedPanel);
 		lastData.InjectedPanel.style.display='';
 		Win.destroy();
 		lastData.Win = null
@@ -139,12 +154,14 @@ function OpenCustomHomeworkWindow() {
 	groupList.onchange = () => {
 		HWFilter.group = groupList.value;
 		RefreshHomeworkView();
+		CheckFilterStatud();
 	};
 	studentNameFilter.oninput = () => {
 		clearTimeout(nameDebounce);
 		nameDebounce = setTimeout(() => {
 			HWFilter.name = studentNameFilter.value;
 			RefreshHomeworkView();
+			CheckFilterStatud();
 		}, 250);
 	};
 	
@@ -177,6 +194,14 @@ function NothingToCheck(Win) {
 	Win.find("div.content").innerHTML = `
 		<span class="nothingToShow"> Работ нет, нечего показывать </span>
 	`
+}
+
+function CheckFilterStatud() {
+	if (HWFilter.group === "" && HWFilter.name === "" && lastData.filterBtn) {
+		lastData.filterBtn.classList.remove('active');
+	} else if (lastData.filterBtn) {
+		lastData.filterBtn.classList.add('active');
+	}
 }
 
 function ReviewIsEmpty(res) {
@@ -511,7 +536,6 @@ function CreateHomeworkCard(hw, contentList) {
 					let uploadId = null;
 					if (fileInput && fileInput.files && fileInput.files.length > 0) {
 						const res = await UploadFile(hw, fileInput);
-						console.log("res result:"+res);
 						uploadId = res[0].link;
 					}
 						
@@ -529,7 +553,6 @@ function CreateHomeworkCard(hw, contentList) {
 						}
 					
 						let result = await SendWorkApply(hw, mark, textArea.value, uploadId);
-						console.log(result);
 						if (result.ok && result.status === 200) {
 							RemoveCard(Homework);
 						}
@@ -627,11 +650,9 @@ function LoadFilterGroups(res, list) { // TODO
 	let groups = [];
 	
 	let WorkSection = res[ActiveReview.type];
-	console.log(res, ActiveReview.type, WorkSection);
 	list.innerHTML = `<option value="" selected>Все группы (${WorkSection.length})</option>`;
 	for (let i = 0; i < WorkSection.length; i++) {
 		let hwObject = WorkSection[i];
-		console.log(hwObject);
 		let group = hwObject.group;
 		if (group === null) continue
 		

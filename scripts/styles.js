@@ -85,6 +85,7 @@ div.CustomHWDiv {
 	width: 80%;
 	height: auto;
 	max-height: 90%;
+	overflow: hidden;
 	padding: 12px;
 	border-radius: 16px;
 	background: white;
@@ -155,8 +156,21 @@ div.CustomHWDiv div.topPanel div.backGuestures img {
 	border-radius: 5px
 }
 
-div.CustomHWDiv div.topPanel div.backGuestures img:hover {
+div.CustomHWDiv div.topPanel div.backGuestures img:hover,
+div.CustomHWDiv div.topPanel div.backGuestures img#filter.open {
 	background: #80808040;
+}
+
+div.CustomHWDiv div.topPanel div.backGuestures img#filter {
+	border: solid 2px transparent;
+	padding: 0px
+}
+div.CustomHWDiv div.topPanel div.backGuestures img#filter.active {
+    border: solid 2px #22aa90;
+}
+
+div.CustomHWDiv div.topPanel div.backGuestures img#filter.open:hover {
+	background: #535353;
 }
 
 div.CustomHWDiv div.topPanel img#close {
@@ -580,18 +594,29 @@ div.CustomHWDiv div.content div.Comment div.fileInput input {
 
 div.CustomHWDiv .topLine {
     display: flex;
+	gap: 10px;
     align-items: center;
 }
 
 div.CustomHWDiv .previewProgress {
     display: flex;
     flex-direction: column;
-    width: 160px;
+    width: calc(100% + 31px);
     height: 20px;
-    border-radius: 6px;
+	opacity: 0.5;
+    border-radius: 10px 0px;
     overflow: hidden;
     margin: 0px 10px;
-	background: #80808085;
+    background: #80808085;
+    position: absolute;
+	transition: all .25s;
+    top: -26px;
+    left: -24px;
+}
+
+div.CustomHWDiv .previewProgress.done {
+	top: -32px;
+	opacity: 0;
 }
 
 .previewProgress span {
@@ -618,9 +643,23 @@ div.CustomHWDiv .topLine.filters select#groupSelector, div.CustomHWDiv .topLine.
     height: 100%;
 }
 
+
 div.CustomHWDiv .topLine.filters {
+    max-height: 0px;
     display: flex;
-	gap: 10px
+    opacity: 0.1;
+    gap: 10px;
+    overflow: hidden;
+    transition: all .25s;
+    interpolate-size: allow-keywords;
+}
+
+div.CustomHWDiv .topLine.filters.visible {
+    max-height: fit-content;
+    padding-top: 7px;
+    opacity: 1;
+    border-top: dashed 1px #80808078;
+    margin-top: 7px;
 }
 
 `
