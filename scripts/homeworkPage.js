@@ -571,11 +571,14 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 						
 					} else { // SAVE
 						if (mark === null || mark === undefined) {
-							throw "mark is null";
+							Toast.create("Вы должны поставить оценку", 3500, {});
 							return
 						}
 					
 						let result = await SendWorkApply(hw, mark, textArea.value, uploadId);
+						if (result.data?.success !== null) {
+							Toast.create(result.data?.success, 4000, {});
+						}
 						if (result.ok && result.status === 200) {
 							RemoveCard(Homework);
 						}

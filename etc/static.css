@@ -11,13 +11,13 @@ html {
 div.OmniToolsExtensionToast {
 	transition: all .8s;
 	position: fixed;
-	padding: 6px;
+	padding: 14px;
 	background: #22222260;
 	backdrop-filter: blur(8px) brightness(1.45);
 	z-index: 10000000000000;
 	interpolate-size: allow-keywords;
 	opacity: 0;
-	border-radius: 16px;
+	border-radius: 12px;
 	right: 8px;
 	bottom: -60px;
 	overflow: hidden;
