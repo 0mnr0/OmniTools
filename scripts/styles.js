@@ -197,12 +197,13 @@ div.CustomHWDiv div.content div.hwBlock {
     padding: 6px 0px;
     width: 100%;
     margin-bottom: 20px;
-    padding-bottom: 7px;
+    padding-top: 0px;
+    padding-bottom: 10px;
     border-bottom: solid 1px #80808096;
     display: flex;
-	gap: 10px;
+    gap: 10px;
     height: auto;
-	min-height: 500px;
+    min-height: 500px;
     interpolate-size: allow-keywords;
     transition: all .5s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
@@ -457,6 +458,7 @@ div.CustomHWDiv div.content div.hwBlock div.Tools {
 	width: 100%;
     justify-content: space-between;
 	align-self: flex-end;
+	margin-top: auto;
 }
 
 div.CustomHWDiv div.content div.hwBlock button.HWSend {

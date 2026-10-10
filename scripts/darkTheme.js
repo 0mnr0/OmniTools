@@ -407,6 +407,12 @@ const CSSImprove = `
 		padding: 4px 8px;
 	}
 	
+	.md-dialog-container {
+		position: fixed;
+		top: 0px !important;
+		height: 100% !important
+	}
+	
 	.hw-md_single_stud-work__answer-text { max-width: 100%; line-break: anywhere }
 	.internal-wrap-global md-input-container .md-placeholder, .internal-wrap-global md-input-container label {transition: all .2s}
 	

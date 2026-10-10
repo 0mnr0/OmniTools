@@ -111,9 +111,6 @@ async function UpdateSettings() {
 				padding-top: 0px;
 			}
 			
-			div.CustomHWDiv div.content div.hwBlock div.Tools {
-				margin-top: auto;
-			}
 		`
 
 	}
