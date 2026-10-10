@@ -33,7 +33,8 @@
 			"scripts/styles.js",
 			"scripts/homeworkPage.js",
 			"scripts/pageHook.js",
-			"scripts/Settings.js"
+			"scripts/Settings.js",
+			"scripts/silent_session_update.js"
 		],
 		"css": ["etc/static.css"],
         "matches": ["https://omni.top-academy.ru/*"]
@@ -44,6 +45,7 @@
 		"resources": [
 			"icons/general.svg",
 			"icons/search.svg",
+			"icons/filter.svg",
 			"icons/fullscreen.svg",
 			"icons/fullscreen_close.svg",
 			"icons/cancel.svg",
