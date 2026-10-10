@@ -346,6 +346,8 @@ function LoadNextCards(count) {
 }
 
 function CreateHomeworkCard(hw, contentList) {
+		let ApplyOrDeny = (ActiveReview.type === "requests") && hw.bad_dz === "0";
+		
 		let marksData = GenMarks();
 		let unableToDownload = hw.st_filename === null;
 		let block = `
@@ -400,12 +402,20 @@ function CreateHomeworkCard(hw, contentList) {
 					</div>
 					
 					<div class="Tools">
-						<div class="denialDivide noselect">
-							<img src="${TrashCan}" class="Delete" alt="Удалить работу">
-							<span class="denialText"> Удалить работу </span>
-						</div>
+						${
+							ApplyOrDeny ? `
+								<button class="HWSend homeworkModal customBtn mini deny"> Отклонить </button>
+								<button class="HWSend homeworkModal customBtn mini apply"> Принять </button>`
+							
+							:`<div class="denialDivide noselect">
+									<img src="${TrashCan}" class="Delete" alt="Удалить работу">
+									<span class="denialText"> Удалить работу </span>
+								</div>
+								<button class="HWSend homeworkModal customBtn mini"> Сохранить </button>`
+		
+						}
+					
 						
-						<button class="HWSend homeworkModal customBtn mini">Сохранить</span> </button>
 					</div>
 				</div>
 				
@@ -421,11 +431,16 @@ function CreateHomeworkCard(hw, contentList) {
 		Homework.setAttribute("id_stud", hw.id_stud);
 		Homework.setAttribute("hw_group", hw.group);
 		Homework.setAttribute("hw_creds", hw.fio_stud);
+		if (ApplyOrDeny) {
+			Homework.classList.add("ApplyOrDeny");
+		}
 		Homework.innerHTML = block
 		let Preview = Homework.find("div.preview");
 		let SendAction = Homework.find("div.Tools button.HWSend");
-		let ResetActionImage = Homework.find("div.Tools div.denialDivide img");
-		let ResetActionTitle = Homework.find("div.Tools div.denialDivide span.denialText");
+		let ResetActionImage = Homework.find("div.Tools div.denialDivide img");             // null if ApplyOrDeny=true
+		let ResetActionTitle = Homework.find("div.Tools div.denialDivide span.denialText"); // null if ApplyOrDeny=true
+		let HomeworkDeny = Homework.find("div.Tools button.HWSend.deny");                   // null if ApplyOrDeny=false
+		let HomeworkApply = Homework.find("div.Tools button.HWSend.apply");    				// null if ApplyOrDeny=false
 		let textArea = Homework.find("div.Comment textarea#cmnt");
 		let fileInput = Homework.find("div.fileInput form input#fileUploader");
 		let fileInputTitle = Homework.find("div.fileInput form label.input-file span");
@@ -472,62 +487,98 @@ function CreateHomeworkCard(hw, contentList) {
 		
 		
 		let workDenial = false;
-		ResetActionTitle.parentElement.onclick = () => {
-			workDenial = !workDenial;
-			if (workDenial) {
-				SendAction.classList.add('denial');
-				SendAction.textContent = "Удалить работу";
-				ResetActionTitle.textContent = "Отмена";
-				ResetActionImage.src = CloseIco;
-			} else {
-				SendAction.classList.remove('denial');
-				SendAction.textContent = "Сохранить";
-				ResetActionTitle.textContent = "Удалить работу";
-				ResetActionImage.src = TrashCan;
+		if (!ApplyOrDeny) {
+			ResetActionTitle.parentElement.onclick = () => {
+				workDenial = !workDenial;
+				if (workDenial) {
+					SendAction.classList.add('denial');
+					SendAction.textContent = "Удалить работу";
+					ResetActionTitle.textContent = "Отмена";
+					ResetActionImage.src = CloseIco;
+				} else {
+					SendAction.classList.remove('denial');
+					SendAction.textContent = "Сохранить";
+					ResetActionTitle.textContent = "Удалить работу";
+					ResetActionImage.src = TrashCan;
+				}
 			}
-		}
 		
-		SendAction.onclick = async () => {
-			try {
-				const mark = GetMark(Homework);
-				
-				SetCardStatus(Homework, BUSY);
-				let uploadId = null;
-				if (fileInput && fileInput.files && fileInput.files.length > 0) {
-					const res = await UploadFile(hw, fileInput);
-					console.log("res result:"+res);
-					uploadId = res[0].link;
-				}
+			SendAction.onclick = async () => {
+				try {
+					const mark = GetMark(Homework);
 					
-				if (workDenial) { // DENY
-					let result = await SendWorkDenial(hw.id, textArea.value, uploadId);
-					if (result.ok && result.body === "true") {
-						RemoveCard(Homework);
+					SetCardStatus(Homework, BUSY);
+					let uploadId = null;
+					if (fileInput && fileInput.files && fileInput.files.length > 0) {
+						const res = await UploadFile(hw, fileInput);
+						console.log("res result:"+res);
+						uploadId = res[0].link;
 					}
-					return;
+						
+					if (workDenial) { // DENY
+						let result = await SendWorkDenial(hw.id, textArea.value, uploadId);
+						if (result.ok && result.body === "true") {
+							RemoveCard(Homework);
+						}
+						return;
+						
+					} else { // SAVE
+						if (mark === null || mark === undefined) {
+							throw "mark is null";
+							return
+						}
 					
-				} else { // SAVE
-					if (mark === null || mark === undefined) {
-						throw "mark is null";
-						return
+						let result = await SendWorkApply(hw, mark, textArea.value, uploadId);
+						console.log(result);
+						if (result.ok && result.status === 200) {
+							RemoveCard(Homework);
+						}
 					}
-				
-					let result = await SendWorkApply(hw, mark, textArea.value, uploadId);
-					console.log(result);
-					if (result.ok && result.status === 200) {
-						RemoveCard(Homework);
-					}
+				} catch(e) {
+					console.warn(e)
+					Toast.create("Произошла ошибка при выполнении действия!", 3500, {});
+				} finally {
+					SetCardStatus(Homework, FREE);
 				}
-			} catch(e) {
-				console.warn(e)
-				Toast.create("Произошла ошибка при выполнении действия!", 3500, {});
-			} finally {
-				SetCardStatus(Homework, FREE);
 			}
 			
 			
-			
+		// IF WE ARE WORKING ON DENY/APPLY HOMEWORK
+		} else {
+			HomeworkDeny.onclick = () => {
+				fetcher('https://omni.top-academy.ru/homework/approve-request', 'POST', {
+					id: `${hw.id}`,
+					type: 0
+				}).then(res => {
+					onAppealResult(res, true);
+				}).catch(err => {
+					onAppealResult(res, false);
+				})
+			}
+			HomeworkApply.onclick = () => {
+				fetcher('https://omni.top-academy.ru/homework/approve-request', 'POST', {
+					id: `${hw.id}`,
+					type: 1
+				}).then(res => {
+					onAppealResult(res, true);
+				}).catch(err => {
+					onAppealResult(res, false);
+				})
+			}
 		}
+			
+		function onAppealResult(res, isSucsess) {
+			if (res.ok) {
+				RemoveCard(Homework);
+			}
+			if (res.body) {
+				Toast.create(res.body.success, 3500, {});
+			} else if (!isSucsess) {
+				Toast.create("Что-то пошло не так :(", 3500, {});
+			}			
+		}
+			
+		
 		
 		let MarkElements = Homework.findAll("div.SetMark > div.list > span[mark]")
 		MarkElements.forEach(mark => {
@@ -541,7 +592,7 @@ function CreateHomeworkCard(hw, contentList) {
 	
 	// RunHomeworkPreview(PreviewList, lastData.Win);
 	// lastData.M3.setUnreachable(true);
-}
+}	
 
 function RemoveCard(Card) {
 	HWEntries = HWEntries.filter(e => !e.card || e.card.block !== Card);

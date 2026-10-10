@@ -170,6 +170,10 @@ const darkThemeCssContent = `
 	body div.CustomHWDiv div.content div.hwBlock div.info span.fioStud
 		{color: var(--accent-text)}
 	
+	div.CustomHWDiv div.content div.hwBlock div.denialDivide > img {
+		filter: invert(1);
+	}
+	
 	.dossier.row .dossier__graph .graph__item .chart.ng-isolate-scope,
     #myDialog.home_work_modal .hw-md__close	{
 		filter: invert(1);

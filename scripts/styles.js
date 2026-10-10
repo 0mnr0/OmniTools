@@ -32,10 +32,6 @@ styles.textContent = `
 	width: 0;
 	height: 0;
 }
-
-.md-dialog-container {
-	height: 100% !important;
-}
  
 .input-file input[type=file]:focus + span {
 	box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
@@ -156,7 +152,6 @@ div.CustomHWDiv div.topPanel div.backGuestures img {
 	background: transparent;
 	scale: 1.1;
 	padding: 2px;
-	filter: invert(1);
 	border-radius: 5px
 }
 
@@ -193,16 +188,25 @@ div.CustomHWDiv div.content div.hwBlock {
     display: flex;
 	gap: 10px;
     height: auto;
+	min-height: 500px;
     interpolate-size: allow-keywords;
     transition: all .5s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+
+div.CustomHWDiv div.content div.hwBlock.ApplyOrDeny div.Comment,
+div.CustomHWDiv div.content div.hwBlock.ApplyOrDeny div.SetMark {
+	display: none
 }
 
 div.CustomHWDiv div.content div.hwBlock.closed {
 	overflow: hidden;
 	pointer-events: none;
+	min-height: 0px;
 	height: 0px;
 	padding: 0px;
 	margin: 0px;
+	border: none;
 	margin-top: -1px;
 	opacity: 0
 }
@@ -230,8 +234,9 @@ div.CustomHWDiv div.content div.hwBlock.busy {
 }
 
 div.CustomHWDiv div.content div.hwBlock div.info {
-	width: 100%;
-	min-width: 33%;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
 }
 
 div.CustomHWDiv div.content div.hwBlock div.info > block1, div.CustomHWDiv div.content div.hwBlock div.info > block2 {
@@ -377,6 +382,7 @@ div.CustomHWDiv div.content div.SetMark div.list {
 
 div.CustomHWDiv div.content div.Comment {
     margin-top: 16px;
+	margin-bottom: 40px;
 }
 
 div.CustomHWDiv div.content div.Comment textarea {
@@ -423,10 +429,10 @@ div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span.act
 }
 
 div.CustomHWDiv div.content div.hwBlock div.Tools {
-	margin-top: 16px;
-	margin-bottom: 8px;
     display: flex;
+	width: 100%;
     justify-content: space-between;
+	align-self: flex-end;
 }
 
 div.CustomHWDiv div.content div.hwBlock button.HWSend {
@@ -438,6 +444,10 @@ div.CustomHWDiv div.content div.hwBlock button.HWSend {
     border-radius: 6px;
 	min-width: 33%;
 	transition: all .15s
+}
+
+div.CustomHWDiv div.content div.hwBlock button.HWSend.homeworkModal.customBtn.mini.deny {
+    background: #9f3f20;
 }
 
 div.CustomHWDiv div.content div.hwBlock button.HWSend.denial {
@@ -457,21 +467,29 @@ div.CustomHWDiv div.content div.hwBlock div.denialDivide {
 }
 
 div.CustomHWDiv div.hwPreview.hideBlock {
-	min-width: 0%;
     width: 0%;
     padding: 0px !important;
     border: none !important;
 }
 
 div.CustomHWDiv div.hwPreview {
+    padding: 0px 10px;
     width: 100%;
     transition: all .5s ease-out;
     interpolate-size: allow-keywords;
-    border: solid 1px #808080b0;
-    border-radius: 12px;
+	border: solid 1px #808080b0;
+	border-radius: 12px;
     overflow: hidden;
-    max-width: 50%;
-	min-width: 33%;
+    max-width: 33%;
+}
+
+div.CustomHWDiv div.hwPreview.teacherPreview {
+	padding-right: 0px;	
+	padding-left: 3px;	
+}
+
+div.CustomHWDiv div.hwPreview.studentPreview.asClient {
+    padding-right: 0px;
 }
 
 div.CustomHWDiv div.hwPreview.asClient {
@@ -481,14 +499,12 @@ div.CustomHWDiv div.hwPreview.asClient {
     border-radius: 12px;
     border: none;
     width: 100%;
+    padding: 20px;
+    padding-left: 10px;
 }
 
-div.CustomHWDiv div.hwPreview.teacherPreview.asClient {
-    padding-right: 12px;
-}
-
-div.CustomHWDiv div.hwPreview.studentPreview.asClient {
-    padding-left: 12px;
+div.CustomHWDiv div.hwPreview.studentPreview {
+	padding-left: 0px
 }
 
 div.CustomHWDiv div.hwPreview.asClient img#IMAGEContent, div.CustomHWDiv div.hwPreview.asClient video#VIDEOContent {
@@ -501,7 +517,7 @@ div.CustomHWDiv div.hwPreview.asClient img#IMAGEContent, div.CustomHWDiv div.hwP
 
 div.CustomHWDiv div.hwPreview m3loader span {
 	top: 130%;
-	color: #1c8974
+	colotr: #1c8974
 }
 
 div.CustomHWDiv div.hwPreview iframe.HTMLContent {
