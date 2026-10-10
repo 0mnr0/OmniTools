@@ -33,6 +33,11 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 	function updateProgressTitle() {
 		let taskProgress = (progressData.task / progressData.totalTasks) * 100;
 		let hwProgress = (progressData.homework / progressData.total) * 100;
+		if (taskProgress >= 99 && hwProgress >= 99) {
+			previewProgress.classList.add("done")
+		} else {
+			previewProgress.classList.remove("done")
+		}
 		previewProgress.setAttribute("title", `Загрузка предпросмотра учеников: ${Math.round(hwProgress)}%\nЗагрузка предпросмотра преподавателей: ${Math.round(taskProgress)}%`);
 	}
 
@@ -119,7 +124,7 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 					return;
 				}
 
-				if (readContent.displayAs === "html") {
+				if (readContent.displayAs === "html") {					
 					setHtmlContent(readContent.content);
 					DestroyLoader();
 					return;
@@ -176,7 +181,6 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 					return;
 				}
 				else if (!fetchRes.success) {
-					console.log("Non Success")
 					await DBStore.setHWID("HWC", URLContent, { displayAs: "none", content: null });
 					FailedToPreview(Preview);
 					return;
