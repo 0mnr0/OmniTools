@@ -69,6 +69,7 @@ function OpenCustomHomeworkWindow() {
 	let code = `
 		<div class="topPanel">
 			<div class="topLine">
+				<img id="back" src="${getIcon('/icons/arrow_left.svg')}">
 				<h4 class="ng-binding">Задания на проверку</h4>
 				<div class="previewProgress">
 					<span id="taskPreview"></span>
@@ -76,8 +77,7 @@ function OpenCustomHomeworkWindow() {
 				</div>
 				<select id="reviewTypes" disabled style="display: none"> Секунду... </select>
 				
-				<div class="backGuestures">
-					<span id="back"> Вернуться </span>			
+				<div class="backGuestures">		
 					<img id="filter" src="${getIcon('/icons/filter.svg')}">
 					<img id="fullscreen" src="${getIcon('/icons/fullscreen.svg')}">
 					<img id="close" src="${getIcon('/icons/cancel.svg')}">
@@ -103,8 +103,12 @@ function OpenCustomHomeworkWindow() {
 	
 	let closeBtn = Win.find('div.topPanel div img#close')
 	closeBtn.onclick = () => {
+		lastData.InjectedPanel.style.display='';
 		Win.destroy();
-		lastData = {};
+		if (lastData.InjectedPanel) {
+			let targetCloseBtn = lastData.InjectedPanel.find('.hw-md__close');
+			if (targetCloseBtn) targetCloseBtn.click();
+		}
 	}
 	
 	let fullscreenBtn = Win.find('div.topPanel div img#fullscreen')
@@ -135,7 +139,7 @@ function OpenCustomHomeworkWindow() {
 		filterVisible = !filterVisible;
 	}
 	
-	let backBtn = Win.find('div.topPanel div span#back')
+	let backBtn = Win.find('div.topPanel img#back')
 	backBtn.onclick = () => {
 		lastData.InjectedPanel.style.display='';
 		Win.destroy();
@@ -895,3 +899,4 @@ function SendWorkApply(studDz, mark, comment, comment_attach) {
 // TODO:
 // - Проверка длины comment (до 1000 символов)
 // - Менять "Добавить комментарий" на "Почему отклоняете?" когда отклоняем
+// - Настройка для показа по дате загрузки

@@ -44,6 +44,7 @@
 	  {
 		"resources": [
 			"icons/general.svg",
+			"icons/arrow_left.svg",
 			"icons/search.svg",
 			"icons/filter.svg",
 			"icons/fullscreen.svg",

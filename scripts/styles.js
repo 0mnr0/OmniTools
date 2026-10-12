@@ -143,16 +143,16 @@ div.CustomHWDiv div.topPanel div.backGuestures {
 	position: absolute;
 	top: 0px;
     right: 0px;
-	height: 22px;
-	gap: 10px;
+	height: 24px;
+	gap: 5px;
 }
 
 div.CustomHWDiv div.topPanel div.backGuestures img {
 	cursor: pointer;
 	transition: all .2s;
 	background: transparent;
-	scale: 1.1;
-	padding: 2px;
+	padding: 3px;
+	filter: invert(1);
 	border-radius: 5px
 }
 
@@ -181,7 +181,21 @@ div.CustomHWDiv div.topPanel img#close {
     font-weight: 700;
     font-size: 150%;
 	cursor: pointer;
-	scale: 1.1;
+}
+
+
+div.CustomHWDiv div.topPanel img#back {
+	aspect-ratio: 1/1;
+	width: 30px;
+	padding: 2px;
+	filter: invert(1);
+	cursor: pointer;
+	border-radius: 6px;
+	transition: all .2s;
+}
+
+div.CustomHWDiv div.topPanel img#back:hover {
+	background: #71717160;
 }
 
 
@@ -336,12 +350,14 @@ div.CustomHWDiv div.content div.hwBlock div.info div.HwActions > div {
 }
 
 div.CustomHWDiv div.content div.hwBlock div.info div.HwActions .StudentResponse {
+	word-break: break-word;
     padding: 10px;
     border: solid 1px black;
     border-radius: 10px;
     margin-top: 8px;
 	display: none;
 }
+
 div.CustomHWDiv div.content div.hwBlock div.info div.HwActions .StudentResponse.visible {
 	display: block;
 }

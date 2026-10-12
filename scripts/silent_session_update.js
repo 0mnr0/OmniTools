@@ -1,36 +1,52 @@
-// https://omni.top-academy.ru/auth/change-city?city='
-
-
-const SESSION_UPDATE_INTERVAL = 7.5 * 60; // MINUTES
-function sessionUpdate(attempt=0) {
-	if (typeof CurrentSettings === "object" && !CurrentSettings.DoSessionUpdate) {
-		return;
-	}
-	console.debug("Running Session Update!");
-	
-	if (attempt >= 3) {
-		Toast.create("Не удалось обновить сессию :(", 5000, {});
-		return
-	}
-	
-	fetcher('https://omni.top-academy.ru/auth/get-start-info', 'POST').then(res => {
-		let payload = res.data;
-		let cityId = payload?.branch?.id_city;
-		
-		if (!cityId) {
-			sessionUpdate(attempt+1);
-			return;
-		} else {
-			fetcher(`https://omni.top-academy.ru/auth/change-city?city=${cityId}`, 'GET')
-		}
-	})
+function gaussian(mean, stdDev, min, max) {
+  let u = 0, v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  const z = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+  return Math.min(max, Math.max(min, mean + z * stdDev));
 }
 
 
-setInterval(() => {
-	sessionUpdate(0);
-}, SESSION_UPDATE_INTERVAL*1000);
+const MEAN_S = 7.5 * 60;
+const SD_S   = 1.5 * 60;
+const MIN_S  = 3 * 60;
+const MAX_S  = 14 * 60;
 
-setTimeout(() => {
-	sessionUpdate(0);
-}, 1000)
+function nextDelayMs() {
+  return gaussian(MEAN_S, SD_S, MIN_S, MAX_S) * 1000;
+}
+
+function scheduleNext() {
+  const delay = nextDelayMs();
+  console.debug(`Следующее обновление сессии через ${(delay / 60000).toFixed(1)} мин`);
+  setTimeout(() => sessionUpdate(0), delay);
+}
+
+async function sessionUpdate(attempt = 0) {
+  if (typeof CurrentSettings === "object" && !CurrentSettings.DoSessionUpdate) {
+    scheduleNext();
+    return;
+  }
+
+  console.debug("Running Session Update!");
+
+  try {
+    const res = await fetcher('https://omni.top-academy.ru/auth/get-start-info', 'POST');
+    const cityId = res?.data?.branch?.id_city;
+    if (!cityId) throw new Error("no city id");
+
+    await fetcher(`https://omni.top-academy.ru/auth/change-city?city=${cityId}`, 'GET');
+    scheduleNext();
+  } catch (e) {
+    if (attempt >= 2) {
+      Toast.create("Не удалось обновить сессию :(", 5000, {});
+      scheduleNext();
+      return;
+    }
+	
+    const retryMs = gaussian(40, 10, 20, 60) * 1000;
+    setTimeout(() => sessionUpdate(attempt + 1), retryMs);
+  }
+}
+
+setTimeout(() => sessionUpdate(0), 1200);
