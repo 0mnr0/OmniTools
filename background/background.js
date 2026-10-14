@@ -130,6 +130,10 @@ BrowserContext.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         return true; 
     }
 	
+    if (msg.type === 'OPEN_POPUP') {
+		chrome.action.openPopup().catch(console.error);
+    }	
+	
 	if (msg.type === "VersionBumper") {
         sendResponse({ status: BrowserContext.runtime.getManifest() });
 		return false;

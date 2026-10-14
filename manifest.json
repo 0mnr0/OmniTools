@@ -29,6 +29,7 @@
 			"scripts/darkTheme.js",
 			"scripts/parsers.js",
 			"scripts/codeBunch.js",
+			"scripts/hookLeftBar.js",
 			"scripts/HomeworkPreview.js",
 			"scripts/styles.js",
 			"scripts/homeworkPage.js",
@@ -45,6 +46,7 @@
 		"resources": [
 			"icons/general.svg",
 			"icons/arrow_left.svg",
+			"icons/settings.svg",
 			"icons/search.svg",
 			"icons/filter.svg",
 			"icons/fullscreen.svg",

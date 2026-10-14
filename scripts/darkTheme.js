@@ -61,12 +61,14 @@ const darkThemeCssContent = `
 	.review-workspace .review-metrics .review-metric strong,
 	.review-workspace .review-queue-header h3,
 	.review-workspace .review-card-section h3,
+	.hw-md_single_teacher__file-count,
 	.review-workspace .review-queue-student,
 	.review-student-main h2
 	{
 		color: var(--accent-text);
 	}
 	
+	.hw-md_single_teacher__file-count {opacity: 0.6;}
 	
 	.review-workspace .review-card .review-student-tags span,
 	.review-workspace .review-metrics .review-metric

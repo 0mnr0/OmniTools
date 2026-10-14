@@ -699,6 +699,40 @@ div.CustomHWDiv .topLine.filters.visible {
     margin-top: 7px;
 }
 
+
+
+
+
+
+div.inMenuButton.Injected {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+	color: #63d3bd;
+    position: absolute;
+    bottom: 10px;
+	cursor: pointer;
+	transition: all .2s;
+	font-weight: 300
+}
+
+div.inMenuButton.Injected:hover {
+	color: white
+}
+
+div.inMenuButton.Injected:hover img {
+	transform: rotate(90deg)
+}
+
+div.inMenuButton.Injected img {
+    height: 32px;
+    aspect-ratio: 1/1;
+    width: auto;
+	transition: all .2s;
+    margin: 0px 6px;
+}
+
 `
 
 document.body.after(styles);

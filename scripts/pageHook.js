@@ -6,9 +6,12 @@ const Listeners = {
 function onDomChange() {
 	let loc = location.href;
 	
+	
+	InjectSettingsButton();
 	if (loc.endsWith("/homeWork")) {
 		Listeners.Homework();
 	}
+	
 }
 
 
