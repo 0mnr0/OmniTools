@@ -236,7 +236,7 @@ const UpdateSizeCounters = (kb) => {
 	let maxSize = UserSettings.MaxCacheSize ? UserSettings.MaxCacheSize : 30; // MB
 	let barWidth = ((kb/1024)/maxSize) * 100;
 	
-	H1Usage.textContent = (kb/1024).toFixed(1)
+	H1Usage.textContent = (kb/1024).toFixed(2)
 	UsageBar.find('#Took').style.width = `${barWidth}%`
 	UsageBar.classList.add("hidden");
 	
