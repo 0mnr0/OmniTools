@@ -1,7 +1,8 @@
 const IDBSettings = {
 	DB_NAME: "HWCacheDB",
-	DB_VERSION: 1,
-	STORE_NAME: "kv",
+	DB_VERSION: 2,
+	STORE_NAME: "kv2",
+	OLD_STORE_NAME: "kv",
 
 	_dbPromise: null,
 
@@ -13,12 +14,33 @@ const IDBSettings = {
 
 			request.onupgradeneeded = (event) => {
 				const db = event.target.result;
+				const tx = event.target.transaction; // versionchange-транзакция
+
 				if (!db.objectStoreNames.contains(this.STORE_NAME)) {
-					db.createObjectStore(this.STORE_NAME, { keyPath: "key" });
+					db.createObjectStore(this.STORE_NAME); // БЕЗ keyPath
+				}
+
+				// Миграция: {key, value} -> put(value, key)
+				if (db.objectStoreNames.contains(this.OLD_STORE_NAME)) {
+					const oldStore = tx.objectStore(this.OLD_STORE_NAME);
+					const newStore = tx.objectStore(this.STORE_NAME);
+					oldStore.openCursor().onsuccess = (e) => {
+						const cursor = e.target.result;
+						if (cursor) {
+							newStore.put(cursor.value.value, cursor.value.key);
+							cursor.continue();
+						} else {
+							db.deleteObjectStore(this.OLD_STORE_NAME);
+						}
+					};
 				}
 			};
 
-			request.onsuccess = (event) => resolve(event.target.result);
+			request.onsuccess = (event) => {
+				const db = event.target.result;
+				db.onversionchange = () => db.close();
+				resolve(db);
+			};
 			request.onerror = (event) => reject(event.target.error);
 			request.onblocked = () => reject(new Error("IndexedDB open blocked"));
 		});
@@ -36,9 +58,7 @@ const IDBSettings = {
 		const { store } = await this._tx("readonly");
 		return new Promise((resolve, reject) => {
 			const req = store.get(key);
-			req.onsuccess = () => {
-				resolve(req.result === undefined ? defValue : req.result.value);
-			};
+			req.onsuccess = () => resolve(req.result === undefined ? defValue : req.result);
 			req.onerror = () => reject(req.error);
 		});
 	},
@@ -46,7 +66,7 @@ const IDBSettings = {
 	async set(key, value) {
 		const { tx, store } = await this._tx("readwrite");
 		return new Promise((resolve, reject) => {
-			store.put({ key, value });
+			store.put(value, key);          // ключ отдельным аргументом
 			tx.oncomplete = () => resolve();
 			tx.onerror = () => reject(tx.error);
 		});
@@ -82,13 +102,14 @@ const IDBSettings = {
 	async getAll() {
 		const { store } = await this._tx("readonly");
 		return new Promise((resolve, reject) => {
-			const req = store.getAll();
-			req.onsuccess = () => {
+			const keysReq = store.getAllKeys();
+			const valsReq = store.getAll();
+			valsReq.onsuccess = () => {
 				const result = {};
-				for (const row of req.result) result[row.key] = row.value;
+				keysReq.result.forEach((k, i) => (result[k] = valsReq.result[i]));
 				resolve(result);
 			};
-			req.onerror = () => reject(req.error);
+			valsReq.onerror = () => reject(valsReq.error);
 		});
 	},
 
