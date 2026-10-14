@@ -49,6 +49,7 @@ const darkThemeCssContent = `
 	.review-workspace .review-queue-panel, .review-workspace .review-editor,
 	.review-lessons-table th, .review-lessons-table td, .review-lessons-table thead th,
 	.md-select-menu-container.md-active md-select-menu,
+	.table .table,
 	div.CustomHWDiv div.content div.Comment textarea
 	{
 		background: var(--accent-2);
@@ -62,6 +63,8 @@ const darkThemeCssContent = `
 	.review-workspace .review-queue-header h3,
 	.review-workspace .review-card-section h3,
 	.hw-md_single_teacher__file-count,
+	#blockExamMark .table>thead>tr>th,
+	#blockExamMark .table tr>*:last-child *,
 	.review-workspace .review-queue-student,
 	.review-student-main h2
 	{
