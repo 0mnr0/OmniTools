@@ -140,12 +140,12 @@ div.CustomHWDiv div.topPanel h4 {
 
 
 div.CustomHWDiv div.topPanel div.backGuestures {
-	display: flex;
-	position: absolute;
-	top: 0px;
+    display: flex;
+    position: absolute;
+    top: 2px;
     right: 0px;
-	height: 24px;
-	gap: 5px;
+    height: 26px;
+    gap: 5px;
 }
 
 div.CustomHWDiv div.topPanel div.backGuestures img {
@@ -623,7 +623,9 @@ div.CustomHWDiv div.content div.Comment div.fileInput input {
 
 div.CustomHWDiv .topLine {
     display: flex;
-	gap: 10px;
+    gap: 10px;
+    margin-top: -4px;
+    margin-bottom: 4px;
     align-items: center;
 }
 
@@ -639,12 +641,12 @@ div.CustomHWDiv .previewProgress {
     background: #80808085;
     position: absolute;
 	transition: all .25s;
-    top: -26px;
+    top: -23px;
     left: -24px;
 }
 
 div.CustomHWDiv .previewProgress.done {
-	top: -32px;
+	top: -28px;
 	opacity: 0;
 }
 
@@ -683,6 +685,7 @@ div.CustomHWDiv .topLine.filters {
     display: flex;
     opacity: 0.1;
     gap: 10px;
+	margin-bottom: 4px;
     overflow: hidden;
     transition: all .25s;
     interpolate-size: allow-keywords;
