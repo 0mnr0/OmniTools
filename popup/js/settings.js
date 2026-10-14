@@ -152,23 +152,7 @@ const GetDatapack = {
 				
 				
 				<div type=other class="TypeSelector">
-					<div class="SettingLine">
-						${GetSwitch('EnableSuperFeatures')} 
-						<p data-i18n="EnableSuperFeatures.Desc"></p>
-					</div>
 					
-					<div class="SettingLine">
-						${GetSwitch('MakeAnnouncements.Ext')} 
-						<p data-i18n="MakeAnnouncements.Ext.Desc"></p>
-					</div>
-					
-					<div class="SettingLine ExportAsSetting">
-						<span> ${TranslateAssistant.translate.get('ExportAsOption')} </span>
-						<div class="flex">
-							<div class="ExportAs" value=gif> GIF </div>
-							<div class="ExportAs" value=webm> WEBM </div>
-						</div>
-					</div>
 				</div>
 			</div>
 			
@@ -182,36 +166,46 @@ const GetDatapack = {
 			</div>
 			
 			
-			<div class="SettingSection BlockList">
+			<div class="SettingSection CacheControl">
+				<h3 data-i18n="CacheControl" class="CacheControl"></h3>
+				
+				<div class="MemoryUsageStats">
+					<span class="UsageLine">
+						<h1 id="Usage"></h1>
+						<span data-i18n="MegaBytes_Took"></span>
+					</span>
+						
+				
+					<div class="Line">
+						<span id="Took"></span>
+					</div>
+				</div>
+				
 				<button id="resetCache"> reset cache <button>
 			</div>
 			
 			
 			<div class="SettingSection AuthorsTab">
-				<h2 class="AuthorsTab" data-i18n="AuthorsTab"></h2> 
+				<h2 class="AuthorsTab" data-i18n="AboutProject"></h2> 
 				
 				<div class="AuthorList">
-					
-					<div class="Author">
-						<div class="AvatarAndName">
-							<img src="https://avatars.githubusercontent.com/u/99125366">
-							<a href="https://github.com/0mnr0" target="_blank"> dsvl0 </a>
-						</div>
-						<span class="ContributorDesc" data-i18n="dsvl0Desc"></span>
-					</div>
+					<span data-i18n="AboutThisProject" class="AboutThisProject"></span>					
 				</div>
+				
+				
 				<div class="flex github">
 					<img src="icons/github.svg">
 					<span data-i18n="ProjectOnGitHub"></span>
+				</div>
+				<div class="flex github tg">
+					<img src="../icons/telegram.svg">
+					<span data-i18n="ContactDev"></span>
 				</div>
 			</div>
 			
 			
 			<div class="SettingSection OtherTab">
-				<div class="SettingLine">
-					${GetSwitch('Other')} 
-					<p data-i18n="Other.Desc"></p>
-				</div>
+				
 				
 				<span class="madeWith"></span>
 			</div>
@@ -234,57 +228,24 @@ const GetDatapack = {
 })()
 
 
-const runPatSound = async function() {
-	let SoundPlace = 'etc/'+LoadedPack.PackPlace+'/'+LoadedPack.sounds[0];
-	if (IsDataPack) {
-		SoundPlace = LoadedPack.sounds[0]
-	}
+const UpdateSizeCounters = (kb) => {
+	let H1Usage = find('div.CacheControl div.MemoryUsageStats span.UsageLine h1#Usage');
+	let UsageBar = find('div.CacheControl div.MemoryUsageStats div.Line');
 	
-	if (IsDataPack) {
-		playBase64Audio(SoundPlace)
-	} else {
-		let audio = new Audio(BrowserContext.runtime.getURL(SoundPlace));
-		audio.volume = getVolume();
-		audio.play();
+	
+	let maxSize = UserSettings.MaxCacheSize ? UserSettings.MaxCacheSize : 30; // MB
+	let barWidth = ((kb/1024)/maxSize) * 100;
+	
+	H1Usage.textContent = (kb/1024).toFixed(1)
+	UsageBar.find('#Took').style.width = `${barWidth}%`
+	UsageBar.classList.add("hidden");
+	
+	
+	if (kb > 512 && barWidth > 2) {
+		UsageBar.classList.remove("hidden");
 	}
 }
 
-
-async function playBase64Audio(base64String, {volume = 1.0, muted = false} = {}) {
-	const isMuted = !UserSettings.AllowSound
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
-    const base64Data = base64String.split(';base64,')[1] || base64String;
-    const binaryString = atob(base64Data);
-    const bytes = new Uint8Array(binaryString.length);
-
-    for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
-    }
-
-    try {
-        const audioBuffer = await audioContext.decodeAudioData(bytes.buffer);
-
-        const source = audioContext.createBufferSource();
-        source.buffer = audioBuffer;
-        const gainNode = audioContext.createGain();
-        gainNode.gain.value = isMuted ? 0 : getVolume();
-        source.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-
-        source.start();
-        return { audioContext, source, gainNode };
-    } catch (e) {
-        console.error("Failed to decode audio:", e);
-    }
-}
-
-const GetIgnoreSitesList = () => {
-	let val = UserSettings.IgnoreSites;
-	if (val === undefined || val === null) {
-		return [];
-	} else { return val }
-}
 
 const UpdateTypes = (newType) => {
 	findAll('div.SettingSection.General > div.TypeSelector').forEach(SettingLine => {
@@ -312,30 +273,6 @@ const TypesRegister = () => {
 	})
 }
 
-const AddIntoIgnoreList = (main, domainName) => {
-	let domainDiv = createElementWith('div', {});
-	domainDiv.className = 'domainDiv';
-	
-	domainDiv.innerHTML = `
-		<img class="preview" src="https://www.google.com/s2/favicons?sz=128&domain=${domainName}">
-		<span class="domainName">${domainName}</span>
-		<img class="delete" src="icons/delete.svg">
-	`;
-	main.appendChild(domainDiv);
-	
-	
-	domainDiv.find('img.delete').onclick = async () => {
-		let newIgnoreList = GetIgnoreSitesList().filter(item => item !== domainName)		
-		await Settings.set('IgnoreSites', newIgnoreList);
-		UserSettings.IgnoreSites = newIgnoreList;
-		domainDiv.remove();
-		Toast.create(
-			TranslateAssistant.translate.get('BlockList.ReloadPageToApply'),
-			3000
-		);
-	}
-}
-
 const onSettingsChanged = async () => {
 	let AllowContextMenu_Record = await Settings.get('AllowContextMenu.Record');
 	RemoveStyle('AllowContextMenu_Record')
@@ -352,7 +289,7 @@ const MadeWithController = {
 	runNextTimeout: 3500,
 	display: undefined,
 	varinats: [
-		"for fun", "for people", "for pating cats", "for pating anything", "for memes", "with the soul", "with love", "with love, by humans"
+		"for people", "with the soul", "with love", "with faith in the best", "by an 18 y.o. human", "while listening to Bi-2"
 	],
 	current: -1,
 	

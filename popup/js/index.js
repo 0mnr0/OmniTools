@@ -16,6 +16,17 @@ let UserSettings = {};
 		`
 	}
 	
+	
+	
+	async function UpdateSize() {
+		let res = await chrome.runtime.sendMessage({ __idbBridge: true, method: "getSize", args: [] });
+		if (!res.ok) {res = {result: {count: 0, kb: 0}}} // db was cleared
+		let dbSize = res.result;
+		UpdateSizeCounters(dbSize.kb);
+	}
+	
+
+	
 	document.runSettingBing = async () => {
 		SettingsPane.innerHTML = await GenerateSettingsCode();
 		TranslateAssistant.translate.all();
@@ -74,6 +85,7 @@ let UserSettings = {};
 				settingType.onclick = () => {
 					let newDivide = settingType.getAttribute('SettingLinkedTo')
 					ClearAllSettingTypes();
+					UpdateSize();
 					findAll('div.SettingSection').forEach(SettingDisplayingType => {
 						SettingDisplayingType.classList.remove('Chosen');
 						SettingDisplayingType.classList.add('Hidden');
@@ -102,6 +114,7 @@ let UserSettings = {};
 		TypesRegister();
 		UpdateTypes('functions')
 		CreateStyle('EnableTransitions', '* { transition: all .3s, scrollbar-color 0s, scrollbar-width 0s; }');
+		setInterval(UpdateSize, 2000);
 	}
 })();
 
@@ -152,7 +165,10 @@ if (manifestData && manifestData.version) {
 
 function setGitListener() {
 	find('div.github').onclick = () => {
-		window.open('https://github.com/0mnr0/OmniTools')
+		window.open('https://github.com/0mnr0/OmniTools/tree/main-v2')
+	}
+	find('div.github.tg').onclick = () => {
+		window.open('https://dsvl0.t.me/')
 	}
 }
 

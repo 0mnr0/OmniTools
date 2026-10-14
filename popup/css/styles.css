@@ -572,9 +572,16 @@ div.removeSavedDataPack span {
 div.leftPane .AuthorsTab {
 	overflow: hidden;
     position: relative;
+	text-align: center;
     bottom: 0px;
     left: 0px;
     width: 100%;
+}
+
+div.leftPane .AuthorsTab span {
+	display: block;
+	width: 100%;
+	text-align: center;
 }
 
 div.leftPane div.bottomOne > div:not(.AuthorsTab) {
@@ -731,6 +738,62 @@ div.SettingSection.changeLog > div > span {
     border-radius: 10px;
 }
 
+div.TypeRoulette option[type="other"],
+div.leftPane div.bottomOne > div.OtherTab,
+div.leftPane > div > div.ServerChoose
+ {
+	display: none !important;
+}
+
+div.CacheControl {
+	padding: 10px
+}
+
+div.CacheControl h1 { font-size: 180%; }
+div.CacheControl h2 { font-size: 160%; }
+div.CacheControl h3 { font-size: 140%; }
+div.CacheControl h4 { font-size: 120%; }
+
+div.CacheControl div.MemoryUsageStats  {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+div.CacheControl div.MemoryUsageStats div.Line {
+    height: 20px;
+    width: 100%;
+	margin-top: -8px;
+    border-radius: 10px;
+    background: #3d3d3d;
+	position: relative;
+    overflow: hidden;
+}
+
+div.CacheControl div.MemoryUsageStats span.UsageLine {
+    display: flex;
+	margin-top: 10px;
+    align-items: flex-end;
+}
+
+div.CacheControl div.MemoryUsageStats span.UsageLine span {
+	padding: 6px;
+}
+
+div.CacheControl div.MemoryUsageStats div.Line.hidden {
+	display: none;
+}
+
+div.CacheControl div.MemoryUsageStats div.Line span#Took {
+    position: absolute;
+    height: 100%;
+    border-radius: 12px;
+    background: #9b633a;
+    outline: solid 6px #1a1a1a;
+    width: 0%;
+    transition: all .5s ease-out;
+}
+
 
 div.flex.github {
     background: #000;
@@ -739,7 +802,19 @@ div.flex.github {
     padding: 5px;
     display: flex;
     justify-content: center;
+	margin-top: 4px;
 	cursor: pointer;
+}
+
+span.AboutThisProject {
+	font-size: 82%;
+}
+
+div.flex.github:hover {background: #333}
+div.flex.github.tg:hover {background: #2b8cbfe8}
+
+div.flex.github.tg { 
+	background: #25a2e096;
 }
 
 div.flex.github img {
