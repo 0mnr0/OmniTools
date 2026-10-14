@@ -113,6 +113,22 @@ const IDBSettings = {
 		});
 	},
 
+	async getSize() {
+		const all = await this.getAll();
+		const enc = new TextEncoder();
+		let bytes = 0;
+		let count = 0;
+
+		for (const [key, value] of Object.entries(all)) {
+			bytes += enc.encode(key).length;
+			if (value instanceof Blob) bytes += value.size;
+			else if (value instanceof ArrayBuffer) bytes += value.byteLength;
+			else bytes += enc.encode(JSON.stringify(value)).length;
+			count++;
+		}
+
+		return { count, kb: +(bytes / 1024).toFixed(2) };
+	},
 
 	async ensureUID(uid) {
 		const existing = await this.get(uid);
@@ -190,7 +206,7 @@ const IDBSettings = {
 		const ALLOWED_METHODS = new Set([
 			"get", "set", "delete", "clear", "isKeyExists", "getAll",
 			"ensureUID", "setUIDData", "setHWID", "getHWID",
-			"deleteHWID", "getAllHWS", "deleteUID",
+			"deleteHWID", "getAllHWS", "deleteUID", "getSize",
 		]);
 
 		chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
