@@ -10,6 +10,7 @@ let lastData = {
 
 let PAGE_SIZE = 30;
 let HWEntries = [];
+let HWSort = "oldest";
 let HWFilter = { group: "", name: "" };
 let ActiveReview = {
 	
@@ -90,6 +91,11 @@ function OpenCustomHomeworkWindow() {
 				</select>
 				
 				<input id="searchName" placeholder="ФИО Ученика"></input>
+				
+				<select id="dateSelector">
+					<option value="oldest" selected>Сначала старые</option>
+					<option value="newest">Сначала новые</option>
+				</select>
 			</div>
 			
 		</div>
@@ -154,6 +160,16 @@ function OpenCustomHomeworkWindow() {
 	let groupList = Win.find('div.topLine.filters select#groupSelector');
 	let studentNameFilter = Win.find('div.topLine.filters input#searchName');
 	
+	let dateSelector = Win.find('div.topLine.filters select#dateSelector');
+	dateSelector.onchange = () => {
+		if (HWSort === dateSelector.value) return;
+		HWSort = dateSelector.value;
+
+		if (!ActiveReview.data || !ActiveReview.type) return;
+		ClearHomeworkView();
+		LoadHomeworkList(ActiveReview.data[ActiveReview.type]);
+	};
+	
 	let nameDebounce = null;
 	groupList.onchange = () => {
 		HWFilter.group = groupList.value;
@@ -199,6 +215,7 @@ function NothingToCheck(Win) {
 		<span class="nothingToShow"> Работ нет, нечего показывать </span>
 	`
 }
+
 
 function CheckFilterStatud() {
 	if (HWFilter.group === "" && HWFilter.name === "" && lastData.filterBtn) {
@@ -331,7 +348,8 @@ const CloseIco = '/img/home-work/close.png';
 
 
 function LoadHomeworkList(list) {
-	HWEntries = list.map(hw => ({ hw, card: null }));
+	const ordered = HWSort === "oldest" ? [...list].reverse() : list;
+	HWEntries = ordered.map(hw => ({ hw, card: null }));
 	RefreshHomeworkView();
 	lastData.M3.setUnreachable(true);
 }

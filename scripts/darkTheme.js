@@ -35,7 +35,7 @@ const darkThemeCssContent = `
 	
 	.lead-form-card, #myDialog.home_work_modal md-dialog,
 	.hw-md_delete .md-dialog-content, body div.CustomHWDiv,
-	div.CustomHWDiv .topLine.filters select#groupSelector,
+	div.CustomHWDiv .topLine.filters select,
 	div.CustomHWDiv .topLine.filters input#searchName,
 	.lead-form-card__title, .lead-form-field select, .lead-form-field input,
 	div.CustomHWDiv .topLine select#reviewTypes,
@@ -347,7 +347,11 @@ const darkThemeCssContent = `
 		background: var(--accent-5) !important;
 	}
 
-	
+	button.customBtn {
+		background: var(--accent-2);
+		border: solid 1px var(--accent-5);
+		filter: brightness(1);
+	}
 	
 	.dossier__students_who_need_help.ng-scope {margin-top: 40px; color: var(--accent-text)}
 	.table-video-reports thead tr td, .table-video-reports thead tr, .table-video-reports tbody tr td {border: solid 1px #438f72}

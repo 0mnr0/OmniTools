@@ -60,6 +60,7 @@ styles.textContent = `
 button.customBtn.mini {
 	width: fit-content;
 	padding: 8px 20px;
+	border-radius: 6px;
 }
 
 button.homeworkModal {
@@ -665,10 +666,15 @@ div.CustomHWDiv .previewProgress.done {
 	background: green;
 }
 
-div.CustomHWDiv .topLine.filters select#groupSelector, div.CustomHWDiv .topLine.filters input#searchName {
+div.CustomHWDiv .topLine.filters select, div.CustomHWDiv .topLine.filters input#searchName {
     border-radius: 12px;
     padding: 8px 12px;
     height: 100%;
+}
+
+div.CustomHWDiv .topLine.filters select#dateSelector {
+	margin-left: auto;
+	align-self: flex-end;
 }
 
 
