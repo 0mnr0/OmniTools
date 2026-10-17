@@ -25,6 +25,7 @@ const IFrameCSSPatch = `
 html, body {
     width: 100%;
     margin: 0;
+	white-space: pre-wrap;
 }
 
 img, video {
