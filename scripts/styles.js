@@ -100,7 +100,20 @@ div.CustomHWDiv.fullscreen {
     height: 100%;
     max-height: 100%;
     border-radius: 0px;
+    margin-bottom: 0px;
+	padding: 4px;
     padding-bottom: 0px;
+	
+	div.topPanel {
+		margin-bottom: 0px
+	}
+}
+
+
+div.CustomHWDiv div.topPanel div.backGuestures { transition: all .3s }
+
+div.CustomHWDiv.fullscreen div.topPanel div.backGuestures {
+	top: 8px;
 }
 
 html.no-scrollbar {
@@ -128,6 +141,7 @@ div.CustomHWDiv m3loader svg {
 }
 
 div.CustomHWDiv div.topPanel {
+	transition: all .2s;
 	margin-bottom: 6px;
 }
 
