@@ -417,11 +417,6 @@ const IFrameDarkCssPatch = `
 		border-radius: 10px;
 	}
 
-	::-webkit-scrollbar-thumb {
-		background: #7f7f7f !important;
-		border-radius: 10px;
-	}
-
 	::-webkit-scrollbar-thumb:hover {
 	  background: #9b9b9b;
 	}

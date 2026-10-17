@@ -44,13 +44,13 @@ img, video {
 }
 
 ::-webkit-scrollbar-track {
-    background: #b7b7b7;
+    background: transparent;
     width: 6px;
     border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #7f7f7f;
+    background: #7f7f7f8c;
     border-radius: 10px;
 }
 

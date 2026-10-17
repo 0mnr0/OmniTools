@@ -532,7 +532,53 @@ div.CustomHWDiv div.hwPreview.teacherPreview {
 }
 
 div.CustomHWDiv div.hwPreview.studentPreview.asClient {
-    padding-right: 0px;
+    padding: 0px 8px
+}
+
+div.CustomHWDiv div.hwPreviewStat {
+    display: flex;
+    position: absolute;
+    padding-left: 4px;
+    padding-right: 2px;
+	gap: 4px;
+    border-radius: 7px;
+    z-index: 10;
+	right: -1px;
+    bottom: -1px;
+    font-size: 70%;
+	transition: all .2s;
+}
+
+div.CustomHWDiv div.hwPreviewStat span {
+    min-height: 19px;
+    display: flex;
+    align-items: center;
+}
+
+div.CustomHWDiv div.hwPreviewStat span#FileType {
+    background: #000000a8;
+    margin-top: 2px;
+    padding: 0px 4px;
+	display: none;
+    border-radius: 6px;
+    font-weight: 700;
+    margin-bottom: 3px;
+}
+
+div.CustomHWDiv div.hwPreviewStat span#FileType.defined {
+	display: inline-flex;
+}
+
+div.CustomHWDiv div.hwPreviewStat.studentSide {
+    background: #007e00;
+}
+
+div.CustomHWDiv div.hwPreviewStat.teacherSide {
+    background: #ff4500d6;
+}
+
+div.CustomHWDiv div.hwPreview:hover div.hwPreviewStat {
+	bottom: -30px
 }
 
 div.CustomHWDiv div.hwPreview.asClient {
@@ -547,7 +593,8 @@ div.CustomHWDiv div.hwPreview.asClient {
 }
 
 div.CustomHWDiv div.hwPreview.studentPreview {
-	padding-left: 0px
+	padding-left: 0px;
+	padding-right: 0px
 }
 
 div.CustomHWDiv div.hwPreview.asClient img#IMAGEContent, div.CustomHWDiv div.hwPreview.asClient video#VIDEOContent {

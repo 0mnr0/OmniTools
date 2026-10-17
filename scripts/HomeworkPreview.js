@@ -63,6 +63,7 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 		let VIDEOContent = Preview.find('video#VIDEOContent');
 		let IFrame = Preview.find('iframe.HTMLContent');
 		let Loader = Preview.find('span.loaderStatus');
+		let FileDefinition = Preview.find('div.hwPreviewStat span#FileType');
 		
 		if (!CurrentSettings.ShowTeacherPreview && !studentView) {
 			bumpTaskCounter();
@@ -73,6 +74,10 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 		Loader.find('span[text]').textContent = "Открытие на клиенте...";
 
 		let URLContent = studentView ? HW.url : HW.teach_url;
+		
+		function setFileType(type) {
+			if (type) {FileDefinition.textContent = type; FileDefinition.classList.add('defined')}
+		}
 
 		function setLocalContent(LocalContent, isImage, URL) {
 			if (LocalContent.type.startsWith("image")) {
@@ -106,10 +111,6 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 		}
 
 		try {
-
-			// было: URLContent === null - не ловило undefined (например, когда
-			// у ДЗ вообще нет teach_url), из-за чего запрос улетал на сервер
-			// с пустым url и там зависал без ответа/таймаута.
 			if (!URLContent) {
 				FailedToPreview(Preview);
 				return;
@@ -120,12 +121,14 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 			if (readContent !== undefined) {
 				if (readContent.displayAs === "image" || readContent.displayAs === "video") {
 					setLocalContent({ type: readContent.displayAs }, readContent.displayAs.startsWith("image"), URLContent);
+					setFileType('media');
 					DestroyLoader();
 					return;
 				}
 
 				if (readContent.displayAs === "html") {					
 					setHtmlContent(readContent.content);
+					setFileType(readContent.type);
 					DestroyLoader();
 					return;
 				}
@@ -143,6 +146,7 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 				setLocalContent(LocalContent, isImage, URLContent);
 				const fileType = isImage ? "image" : "video";
 				await DBStore.setHWID("HWC", URLContent, { displayAs: fileType, content: URLContent, type: fileType });
+				setFileType("media");
 				return;
 
 			} else {
@@ -178,6 +182,7 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 					setHtmlContent(fetchedHTML);
 					DestroyLoader();
 					await DBStore.setHWID("HWC", URLContent, { displayAs: "html", content: fetchedHTML, type: fileType });
+					setFileType(fileType);
 					return;
 				}
 				else if (!fetchRes.success) {

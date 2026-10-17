@@ -401,7 +401,12 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 		let block = `
 				<json technical style="display: none" title="This block was especially created for another enthusiasts">${JSON.stringify(hw)}</json>
 				
+				
 				<div class="hwPreview teacherPreview">
+					<div class="hwPreviewStat teacherSide">
+						<span id="WhosSide">Учитель</span>
+						<span id="FileType"></span>
+					</div>
 					${PreviewContent}
 				</div>
 				
@@ -478,6 +483,11 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 				</div>
 				
 				<div class="hwPreview studentPreview">
+					<div class="hwPreviewStat studentSide">
+						<span id="WhosSide">Ученик</span>
+						<span id="FileType"></span>
+					</div>
+				
 					${PreviewContent}
 				</div>
 		`

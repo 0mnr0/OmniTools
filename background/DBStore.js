@@ -1,3 +1,5 @@
+// THIS File running in background script
+
 const IDBSettings = {
 	DB_NAME: "HWCacheDB",
 	DB_VERSION: 2,
@@ -161,8 +163,13 @@ const IDBSettings = {
 		return `${uid}::HW::${hwidName}`;
 	},
 
-	async setHWID(uid, hwidName, { displayAs = "text", content = "" } = {}) {
+	async setHWID(uid, hwidName, { displayAs = "text", content = "", type } = {}) {
 		const value = { displayAs, content };
+		
+		if (type !== undefined && type !== null) {
+			value.type = type;
+		}
+		
 		await this.set(this._hwidKey(uid, hwidName), value);
 		return value;
 	},
