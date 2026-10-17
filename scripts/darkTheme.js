@@ -19,6 +19,7 @@ const darkThemeCssContent = `
 		background: var(--accent-toolbar-2)
 	}
 	
+	
 	#cover, html, body.main, body.main main.content,
 	.dossier.row .dossier__graph .dossier__subjects .subjects__list .list__item,
 	.table-video-reports, .content__author
@@ -27,8 +28,9 @@ const darkThemeCssContent = `
 		color: var(--accent-text);
 	}
 	
+	#blockExamMark thead tr {background: transparent}
 	
-	.review-workspace {
+	.review-workspace, .presents .modal-footer.footer-table thead {
 		background: var(--accent-1);
 		color: var(--accent-text);
 	}
@@ -49,6 +51,7 @@ const darkThemeCssContent = `
 	.review-workspace .review-queue-panel, .review-workspace .review-editor,
 	.review-lessons-table th, .review-lessons-table td, .review-lessons-table thead th,
 	.md-select-menu-container.md-active md-select-menu,
+	.presents #presentsModal,
 	.table .table,
 	div.CustomHWDiv div.content div.Comment textarea
 	{
@@ -63,6 +66,8 @@ const darkThemeCssContent = `
 	.review-workspace .review-queue-header h3,
 	.review-workspace .review-card-section h3,
 	.hw-md_single_teacher__file-count,
+	.presents #presentsModal md-input-container textarea.md-input,
+	.presents #presentsModal md-input-container label,
 	#blockExamMark .table>thead>tr>th,
 	#blockExamMark .table tr>*:last-child *,
 	.review-workspace .review-queue-student,
@@ -108,7 +113,8 @@ const darkThemeCssContent = `
 		background: var(--accent-2) !important;
 	}
 	
-	.internal-wrap-global .btn {
+	.internal-wrap-global .btn,
+	.presents .presents__lesson-actions .add-materials-btns .md-button {
 		background: var(--accent-toolbar-1) !important;
 	}
 	
@@ -177,6 +183,16 @@ const darkThemeCssContent = `
 	
 	div.CustomHWDiv div.content div.hwBlock div.denialDivide > img {
 		filter: invert(1);
+	}
+	
+	
+	.schedule .beetwen_nav {padding: 6px}
+	.schedule .schedule_top .nav_week {padding-left: 3px}
+	
+	.schedule .schedule_top .nav_week i {
+		padding-right: 30px;
+		border: solid 2px;
+		filter: hue-rotate(180deg) invert(1)
 	}
 	
 	.dossier.row .dossier__graph .graph__item .chart.ng-isolate-scope,
@@ -262,6 +278,7 @@ const darkThemeCssContent = `
 	
 	main.content .presents input {
 		background: var(--accent-1);
+		color: var(--accent-text)
 	}
 	
 	.students .card .card-fio span, 
@@ -325,7 +342,10 @@ const darkThemeCssContent = `
 		filter: brightness(1.02)
 	}
 	
-	.presents .pars li.active a, .presents .groups li.active a, .tabs-global ul li a.active {
+	.presents .pars li.active a, .presents .groups li.active a, .tabs-global ul li a.active,
+	div.presents div.topPanel button.md-button.md-ink-ripple,
+	.presents #presentsModal .btn.modal-close, .presents .left-form-side .modal-footer button.btn.btn-flat
+	{
 		background: var(--accent-toolbar-0) !important;
 		color: var(--accent-text) !important;
 	}
@@ -335,6 +355,7 @@ const darkThemeCssContent = `
 	}
 	
 	md-select-menu.md-default-theme md-content, md-select-menu md-content, 
+	.has_header,
 	.selectdemoSelectHeader input[type=search] {
 		background: var(--accent-2);
 		color: var(--accent-text);

@@ -563,6 +563,9 @@ div.CustomHWDiv div.hwPreview m3loader span {
 	colotr: #1c8974
 }
 
+.presents .table thead th.number {border-start-start-radius: 16px}
+.presents .table thead th:last-child {border-start-end-radius: 16px}
+
 div.CustomHWDiv div.hwPreview iframe.HTMLContent {
 	width: 100%; 
 	height: 100%;
@@ -700,10 +703,6 @@ div.CustomHWDiv .topLine.filters.visible {
 }
 
 
-
-
-
-
 div.inMenuButton.Injected {
     width: 100%;
     display: flex;
@@ -733,6 +732,23 @@ div.inMenuButton.Injected img {
     margin: 0px 6px;
 }
 
-`
+div.inMenuButton.Injected span {left: 2px; position: relative}
 
-document.body.after(styles);
+
+.presents .number__presents span { left: -32px }
+
+@media (max-width: 1300px) {
+	.presents .table th.selector_students {border-start-start-radius: 16px; border-start-end-radius: 16px}
+	.presents .table th.diamonds {border-end-start-radius: 16px; border-end-end-radius: 16px}
+	.wrapper-students table.table tr.presents_stud {
+		border-radius: 12px;
+		-webkit-border-radius: 12px
+	}
+	.wrapper-students table.table tr {margin-bottom: 0px; margin-right: 0px}
+	.wrapper-students table.table tbody {gap: 15px; justify-content: center; padding: 15px}
+}
+
+
+`; document.body.after(styles);
+
+
