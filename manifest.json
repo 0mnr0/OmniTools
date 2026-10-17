@@ -25,6 +25,7 @@
 			"scripts/libs/UniqueColor.js",
 			"scripts/libs/toaster.js",
 			"scripts/libs/purify.min.js",
+			"scripts/libs/fileQualifier.js",
 			"scripts/libs/DBStore.js",
 			"scripts/darkTheme.js",
 			"scripts/parsers.js",
@@ -63,6 +64,10 @@
     "default_icon" : "OmniTools_128x128.png"
   },
   "host_permissions": [
-    "https://*.top-academy.ru/*"
+    "https://omni.top-academy.ru/*",
+    "https://fs.top-academy.ru/*",
+    "https://fsapi.top-academy.ru/*",
+    "https://ms-api.top-academy.ru/*",
+	"https://storage.yandexcloud.net/*"
   ]
 }

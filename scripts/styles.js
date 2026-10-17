@@ -368,8 +368,14 @@ div.CustomHWDiv div.content div.hwBlock div.info span[second] {
 	top: 5px;
 }
 
+
 div.CustomHWDiv div.content div.hwBlock div.info div.HwActions span[ico] {
-    cursor: pointer;
+	cursor: pointer;
+	color: black;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	gap: 5px;
 }
 
 div.CustomHWDiv div.content div.hwBlock div.info div.HwActions span[ico].FileRestored {
@@ -392,19 +398,42 @@ div.CustomHWDiv div.content div.hwBlock div.info div.HwActions span[second] b {
 	font-weight: 500
 }
 
+div.CustomHWDiv div.content div.hwBlock div.info span[ico].FileTeach::before {
+	filter: hue-rotate(170deg);
+}
+
+div.CustomHWDiv div.content div.hwBlock div.info span[ico].FileStud::before {
+	filter: hue-rotate(295deg);
+}
 
 div.CustomHWDiv div.content div.hwBlock div.info span[ico]::before {
     content: "";
-	position: relative;
-	width: 18px;
-	height: auto;
-	aspect-ratio: 1/1;
-	background: red;
-	display: inline-block;
-	top: 3px;
-	background: url('/img/home-work/down-arrow.png');
-	background-size: contain;
+    position: relative;
+    width: 18px;
+    height: auto;
+    aspect-ratio: 1/1;
+    background: red;
+    display: inline-block;
+    top: -1px;
+    background: url('/img/home-work/down-arrow.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
 }
+
+div.CustomHWDiv div.content div.hwBlock div.info span[ico] span#FileExt {
+	display: none;
+    background: #22aa9094;
+    width: fit-content;
+    padding: 3px;
+    border-radius: 6px;
+	height: fit-content;
+    font-size: 80%;
+    order: 10;
+    margin-left: 2px;
+}
+
+div.CustomHWDiv div.content div.hwBlock div.info span[ico] span#FileExt.defined {display: inline}
 
 div.CustomHWDiv div.content div.SetMark, div.CustomHWDiv div.content div.Comment {
     padding-top: 16px;
@@ -451,8 +480,7 @@ div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span {
     padding: 4px;
 }
 
-div.CustomHWDiv div.content div.hwBlock div.info span b,
-div.CustomHWDiv div.content div.hwBlock div.info div.HwActions span[ico] {
+div.CustomHWDiv div.content div.hwBlock div.info span b {
 	color: black;
 }
 
@@ -538,15 +566,13 @@ div.CustomHWDiv div.hwPreview.studentPreview.asClient {
 div.CustomHWDiv div.hwPreviewStat {
     display: flex;
     position: absolute;
-    padding-left: 4px;
-    padding-right: 2px;
-	gap: 4px;
+    gap: 4px;
     border-radius: 7px;
     z-index: 10;
-	right: -1px;
+    right: -1px;
     bottom: -1px;
     font-size: 70%;
-	transition: all .2s;
+    transition: all .2s;
 }
 
 div.CustomHWDiv div.hwPreviewStat span {
@@ -556,13 +582,10 @@ div.CustomHWDiv div.hwPreviewStat span {
 }
 
 div.CustomHWDiv div.hwPreviewStat span#FileType {
-    background: #000000a8;
-    margin-top: 2px;
-    padding: 0px 4px;
+    padding: 4px;
 	display: none;
     border-radius: 6px;
     font-weight: 700;
-    margin-bottom: 3px;
 }
 
 div.CustomHWDiv div.hwPreviewStat span#FileType.defined {
@@ -570,11 +593,11 @@ div.CustomHWDiv div.hwPreviewStat span#FileType.defined {
 }
 
 div.CustomHWDiv div.hwPreviewStat.studentSide {
-    background: #007e00;
+    background: #004f00;
 }
 
 div.CustomHWDiv div.hwPreviewStat.teacherSide {
-    background: #ff4500d6;
+    background: #691d00;
 }
 
 div.CustomHWDiv div.hwPreview:hover div.hwPreviewStat {
@@ -717,6 +740,8 @@ div.CustomHWDiv .previewProgress.done {
 .previewProgress span#hwPreview {
 	background: green;
 }
+
+
 
 div.CustomHWDiv .topLine.filters select, div.CustomHWDiv .topLine.filters input#searchName {
     border-radius: 12px;

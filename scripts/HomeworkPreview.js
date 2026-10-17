@@ -64,6 +64,7 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 		let IFrame = Preview.find('iframe.HTMLContent');
 		let Loader = Preview.find('span.loaderStatus');
 		let FileDefinition = Preview.find('div.hwPreviewStat span#FileType');
+		let BadgeFileType = Preview.parentElement.find('div.HwActions span.FileStud span#FileExt');
 		
 		if (!CurrentSettings.ShowTeacherPreview && !studentView) {
 			bumpTaskCounter();
@@ -78,9 +79,13 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 		function setFileType(type) {
 			if (type) {FileDefinition.textContent = type; FileDefinition.classList.add('defined')}
 		}
+		
+		function setBadge(ext) {
+			if (ext && studentView) {BadgeFileType.textContent = ext; BadgeFileType.classList.add('defined')} 
+		}
 
 		function setLocalContent(LocalContent, isImage, URL) {
-			if (LocalContent.type.startsWith("image")) {
+			if (LocalContent.startsWith("image")) {
 				IMAGEContent.src = URL;
 				IMAGEContent.style.display = '';
 			} else {
@@ -120,8 +125,8 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 			
 			if (readContent !== undefined) {
 				if (readContent.displayAs === "image" || readContent.displayAs === "video") {
-					setLocalContent({ type: readContent.displayAs }, readContent.displayAs.startsWith("image"), URLContent);
-					setFileType('media');
+					setLocalContent(readContent.displayAs, readContent.displayAs.startsWith("image"), URLContent);
+					setFileType(readContent.type);
 					DestroyLoader();
 					return;
 				}
@@ -135,18 +140,22 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 
 				if (readContent.displayAs === "none" && readContent.content === null) {
 					FailedToPreview(Preview);
+					setBadge(readContent.type);
 					return;
 				}
 			}
 
 
-			let LocalContent = await getMedia(URLContent);
-			if (LocalContent.isContent) {
-				let isImage = LocalContent.type.startsWith("image");
-				setLocalContent(LocalContent, isImage, URLContent);
-				const fileType = isImage ? "image" : "video";
-				await DBStore.setHWID("HWC", URLContent, { displayAs: fileType, content: URLContent, type: fileType });
-				setFileType("media");
+			const info = await getMedia(URLContent);
+			let haveFileExtData = info.fileext !== null && typeof info.fileext === 'string' && info.fileext.startsWith('.');
+			const previewedFileType = haveFileExtData ? info.fileext : "media";
+			
+			if (info.isMedia) {
+				let isImage = (info.type === "image" || info.filetype.startsWith("image/"));
+				
+				setLocalContent(isImage ? "image" : "video", isImage, isImage ? info.content : URLContent);
+				await DBStore.setHWID("HWC", URLContent, { displayAs: isImage ? "image" : "video", content: URLContent, type: previewedFileType });
+				setFileType(previewedFileType);
 				return;
 
 			} else {
@@ -161,6 +170,7 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 						'hwPreviewTool'
 					);
 				} catch (err) {
+					if (haveFileExtData) { setBadge(previewedFileType) }
 					FailedToPreview(Preview);
 					if (err instanceof TimeoutError) {
 						return
@@ -168,7 +178,7 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 						console.error('[HWPreview] Непредсказанная ошибка парсера:', URLContent, err);
 					}
 
-					await DBStore.setHWID("HWC", URLContent, { displayAs: "none", content: null });
+					await DBStore.setHWID("HWC", URLContent, { displayAs: "none", content: null, type: previewedFileType });
 					return;
 				}
 				
@@ -186,7 +196,8 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 					return;
 				}
 				else if (!fetchRes.success) {
-					await DBStore.setHWID("HWC", URLContent, { displayAs: "none", content: null });
+					if (haveFileExtData) { setBadge(previewedFileType) }
+					await DBStore.setHWID("HWC", URLContent, { displayAs: "none", content: null, type: previewedFileType });
 					FailedToPreview(Preview);
 					return;
 				}
@@ -241,66 +252,6 @@ function FailedToPreview(block, instant=false) {
 	block.find('span.loaderStatus span[text]').textContent = "Предпросмотр не доступен :(";
 }
 
-
-async function getMedia(url) {
-	return new Promise((resolve) => {
-		let finished = false;
-
-		const done = (result) => {
-			if (finished)
-				return;
-
-			finished = true;
-
-			img.src = "";
-			video.src = "";
-
-			resolve(result);
-		};
-
-		const img = new Image();
-
-		img.onload = () => {
-			done({
-				isContent: true,
-				type: "image",
-				media: img
-			});
-		};
-
-		img.onerror = () => {
-			imgFailed = true;
-
-			if (videoFailed)
-				done({ isContent: false });
-		};
-
-		const video = document.createElement("video");
-
-		video.onloadeddata = () => {
-			done({
-				isContent: true,
-				type: "video",
-				media: video
-			});
-		};
-
-		video.onerror = () => {
-			videoFailed = true;
-
-			if (imgFailed)
-				done({ isContent: false });
-		};
-
-		let imgFailed = false;
-		let videoFailed = false;
-
-		img.src = url;
-		video.src = url;
-
-		video.load();
-	});
-}
 
 
 function UpdateIFrameDarkTheme(frame, state, origin="*") {

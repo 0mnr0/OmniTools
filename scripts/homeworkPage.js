@@ -404,7 +404,6 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 				
 				<div class="hwPreview teacherPreview">
 					<div class="hwPreviewStat teacherSide">
-						<span id="WhosSide">Учитель</span>
 						<span id="FileType"></span>
 					</div>
 					${PreviewContent}
@@ -421,7 +420,7 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 							<span class="Given" second> <b 500> Дата выдачи: </b> ${toNormalDateS(hw.teach_date)} </span>
 						</div>
 						<div ${unableToDownload ? `title="Ученик не приложил файлы"` : ''}>
-							<span class="FileStud b500" ico url="${hw.download_url_stud}" ${unableToDownload ? `disabled` : ""}> Работа студента </span>
+							<span class="FileStud b500" ico url="${hw.download_url_stud}" ${unableToDownload ? `disabled` : ""}> <span id="FileExt"></span> Работа студента </span>
 							<span second> <b class="500"> Дата загрузки: </b> ${toNormalDateS(hw.stud_date)} </span>
 						</div>
 						${
@@ -484,7 +483,6 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 				
 				<div class="hwPreview studentPreview">
 					<div class="hwPreviewStat studentSide">
-						<span id="WhosSide">Ученик</span>
 						<span id="FileType"></span>
 					</div>
 				

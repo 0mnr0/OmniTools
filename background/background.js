@@ -1,5 +1,31 @@
+import { getMedia } from "./lib/media.js";
+import { toTransferable } from "./lib/transfer.js";
 import IDBSettings from "./DBStore.js";
+
+const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
+const BrowserContext = isFirefox ? browser : chrome;
+const ExtensionVersion = BrowserContext.runtime.getManifest().version;
+const log = console.log;
 IDBSettings.registerBridge();
+
+const handlers = {
+	async getMedia({ url, opts }) {
+		return toTransferable(await getMedia(url, opts));
+	}
+};
+
+BrowserContext.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+	const handler = handlers[msg?.type];
+	if (!handler) return false;
+
+	handler(msg)
+		.then(sendResponse)
+		.catch((e) => sendResponse({ ok: false, error: String(e) }));
+
+	return true;
+});
+
+
 
 
 const DOMAIN = "omni.top-academy.ru";
@@ -24,12 +50,6 @@ function getCityID(callback) {
         callback(cityID);
     });
 }
-
-
-const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
-const BrowserContext = isFirefox ? browser : chrome;
-const ExtensionVersion = BrowserContext.runtime.getManifest().version;
-const log = console.log;
 
 
 const Settings = {
