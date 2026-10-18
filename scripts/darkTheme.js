@@ -423,28 +423,3 @@ const IFrameDarkCssPatch = `
 `
 
 
-const CSSImprove = `
-	.hw-md_single__select-mark md-radio-button .md-label button span { top: -1px; position: relative } /* Fixes mark pos in hw check */
-	.students .card .card-internal {border-radius: 8px} /* Students Tab */
-	.groups .presents table {
-		border-radius: 10px;
-		overflow: hidden;
-	}
-	
-	.has_header md-content md-select-header input {
-		left: 0px;
-		width: calc(100% - 16px);
-		padding: 4px 8px;
-	}
-	
-	.md-dialog-container {
-		position: fixed;
-		top: 0px !important;
-		height: 100% !important
-	}
-	
-	.hw-md_single_stud-work__answer-text { max-width: 100%; line-break: anywhere }
-	.internal-wrap-global md-input-container .md-placeholder, .internal-wrap-global md-input-container label {transition: all .2s}
-	
-	
-`

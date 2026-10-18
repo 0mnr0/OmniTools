@@ -140,6 +140,10 @@ const GetDatapack = {
 						<p data-i18n="FullScreenHomeworkCard.Desc"></p>
 					</div>
 					<div class="SettingLine">
+						${GetSwitch('ImproveSiteStyle')} 
+						<p data-i18n="ImproveSiteStyle.Desc"></p>
+					</div>
+					<div class="SettingLine">
 						${GetSwitch('LoadingIndicatorFix')} 
 						<p data-i18n="LoadingIndicatorFix.Desc"></p>
 					</div>
