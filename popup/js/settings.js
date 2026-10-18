@@ -122,11 +122,6 @@ const GetDatapack = {
 						${GetSwitch('ShowTeacherPreview')} 
 						<p data-i18n="ShowTeacherPreview.Desc"></p>
 					</div>
-					
-					<div class="SettingLine">
-						${GetSwitch('AiLearning')} 
-						<p data-i18n="AiLearning.Desc"></p>
-					</div>
 					<div class="SettingLine">
 						${GetSwitch('DoSessionUpdate')} 
 						<p data-i18n="DoSessionUpdate.Desc"></p>
@@ -149,6 +144,7 @@ const GetDatapack = {
 						<p data-i18n="LoadingIndicatorFix.Desc"></p>
 					</div>
 				</div>
+				
 				
 				
 				<div type=other class="TypeSelector">
@@ -185,11 +181,26 @@ const GetDatapack = {
 			</div>
 			
 			
+			
+			<div class="SettingSection AiSettingDiv">
+				<div class="SettingLine">
+					${GetSwitch('LoyalAI')} 
+					<p data-i18n="LoyalAI.Desc"></p>
+				</div>
+				
+				<div class="SettingLine">
+					${GetSwitch('AiLearning')} 
+					<p data-i18n="AiLearning.Desc"></p>
+				</div>
+				
+			</div>
+			
 			<div class="SettingSection AuthorsTab">
 				<h2 class="AuthorsTab" data-i18n="AboutProject"></h2> 
 				
 				<div class="AuthorList">
-					<span data-i18n="AboutThisProject" class="AboutThisProject"></span>					
+					<span data-i18n="AboutThisProject_P1" class="AboutThisProject"></span>					
+					<span data-i18n="AboutThisProject_P2" class="AboutThisProject"></span>					
 				</div>
 				
 				
@@ -202,7 +213,6 @@ const GetDatapack = {
 					<span data-i18n="ContactDev"></span>
 				</div>
 			</div>
-			
 			
 			<div class="SettingSection OtherTab">
 				
