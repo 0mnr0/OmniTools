@@ -11,6 +11,9 @@ function onDomChange() {
 	if (loc.endsWith("/homeWork")) {
 		Listeners.Homework();
 	}
+	if (loc.includes("students/comment")) {
+		setGenAi();
+	}
 	
 }
 

@@ -67,7 +67,7 @@ async function UpdateSettings() {
 	
 	
 	if (newSettings.DarkTheme) {
-		cssContent += darkThemeCssContent + CSSImprove;
+		cssContent += darkThemeCssContent;
 	}
 	if (newSettings.DarkTheme !== CurrentSettings.DarkTheme) {
 		AutoUpdateIFrameDarkTheme(newSettings.DarkTheme);
@@ -112,7 +112,10 @@ async function UpdateSettings() {
 			}
 			
 		`
-
+	}
+	
+	if (newSettings.ImproveSiteStyle) {
+		cssContent += CSSImprove;
 	}
 	
 	

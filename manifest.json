@@ -33,10 +33,11 @@
 			"scripts/hookLeftBar.js",
 			"scripts/HomeworkPreview.js",
 			"scripts/styles.js",
+			"scripts/reviewAi.js",
 			"scripts/homeworkPage.js",
-			"scripts/pageHook.js",
 			"scripts/Settings.js",
-			"scripts/silent_session_update.js"
+			"scripts/silent_session_update.js",
+			"scripts/pageHook.js"
 		],
 		"css": ["etc/static.css"],
         "matches": ["https://omni.top-academy.ru/*"]
@@ -49,6 +50,7 @@
 			"icons/arrow_left.svg",
 			"icons/settings.svg",
 			"icons/search.svg",
+			"icons/wand.svg",
 			"icons/filter.svg",
 			"icons/fullscreen.svg",
 			"icons/fullscreen_close.svg",

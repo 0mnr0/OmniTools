@@ -277,6 +277,16 @@ div.CustomHWDiv div.content div.hwBlock.busy {
   }
 }
 
+
+@keyframes conicAiGen {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
 div.CustomHWDiv div.content div.hwBlock div.info {
     display: flex;
     width: 100%;
@@ -834,6 +844,97 @@ div.inMenuButton.Injected span {left: 2px; position: relative}
 	.wrapper-students table.table tbody {gap: 15px; justify-content: center; padding: 15px}
 }
 
+
+section.review-card-panel section.review-editor {position: relative}
+section.review-card-panel section.review-editor button#AIGenButton {
+    position: absolute;
+    display: flex;
+    z-index: 2;
+    gap: 6px;
+	background: transparent;
+    padding: 10px;
+    border: none;
+	overflow: hidden;
+	transition: all .3s, left .3s, top .85s;
+    border-radius: 30px;
+    top: -55px;
+    right: 78px;
+    align-items: center;
+	
+	span {
+		interpolate-size: allow-keywords;
+		width: auto;
+		overflow: hidden;
+		white-space: nowrap;
+		transition: all .5s ease-out;
+	}
+}
+
+section.review-card-panel section.review-editor button#AIGenButton:after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: auto;
+	aspect-ratio: 1/1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    transform-origin: center;
+    filter: brightness(0.7);
+    transition: all 1s;
+	animation: conicAiGen 16s infinite linear;
+    background: conic-gradient(red, orange, yellow, green, cyan, blue, violet, red);
+}
+
+section.review-card-panel section.review-editor button#AIGenButton:before {
+    content: "";
+    display: flex;
+    width: 30px;
+    height: auto;
+    position: relative;
+    transition: all .4s;
+    transition-delay: 0.1s;
+    aspect-ratio: 1/1;
+    background: var(--ai-icon-url);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+section.review-card-panel section.review-editor button#AIGenButton.mini {
+	gap: 0px;
+    background: #22aa90;
+	right: 15px;
+	top: 2px;
+	
+	span {
+		width: 0px;
+		opacity: 0.25;
+	}
+	
+	&:after {
+		transition-delay: 0.15s;
+		opacity: 0;
+		width: 200px;
+	}
+}
+
+
+section.review-card-panel section.review-editor button#AIGenButton.animEnd {
+	&:after {
+		animation: none;
+	}
+}
+
+section.review-card-panel section.review-editor .review-send-button {
+    transition: all .35s; top: 0px
+}
+
+section.review-card-panel section.review-editor.moveSendButton .review-send-button {
+    top: 25px;
+}
 
 `; document.body.after(styles);
 
