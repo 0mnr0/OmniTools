@@ -864,6 +864,7 @@ section.review-card-panel section.review-editor button#AIGenButton {
 	span {
 		interpolate-size: allow-keywords;
 		width: auto;
+		color: white;
 		overflow: hidden;
 		white-space: nowrap;
 		transition: all .5s ease-out;

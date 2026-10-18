@@ -23,7 +23,7 @@ function placeAiGenButton() {
 		AIGenButton.classList.add('mini');
 		placement.classList.add('moveSendButton');
 		setTimeout(() => {AIGenButton.classList.add('end');}, 1000)
-	}, 4000);
+	}, 5000);
 	AIGenButton.onclick = () => {
 		GenerateAiCallback(AIGenButton);
 	}
