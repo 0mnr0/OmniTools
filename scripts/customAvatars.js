@@ -9,6 +9,11 @@ function onAccountReset() {
 	lastCityId = null;
 }
 
+function findUserWithData(fio) {
+	if (!fio || !AvatarsData) return undefined
+	return Object.values(AvatarsData).find(obj => obj.name === fio);
+}
+
 function LoadCustomAvatars() {
 	const token = ++avatarsLoadToken;
 
@@ -39,6 +44,7 @@ function LoadCustomAvatars() {
 
 				result[original] = {
 					photo: `${ServerURL}/Data/JournalData/${key}/${userData.photo}`,
+					name: userData.name,
 					birthday: typeof userData.birthday === 'string' ? userData.birthday : null
 				};
 			}
