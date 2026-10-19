@@ -908,7 +908,7 @@ section.review-card-panel section.review-editor button#AIGenButton {
 	span {
 		interpolate-size: allow-keywords;
 		width: auto;
-		color: white;
+		color: black;
 		overflow: hidden;
 		white-space: nowrap;
 		transition: all .5s ease-out;
@@ -937,11 +937,10 @@ section.review-card-panel section.review-editor button#AIGenButton:before {
     content: "";
     display: flex;
     width: 30px;
-    height: auto;
+    height: 30px;
     position: relative;
     transition: all .4s;
     transition-delay: 0.1s;
-    aspect-ratio: 1/1;
     background: var(--ai-icon-url);
     background-repeat: no-repeat;
     background-position: center;
@@ -966,6 +965,55 @@ section.review-card-panel section.review-editor button#AIGenButton.mini {
 	}
 }
 
+section.review-card-panel section.review-editor button#AIGenButton.end.workingOnIt {
+	background: transparent;
+	padding: 5px 20px;
+	top: -50px;
+	
+	span {
+		opacity: 1;
+		width: auto;
+	}
+	
+	&:before {
+		width: 0px;
+		height: 30px;
+		opacity: 0
+	}
+	
+	&:after {
+		animation: conicAiGen 16s infinite linear;
+		opacity: 0.5;
+	}
+}
+section.review-card-panel section.review-editor button#AIGenButton.end.somethingIsWrong {
+	background: transparent;
+	span {
+		opacity: 1;
+		width: auto;
+	}
+	
+	&:before {
+		width: 0px;
+		height: 30px;
+		opacity: 0
+	}
+	
+	&:after {
+		animation: conicAiGen 16s infinite linear;
+		opacity: 0.75;
+		background: repeating-conic-gradient(black 0deg 25%, red 0deg 50%);
+	}
+}
+
+
+section.review-card-panel section.review-editor button#AIGenButton.end {
+    transition: all 0s, top .3s, padding .3s;
+	
+	&:after {
+		animation: none;
+	}
+}
 
 section.review-card-panel section.review-editor button#AIGenButton.animEnd {
 	&:after {

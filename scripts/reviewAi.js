@@ -1,3 +1,4 @@
+let aiReviewAnimationWasShown = false;
 let AINameList = ["Auto (Recommended)", "Google Gemma (Recommended)", "DeepSeek", "Qwen3"];
 let AIProvidesList = ["JournalUI: Server", "google/gemma-3-27b-it:free", "deepseek/deepseek-chat-v3-0324:free", "qwen/qwen3-coder:free"];
 
@@ -19,15 +20,23 @@ function placeAiGenButton() {
 	AIGenButton.style=`--ai-icon-url: url('${getIcon('/icons/wand.svg')}')`;
 	AIGenButton.innerHTML="<span> Сгенерировать отзыв </span>";
 	
-	setTimeout(() => {
+	if (aiReviewAnimationWasShown) {
+		AIGenButton.classList.add('end');
 		AIGenButton.classList.add('mini');
 		placement.classList.add('moveSendButton');
-		setTimeout(() => {AIGenButton.classList.add('end');}, 1000)
-	}, 5000);
-	AIGenButton.onclick = () => {
-		GenerateAiCallback(AIGenButton);
+	} else {
+		setTimeout(() => {
+			AIGenButton.classList.add('mini');
+			placement.classList.add('moveSendButton');
+			setTimeout(() => {AIGenButton.classList.add('end');}, 1000)
+		}, 5000);
 	}
+	
 	placement.prepend(AIGenButton);
+	const AIGenText = AIGenButton.find('span');
+	AIGenButton.onclick = () => {
+		GenerateAiCallback(AIGenButton, AIGenText);
+	}
 }
 
 const BlockDefinitionNames = {
@@ -41,10 +50,22 @@ const BlockDefinitionNames = {
 	7: "средняя оценка за прошедшие экзамены: ",
 }
 
-function GenerateAiCallback(fromButton) {
+function setTextWithAnim(target, text) {
+	target.textContent = text;
+	target.style.width = `${target.scrollWidth}px`
+}
+function setTextWithWidth(target, text, width) {
+	target.textContent = text;
+	target.style.width = `${width}px`
+}
+function clearTextWithWidth(target) {
+	target.style.width = '';
+}
+
+function GenerateAiCallback(fromButton, AIGenText) {
 	fromButton.disabled = true;
-	fromButton.className = "workingOnIt";
-	fromButton.textContent = "Работаем...";
+	fromButton.classList.add("workingOnIt");
+	setTextWithAnim(AIGenText, "Работаем...");
 	
 	function ExportAiInfo(blockList, index) {
 		let targetBlock = blockList[index];
@@ -84,38 +105,63 @@ function GenerateAiCallback(fromButton) {
 		subInfoText += "."
 	}
 	
+	let LoyalAI = CurrentSettings.LoyalAI;
+	
+	log("LoyalAI: ", LoyalAI)
 	let Prompt = `
 		Привет!
 		Я преподаватель в колледже и мне нужно составить простой и краткий отзыв для ученика (около 3х предложений).
 		Прошу тебя помочь с написанием отзыва, заранее большое спасибо. Напиши отзыв от имени учителя, без приветствий, начальных вступлений и без конечного вывода, не растягивая отзыв.
-		Пиши просто: короткие фразы, без усложнений. Избегай ИИ-клише: не используй штампы типа «погрузитесь», «раскрой потенциал», «решение нового уровня». Данные могут быть вычислены неполностью, и зачастую, реальные показания чуть выше.
+		Пиши просто: короткие фразы, без усложнений но в "деловой" форме. Данные могут быть вычислены неполностью, и зачастую, реальные показания выше.
+		${LoyalAI ? "Пожалуйста, не оценивай строго, учебная нагрузка сейчас достаточно большая. Если оценки или посещаемость низкие - постарайся не говорить об этом прямо" : ''}
 		Не парься про идеальную грамматику: можно без заглавных, без сложных конструкций. Избегай часто используемых общих слов и фраз! :) Желательно написать отзыв лояльно, простым текстом, если надо - привести проценты. Вот некоторая информация о нем:
 		Ученика зовут - "${studentName}". Предмет - ${subjectName}.
 		${subInfoText}
 	`
 	Prompt = Prompt.replaceAll('\t', '');
 	
-	fetcher(ServerURL+"/teacherTools/ai.generateText", "POST", { prompt: Prompt }).then((res) => {
-        placementArea.value = res.text;
-		placementArea.dispatchEvent(new Event('input', { bubbles: true }));
-		
-		fromButton.className = "ready";
-		fromButton.textContent = "Готово!";
-        
+	
+	
+	function parseFail() {
+		fromButton.classList.add("somethingIsWrong");
+		setTextWithAnim(AIGenText, "Что-то пошло не так :(");
 		setTimeout(() => {
 			fromButton.disabled = false;
-			fromButton.className = "";
-			fromButton.textContent = "Сгенерировать отзыв";
-		}, 2000)
+			fromButton.classList.remove("somethingIsWrong");
+			fromButton.classList.remove("workingOnIt");
+			fromButton.classList.remove("ready");
+			
+			setTextWithWidth(AIGenText, "Сгенерировать отзыв", 0);
+			setTimeout(() => {
+					fromButton.disabled = false;
+					clearTextWithWidth(AIGenText);
+				}, 1000);
+		}, 3000)
+	}
+	
+	fetcher(ServerURL+"/teacherTools/ai.generateText", "POST", { prompt: Prompt }).then((res) => {
+		if (res.ok) {
+			placementArea.value = res.data.text;
+			placementArea.dispatchEvent(new Event('input', { bubbles: true }));
+			fromButton.classList.add("ready");
+			setTextWithAnim(AIGenText, "Готово!");
+			
+			setTimeout(() => {
+				fromButton.classList.remove("ready");
+				fromButton.classList.remove("workingOnIt");
+				setTextWithWidth(AIGenText, "Сгенерировать отзыв", 0);
+				
+				setTimeout(() => {
+					clearTextWithWidth(AIGenText);
+					fromButton.disabled = false;
+				}, 1000);
+			}, 2000)
+		} else {
+			parseFail();
+		}
 		
 	}).catch((err) => {
-		fromButton.className = "somethingIsWrong";
-		fromButton.textContent = "Что-то пошло не так :(";
-		setTimeout(() => {
-			fromButton.disabled = false;
-			fromButton.className = "";
-			fromButton.textContent = "Сгенерировать отзыв";
-		}, 3000)
+		parseFail();
 	});
 	
 }

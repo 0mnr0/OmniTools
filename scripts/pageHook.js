@@ -8,11 +8,21 @@ function onDomChange() {
 	
 	
 	InjectSettingsButton();
+	if (loc.includes("/login/")) {
+		if (typeof AvatarsData === 'object') {
+			AvatarsData = {}
+		}
+	}
+		
+	
 	if (loc.endsWith("/homeWork")) {
 		Listeners.Homework();
 	}
 	if (loc.includes("students/comment")) {
 		setGenAi();
+		aiReviewAnimationWasShown = true;
+	} else {
+		aiReviewAnimationWasShown = false;
 	}
 	
 }

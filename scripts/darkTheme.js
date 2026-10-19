@@ -407,6 +407,8 @@ const darkThemeCssContent = `
 	div.CustomHWDiv div.topPanel img#back {
 		filter: none !important;
 	}
+	
+	section.review-card-panel section.review-editor button#AIGenButton span {color: var(--accent-text) !important;}
 `
 
 const IFrameDarkCssPatch = `
