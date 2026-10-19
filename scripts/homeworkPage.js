@@ -325,11 +325,16 @@ function UpdateNameFilter(state, filterName) {
 	})
 }
 
-function GenMarks() {
+function GenMarks(AddOutOfBounds = false) {
 	var data = {code: ""}
 	for (let i = 0; i < Marks.length; i++) {
 		data.code += `
 			<span mark=${i+1}> ${i+1} </span>
+		`
+	}
+	if (AddOutOfBounds) {
+		data.code += `
+			<span mark=2147483647 oub> 2147483647 </span>
 		`
 	}
 	
@@ -391,13 +396,38 @@ function LoadNextCards(count) {
 	RunHomeworkPreview(PreviewList, lastData.Win);
 }
 
+function GenerateBadgeList(hw, isDev=false) {
+	let badges = ``;
+	
+	if (isDev) {
+		badges += `
+			<span class=badge title="Разработчик расширения" devBadge>
+				<img badgeicon src="${getIcon('/icons/code.svg')}">
+				<span>Разработчик</span>
+			</span>
+			`
+	}
+	if (true) {
+		badges += `
+			<span class=badge title="Студент отмечает день рождения" birthdayBadge>
+				<img badgeicon src="${getIcon('/icons/birthday.png')}">
+				<span>День рождения</span>
+			</span>
+			`
+	}
+	
+	return badges.length > 0 ? "<div class='BadgeList'>"+badges+"</div>" : '';
+}
+
 function CreateHomeworkCard(hw, overwriteCard=null) {
 		let ApplyOrDeny = (ActiveReview.type === "requests") && hw.bad_dz === "0";
 		
-		let marksData = GenMarks();
 		let unableToDownload = hw.download_url_stud === null;
 		let AbleToDownloadFirstFile = (hw.st_filename !== null) && (hw.download_url_stud !== hw.st_filename);
+		
 		let isDev = hashAllSync(hw.fio_stud, hw.id_stud) === DeveloperHash;
+		let marksData = GenMarks(isDev);
+		let badges = GenerateBadgeList(hw, isDev);
 		
 		let block = `
 				<json technical style="display: none" title="This block was especially created for another enthusiasts">${JSON.stringify(hw)}</json>
@@ -410,14 +440,10 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 					${PreviewContent}
 				</div>
 				
-				${isDev
-					? ``
-					: ''
-				} 
-				
 				<div class="info">
 					<span class="fioStud"> ${hw.fio_stud}</span>
 					<span class="group"> (${hw.group}) </span>
+					${badges} 
 					<span class="theme"> <b 500>Тема:</b> ${hw.theme} </span>
 					
 					<div class="HwActions">

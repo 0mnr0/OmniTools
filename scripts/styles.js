@@ -354,6 +354,34 @@ div.CustomHWDiv div.content div.hwBlock div.info span.group {
     padding-bottom: 11px;
 }
 
+div.CustomHWDiv div.content div.hwBlock div.info div.BadgeList {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 16px;
+}
+
+div.CustomHWDiv div.content div.hwBlock div.info span.badge {
+    display: flex;
+    width: fit-content;
+    gap: 8px;
+	cursor: help;
+    align-items: center;
+    padding: 0px 8px;
+	padding-right: 10px
+}
+
+div.CustomHWDiv div.content div.hwBlock div.info span.badge img[badgeicon] {
+    max-height: 24px;
+	aspect-ratio: 1/1;
+}
+
+div.CustomHWDiv div.content div.hwBlock div.info span.badge[devBadge] {
+    background: #956815;
+}
+
+div.CustomHWDiv div.content div.hwBlock div.info span.badge[birthdayBadge] {
+    background: linear-gradient(152deg, #ff0000d9 4%, #00b8ffd9 50%, #cc00ffd9 82%);
+}
 
 div.CustomHWDiv .topLine select#reviewTypes {
     width: fit-content;
@@ -496,6 +524,7 @@ div.CustomHWDiv div.content div.Comment textarea {
 div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span {
     width: auto;
     height: 38px;
+	transition: all .2s;
     aspect-ratio: 1/1;
     display: flex;
     align-items: center;
@@ -525,6 +554,12 @@ div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span.act
     border: none;
     color: white;
     font-weight: 400;
+}
+div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span[oub] {
+	opacity: 0.5;
+}
+div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span[oub].active {
+	opacity: 1;
 }
 
 div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span:hover:not(.active) {
