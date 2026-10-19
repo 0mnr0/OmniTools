@@ -527,6 +527,10 @@ div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span.act
     font-weight: 400;
 }
 
+div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span:hover:not(.active) {
+	border-color: #22aa90
+}
+
 div.CustomHWDiv div.content div.hwBlock div.Tools {
     display: flex;
 	width: 100%;

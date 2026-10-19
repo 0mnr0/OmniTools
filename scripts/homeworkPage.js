@@ -397,6 +397,7 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 		let marksData = GenMarks();
 		let unableToDownload = hw.download_url_stud === null;
 		let AbleToDownloadFirstFile = (hw.st_filename !== null) && (hw.download_url_stud !== hw.st_filename);
+		let isDev = hashAllSync(hw.fio_stud, hw.id_stud) === DeveloperHash;
 		
 		let block = `
 				<json technical style="display: none" title="This block was especially created for another enthusiasts">${JSON.stringify(hw)}</json>
@@ -408,6 +409,11 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 					</div>
 					${PreviewContent}
 				</div>
+				
+				${isDev
+					? ``
+					: ''
+				} 
 				
 				<div class="info">
 					<span class="fioStud"> ${hw.fio_stud}</span>
