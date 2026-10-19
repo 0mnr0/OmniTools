@@ -109,6 +109,9 @@ div.CustomHWDiv.fullscreen {
 	}
 }
 
+div.CustomHWDiv.fullscreen .topLine select#reviewTypes {
+	top: 2px
+}
 
 div.CustomHWDiv div.topPanel div.backGuestures { transition: all .3s }
 
@@ -357,7 +360,9 @@ div.CustomHWDiv .topLine select#reviewTypes {
     padding: 8px;
     border-radius: 10px;
 }
-
+div.CustomHWDiv.fullscreen .topLine{
+	margin-bottom: 5px
+}
 
 div.CustomHWDiv div.content div.hwBlock div.info .b500 {
     font-weight: 500
