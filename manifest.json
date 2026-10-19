@@ -27,6 +27,7 @@
 			"scripts/libs/purify.min.js",
 			"scripts/libs/fileQualifier.js",
 			"scripts/libs/DBStore.js",
+			"scripts/libs/hashLib.js",
 			"scripts/darkTheme.js",
 			"scripts/parsers.js",
 			"scripts/codeBunch.js",
