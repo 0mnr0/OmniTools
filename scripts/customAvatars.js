@@ -1,94 +1,130 @@
-
+// AvatarsData: { "<оригинальный URL аватарки>": { photo: "<новый URL>", birthday: "<строка|null>" } }
 let AvatarsData = {};
-function LoadCustomAvatars(){
-		AvatarsData = {};
-		fetcher('https://omni.top-academy.ru/students/get-students', 'POST', {group: null}).then(res => {
-			let ProcessedList = [];
-			for (let i=0; i < res.length; i++) {
-				let Student = res[i];
-				ProcessedList.push(`${CityID}_${Student.id_stud}_${Student.fio_stud.replaceAll(" ","")}`)
-			}
-			fetcher(ServerURL+'/teacherTools/v2/get-student-list', 'POST', {studentList: ProcessedList}).then(uires => {
-				let result = uires.value;
-				for (let i = 0; i < result.length; i++) {
-					let UIStudent = result[i];
-					let StudentData = res[i];
-					if (UIStudent.photo !== null) {
-						let isBirthday = false;
-						if (typeof UIStudent.birthday === 'string' && UIStudent.birthday.indexOf(currentDate) >= 0) {
-							isBirthday = true;
-						}
-						AvatarsData[StudentData.photo_pas] = baseURL+'/Data/JournalData/'+ProcessedList[i]+'/'+UIStudent.photo + ( isBirthday ? "?isBirthday=true" : "" );
-					}
-				}
-			})
-		})
+let currentDateForBirths = "";
+let avatarsLoadToken = 0; // защита от устаревших ответов (смена аккаунта/города)
+
+function onAccountReset() {
+	avatarsLoadToken++;
+	AvatarsData = {};
+	lastCityId = null;
 }
 
-LoadCustomAvatars();
+function LoadCustomAvatars() {
+	const token = ++avatarsLoadToken;
 
+	if (lastCityId === null) {
+		AvatarsData = {};
+		return;
+	}
+
+	fetcher('https://omni.top-academy.ru/students/get-students', 'POST', { group: null }).then(res => {
+		if (token !== avatarsLoadToken || !res || !res.data) return;
+
+		const keyToOriginal = {};
+		const studentList = [];
+
+		for (const student of res.data) {
+			const key = `${lastCityId}_${student.id_stud}_${student.fio_stud.replaceAll(" ", "")}`;
+			keyToOriginal[key] = student.photo_pas;
+			studentList.push(key);
+		}
+
+		fetcher(ServerURL + '/teacherTools/v2/get-student-list', 'POST', { studentList }).then(uires => {
+			if (token !== avatarsLoadToken || !uires || !uires.ok || !uires.data) return;
+
+			const result = {};
+			for (const [key, userData] of Object.entries(uires.data)) {
+				const original = keyToOriginal[key];
+				if (!original || !userData || !userData.photo) continue;
+
+				result[original] = {
+					photo: `${ServerURL}/Data/JournalData/${key}/${userData.photo}`,
+					birthday: typeof userData.birthday === 'string' ? userData.birthday : null
+				};
+			}
+			AvatarsData = result;
+		});
+	});
+}
+
+function getFormattedDate() {
+	const date = new Date();
+	const month = String(date.getMonth() + 1).padStart(2, "0"); // Месяцы с 0 по 11
+	const day = String(date.getDate()).padStart(2, "0");
+	return `-${month}-${day}`;
+}
+currentDateForBirths = getFormattedDate();
+
+function isVideoFile(str) {
+	return /\.(mp4|mov)$/i.test(str);
+}
+
+function CreateBirthDayBadge(element, isBirthday) {
+	log(element.parentElement, element.parentElement.find(':scope > img.birthdayBadge') === null)
+	if (isBirthday && element.parentElement && element.parentElement.find(':scope > img.birthdayBadge') === null) {
+		let birthdayBadge = document.createElement('img');
+		birthdayBadge.className = 'birthdayBadge';
+		birthdayBadge.title = 'По нашим данным у ученика сегодня день рождения';
+		birthdayBadge.src = getIcon('/icons/birthday.png');
+		element.parentElement.appendChild(birthdayBadge);
+		console.log(birthdayBadge)
+	}
+}
+
+function escapeAttr(value) {
+	return value.replaceAll("\\", "\\\\").replaceAll('"', '\\"');
+}
+
+function CreateVideoAvatar(src) {
+	const video = document.createElement('video');
+	video.className = 'customAvatar';
+	video.muted = true;
+	video.autoplay = true;
+	video.loop = true;
+	video.src = src;
+	return video;
+}
 
 function ReplaceAnyAvatars() {
-	function CreateBirthDayBadge(element, isBirthDay) {
-		if (isBirthDay && element.parentElement && element.parentElement.querySelector('img.birthdayBadge') === null) {
-			let birthdayBadge = document.createElement('img');
-			birthdayBadge.className = 'birthdayBadge';
-			birthdayBadge.title='По нашим данным у ученика сегодня день рождения';
-			birthdayBadge.src = 'https://github.com/0mnr0/WallpaperInJournal/blob/main/UIData/badges_images/birthday.png?raw=true';
-			element.parentElement.appendChild(birthdayBadge);
+	const entries = Object.entries(AvatarsData);
+	if (entries.length === 0) return;
+	if (document.querySelector("span.reviews-container") !== null) return;
+
+	for (const [originalAvatar, customUser] of entries) {
+		const isBirthday = !!customUser.birthday && customUser.birthday.includes(currentDateForBirths);
+		const newAvatar = customUser.photo.replaceAll("\\", "/");
+		const original = escapeAttr(originalAvatar);
+
+		const imgSelector = `:not(.reviews-modal-comments .reviews-container) img[src="${original}"]`;
+		const bgSelector = `:not(.reviews-modal-comments .reviews-container) i.user-photo.user-photo__presents[style="background-image: url('${original}')"]`;
+
+		if (!isVideoFile(newAvatar)) {
+			document.querySelectorAll(imgSelector).forEach(el => {
+				el.style.display = '';
+				CreateBirthDayBadge(el, isBirthday);
+				el.src = newAvatar; // после этого элемент перестанет подходить под селектор
+			});
+			document.querySelectorAll(bgSelector).forEach(el => {
+				el.style.display = '';
+				CreateBirthDayBadge(el, isBirthday);
+				el.style.backgroundImage = `url('${newAvatar}')`;
+			});
+		} else {
+			const replaceWithVideo = el => {
+				if (el.nextElementSibling && el.nextElementSibling.classList.contains('customAvatar')) return;
+				const video = CreateVideoAvatar(newAvatar); // отдельный <video> на каждый элемент
+				el.style.display = 'none';
+				el.after(video);
+				console.log(isBirthday);
+				CreateBirthDayBadge(video, isBirthday);
+			};
+			document.querySelectorAll(`img[src="${original}"]`).forEach(replaceWithVideo);
+			document.querySelectorAll(`i.user-photo.user-photo__presents[style="background-image: url('${original}')"]`).forEach(replaceWithVideo);
 		}
 	}
-	
-	
-	for (let i = 0; i < Object.keys(AvatarsData).length; i++) {
-		let KeyName = Object.keys(AvatarsData)[i];
-		let RightAvatar = AvatarsData[KeyName];
-		const isBirthDay = RightAvatar.indexOf('?isBirthday=true') > 0;
-		if (isBirthDay) { RightAvatar = RightAvatar.replaceAll('?isBirthday=true', '') }
-
-		if (document.querySelector("span.reviews-container") === null) { 
-			if (!isVideoFile(RightAvatar)) {
-				document.querySelectorAll(`:not(.reviews-modal-comments .reviews-container) img[src="${KeyName}"]`).forEach(wrongAvatar => {
-					wrongAvatar.style.display = '';
-					CreateBirthDayBadge(wrongAvatar, isBirthDay);
-					if (wrongAvatar.src !== RightAvatar) {
-						wrongAvatar.src = RightAvatar;
-					}
-				})
-				document.querySelectorAll(`:not(.reviews-modal-comments .reviews-container) i.user-photo.user-photo__presents[style="background-image: url('${KeyName}')"]`).forEach(wrongAvatar => {
-					wrongAvatar.style.display='';
-					CreateBirthDayBadge(wrongAvatar, isBirthDay);
-					if (wrongAvatar.style !== `background-image: url('${RightAvatar.replaceAll("\\", "/")}')`) {
-						wrongAvatar.style = `background-image: url('${RightAvatar.replaceAll("\\", "/")}')`;
-					}
-				})
-			} else {
-				
-				let VideoAvatar = document.createElement('video');
-				VideoAvatar.className = 'customAvatar';
-				VideoAvatar.muted = true;
-				VideoAvatar.autoplay = true;
-				VideoAvatar.loop = true;
-				VideoAvatar.src = RightAvatar;
-
-				document.querySelectorAll(`img[src="${KeyName}"]`).forEach(wrongAvatar => {
-					if (wrongAvatar.nextElementSibling && wrongAvatar.nextElementSibling.classList.contains('customAvatar')) {return}
-					wrongAvatar.style.display='none';
-					wrongAvatar.after(VideoAvatar);
-				})
-				document.querySelectorAll(`i.user-photo.user-photo__presents[style="background-image: url('${KeyName}')"]`).forEach(wrongAvatar => {
-					if (wrongAvatar.nextElementSibling && wrongAvatar.nextElementSibling.classList.contains('customAvatar')) {return}
-					wrongAvatar.style.display='none';
-					wrongAvatar.after(VideoAvatar);
-				})
-				CreateBirthDayBadge(VideoAvatar, isBirthDay);
-			}
-		}
-	}
-	//
 }
 setInterval(ReplaceAnyAvatars, 1200);
+
 setInterval(() => {
-	currentDate = getFormattedDate();
-}, 20000)
-document.ReplaceAnyAvatars = ReplaceAnyAvatars;
+	currentDateForBirths = getFormattedDate();
+}, 60 * 1000);

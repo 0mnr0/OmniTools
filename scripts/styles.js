@@ -872,6 +872,65 @@ div.inMenuButton.Injected img {
     margin: 0px 6px;
 }
 
+
+.presents .number .user-photo__presents:hover span img {display: none}
+.presents .number .user-photo__presents {z-index: 3; transition: all .6s; background-position: center; position: relative; top: 0px ; left: 0px}
+.presents .number .user-photo__presents:hover { scale: 2.25; z-index: 10; border-radius: 10px }
+.customAvatar { object-fit: cover; border-radius: 200px; }
+.presents .number video.customAvatar {width: 80px; height: 80px; aspect-ratio: 1/1;position: relative; border-radius: 40px; left: 0px; top: 0px; transition: all .6s ease; cursor: pointer}
+.presents .number video.customAvatar:hover {scale: 2.25; z-index: 10; border-radius: 10px}
+.presents .number video.customAvatar:active {scale: 7.5; position: relative; z-index: 100; left: 350px; border-radius: 5px !important}
+.presents .number .user-photo__presents:active {scale: 7.5; position: relative; z-index: 100; left: 350px; border-radius: 5px !important}
+	md-backdrop.md-opaque {height: 100%}
+	
+.presents .number__presents {display: flex; top: 20px; left: 20px; top: 0px}
+.presents .number .user-photo__presents {margin-top: 0px; top: 0px; position: relative; left: 0px}
+.presents .number__presents span {align-content: center; position: absolute; top: 50%; transform: translateY(-50%)}
+	
+.students .card .card-image video {width: 75px; aspect-ratio: 1/1; height: 75px; object-fit: cover}
+.student-info .mobile_profile .profileImg video.customAvatar {width: 100%; max-height: 160px; object-fit: cover}
+.student-info .reviews-wrap .reviews-wrap__left .profileImg video.customAvatar {width: 116px; height: 116px; transition: all .6s; object-fit: cover;}
+@media (max-width: 1600px) and (min-width: 768px) {
+	.student-info .reviews-wrap .reviews-wrap__left .profileImg video.customAvatar {width: 86px; height: 86px;}
+}
+.student-info .reviews-wrap .student_card .profileImg, .mobile_profile .student_card .profileImg, .students .card .card-image {position: relative;}
+img.birthdayBadge, .students .card .card-image img.birthdayBadge { 
+	width: 30px !important;
+	height: 30px !important;
+	top: 0px;
+	right: 0px;
+	position: absolute;
+	z-index: 1;
+	filter: drop-shadow(0px 0px 2px black);
+}
+img.birthdayBadge:hover, .students .card .card-image img.birthdayBadge:hover, .student-info .reviews-wrap .reviews-wrap__left .profileImg img.birthdayBadge:hover {
+	scale: 1.6;
+}
+.presents .table td i.user-photo span img.birthdayBadge {
+	transition: all .3s;
+	display: block !important;
+	left: 10px
+}
+
+@media (max-width: 1300px) {
+	.wrapper-students table.table tr.presents_stud .number .user-photo span img.birthdayBadge {
+		position: relative !important;
+		top: 15px;
+		left: -5px;
+	}
+	div.wrapper-students table.table tr.presents_stud .number .user-photo span {
+		transform: none;
+		left: 0px;
+		position: relative;
+	}
+	
+	.wrapper-students table.table tr.presents_stud .number .user-photo__presents {pointer-events: none}
+	
+	div.wrapper-students table.table tr.presents_stud .number {
+		left: 0px
+	}
+}
+
 div.inMenuButton.Injected span {left: 2px; position: relative}
 
 

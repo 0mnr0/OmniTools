@@ -407,7 +407,10 @@ function GenerateBadgeList(hw, isDev=false) {
 			</span>
 			`
 	}
-	if (true) {
+	
+	let customUserData = findUserWithData(hw.fio_stud)
+	
+	if (customUserData && customUserData.birthday && customUserData.birthday.includes(currentDateForBirths)) {
 		badges += `
 			<span class=badge title="Студент отмечает день рождения" birthdayBadge>
 				<img badgeicon src="${getIcon('/icons/birthday.png')}">

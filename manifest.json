@@ -38,6 +38,7 @@
 			"scripts/homeworkPage.js",
 			"scripts/Settings.js",
 			"scripts/silent_session_update.js",
+			"scripts/customAvatars.js",
 			"scripts/pageHook.js"
 		],
 		"css": ["etc/static.css"],

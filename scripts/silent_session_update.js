@@ -22,6 +22,8 @@ function scheduleNext() {
   setTimeout(() => sessionUpdate(0), delay);
 }
 
+
+
 async function sessionUpdate(attempt = 0) {
   if (typeof CurrentSettings === "object" && !CurrentSettings.DoSessionUpdate) {
     scheduleNext();
@@ -34,6 +36,11 @@ async function sessionUpdate(attempt = 0) {
     const res = await fetcher('https://omni.top-academy.ru/auth/get-start-info', 'POST');
     const cityId = res?.data?.branch?.id_city;
     if (!cityId) throw new Error("no city id");
+	
+	if (lastCityId !== cityId) {
+		lastCityId = cityId;
+		LoadCustomAvatars();
+	}
 
     await fetcher(`https://omni.top-academy.ru/auth/change-city?city=${cityId}`, 'GET');
     scheduleNext();

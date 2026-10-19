@@ -9,9 +9,8 @@ function onDomChange() {
 	
 	InjectSettingsButton();
 	if (loc.includes("/login/")) {
-		if (typeof AvatarsData === 'object') {
-			AvatarsData = {}
-		}
+		lastCityId = null;
+		onAccountReset(); // in customAvatars
 	}
 		
 	

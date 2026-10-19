@@ -1,6 +1,7 @@
 // https://omni.top-academy.ru/auth/get-start-info
 
 const DeveloperHash = "82cb119234503";
+let lastCityId = null;
 let CurrentSettings = {};
 
 function downloadFile(url, fileName) {
