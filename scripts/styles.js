@@ -754,6 +754,7 @@ div.CustomHWDiv div.content div.Comment div.fileInput input {
 }
 
 
+
 .flex {
 	display: flex;
 }
@@ -826,6 +827,7 @@ div.CustomHWDiv .topLine.filters select#dateSelector {
 div.CustomHWDiv .topLine.filters {
     max-height: 0px;
     display: flex;
+	flex-direction: column;
     opacity: 0.1;
     gap: 10px;
 	margin-bottom: 4px;
@@ -840,6 +842,24 @@ div.CustomHWDiv .topLine.filters.visible {
     opacity: 1;
     border-top: dashed 1px #80808078;
     margin-top: 7px;
+}
+
+div.CustomHWDiv .topLine.filters div.line {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+}
+
+
+div.CustomHWDiv div.showMore {
+    width: fit-content;
+}
+
+div.CustomHWDiv div.showMore button.showMoreBtn {
+    padding: 10px 12px;
+    border: none;
+    background: #22aa90;
+    border-radius: 12px;
 }
 
 

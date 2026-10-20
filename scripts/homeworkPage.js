@@ -9,6 +9,7 @@ let lastData = {
 }
 
 let PAGE_SIZE = 30;
+let HWLimit = PAGE_SIZE; // сколько карточек сейчас разрешено показывать
 let HWEntries = [];
 let HWSort = "oldest";
 let HWFilter = { group: "", name: "" };
@@ -86,20 +87,27 @@ function OpenCustomHomeworkWindow() {
 			</div>
 			
 			<div class="topLine filters">
-				<select id="groupSelector">
-					<option value="" selected>Все группы</option>
-				</select>
-				
-				<input id="searchName" placeholder="ФИО Ученика"></input>
-				
-				<select id="dateSelector">
-					<option value="oldest" selected>Сначала старые</option>
-					<option value="newest">Сначала новые</option>
-				</select>
+				<div class="line">
+					<select id="groupSelector">
+						<option value="" selected>Все группы</option>
+					</select>
+					
+					<input id="searchName" placeholder="ФИО Ученика"></input>
+					
+					<select id="dateSelector">
+						<option value="oldest" selected>Сначала старые</option>
+						<option value="newest">Сначала новые</option>
+					</select>
+				</div>
+				<div class="line showMore">
+					<button class="showMoreBtn show30" show=30> Показать ещё 30 </button>
+					<button class="showMoreBtn showAll" show=all> Показать все </button>
+				</div>
 			</div>
 			
 		</div>
 		<div class="content"></div>
+		
 		<m3loader></m3loader>
 	`;
 	
@@ -170,9 +178,22 @@ function OpenCustomHomeworkWindow() {
 		LoadHomeworkList(ActiveReview.data[ActiveReview.type]);
 	};
 	
+	Win.findAll('div.showMore button.showMoreBtn').forEach(btn => {
+		btn.onclick = () => {
+			const amount = btn.getAttribute('show');
+			if (amount === 'all') {
+				HWLimit = Infinity;
+			} else {
+				HWLimit += parseInt(amount, 10) || PAGE_SIZE;
+			}
+			RefreshHomeworkView();
+		};
+	});
+	
 	let nameDebounce = null;
 	groupList.onchange = () => {
 		HWFilter.group = groupList.value;
+		HWLimit = PAGE_SIZE;
 		RefreshHomeworkView();
 		CheckFilterStatud();
 	};
@@ -180,6 +201,7 @@ function OpenCustomHomeworkWindow() {
 		clearTimeout(nameDebounce);
 		nameDebounce = setTimeout(() => {
 			HWFilter.name = studentNameFilter.value;
+			HWLimit = PAGE_SIZE;
 			RefreshHomeworkView();
 			CheckFilterStatud();
 		}, 250);
@@ -192,6 +214,7 @@ function OpenCustomHomeworkWindow() {
 	
 	Marks = [];
 	HWEntries = [];
+	HWLimit = PAGE_SIZE;
 	HWFilter = { group: "", name: "" };
 	Parse("https://omni.top-academy.ru/auth/get-marks-selects", "POST", null).then(markRes => {
 		Marks = markRes;
@@ -214,6 +237,8 @@ function NothingToCheck(Win) {
 	Win.find("div.content").innerHTML = `
 		<span class="nothingToShow"> Работ нет, нечего показывать </span>
 	`
+	const showMore = Win.find('div.showMore');
+	if (showMore) showMore.style.display = 'none';
 }
 
 
@@ -261,6 +286,7 @@ function SwitchReviewType(type, groupList, nameInput) {
 }
 
 function ClearHomeworkView() {
+	HWLimit = PAGE_SIZE;
 	PreviewFrames = [];
 	HWEntries.forEach(e => e.card?.block.remove());
 	HWEntries = [];
@@ -364,11 +390,14 @@ function RefreshHomeworkView() {
 	const contentList = lastData.Win.find('div.content');
 	const created = [];
 	let shown = 0;
+	let matched = 0;
 
 
 	lastData.M3.setUnreachable(false);
 	HWEntries.forEach((entry, i) => {
-		const show = shown < PAGE_SIZE && MatchesFilter(entry.hw);
+		const matches = MatchesFilter(entry.hw);
+		if (matches) matched++;
+		const show = shown < HWLimit && matches;
 		if (show) shown++;
 
 		if (!entry.card) {
@@ -382,6 +411,9 @@ function RefreshHomeworkView() {
 		entry.card.block.style.display = show ? '' : 'none';
 	});
 	lastData.M3.setUnreachable(true);
+
+	const showMore = lastData.Win.find('div.showMore');
+	if (showMore) showMore.style.display = matched > shown ? '' : 'none';
 
 	if (created.length) RunHomeworkPreview(created, lastData.Win);
 }
@@ -763,7 +795,6 @@ function RemoveCard(Card) {
 	if (entry) {
 		HWEntries = HWEntries.filter(e => e !== entry);
 
-		// Удаление из закэшированного списка данных объект
 		const list = ActiveReview.data?.[ActiveReview.type];
 		if (list) {
 			const idx = list.indexOf(entry.hw);
@@ -787,23 +818,19 @@ function RefreshReviewCounters() {
 	const groupList   = Win.find('div.topLine.filters select#groupSelector');
 	const nameInput   = Win.find('div.topLine.filters input#searchName');
 
-	// Совсем ничего не осталось
 	if (ReviewIsEmpty(ActiveReview.data)) {
 		NothingToCheck(Win);
 		reviewTypes.style.display = 'none';
 		return;
 	}
 
-	// Пересобираем селектор типов
 	LoadReviewTypes(ActiveReview.data, reviewTypes);
 
-	// Если текущий тип пуст - перейти на другой
 	if (!ActiveReview.data[ActiveReview.type]?.length) {
 		SwitchReviewType(GetStartReviewType(ActiveReview.data), groupList, nameInput);
 	}
 	reviewTypes.value = ActiveReview.type;
 
-	// Пересобираем группы, сохраняя выбранную
 	const selected = HWFilter.group;
 	LoadFilterGroups(ActiveReview.data, groupList);
 	if (selected && [...groupList.options].some(o => o.value === selected)) {
@@ -831,7 +858,7 @@ function SetCardStatus(Card, Status) {
 	}
 }
 
-function LoadFilterGroups(res, list) { // TODO
+function LoadFilterGroups(res, list) {
 	let groupData = {}
 	let groups = [];
 	
@@ -909,7 +936,7 @@ function SendWorkDenial(id, comment, comment_attach) {
 	
 	// https://omni.top-academy.ru/homework/delete-stud-dz
 	// POST
-	// {"id_domzad":"156845","comment":"Deny", comment_attach: string?}
+	// {"id_domzad":"2156845","comment":"Deny", comment_attach: string?}
 	
 	// Response:
 	// true / false (as text)
@@ -959,4 +986,3 @@ function SendWorkApply(studDz, mark, comment, comment_attach) {
 // TODO:
 // - Проверка длины comment (до 1000 символов)
 // - Менять "Добавить комментарий" на "Почему отклоняете?" когда отклоняем
-// - Настройка для показа по дате загрузки
