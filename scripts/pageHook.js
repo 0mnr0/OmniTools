@@ -17,14 +17,20 @@ function onDomChange() {
 	if (loc.endsWith("/homeWork")) {
 		Listeners.Homework();
 	}
+	
+	iAmLateFeature();
 	if (loc.includes("students/comment")) {
 		setGenAi();
 		aiReviewAnimationWasShown = true;
 	} else {
 		aiReviewAnimationWasShown = false;
-	}
+	}	
+}
+
+function onPageChange() {
 	
 }
+
 
 
 let timeout;
@@ -38,6 +44,31 @@ observer.observe(document.body, {
     subtree: true
 });
 
+
+
+function interceptHistory() {
+    const changeState = (type) => {
+        const original = history[type];
+        return function () {
+            const result = original.apply(this, arguments);
+            const event = new CustomEvent(type.toLowerCase(), { detail: { arguments } });
+            window.dispatchEvent(event);
+            return result;
+        };
+    };
+
+    history.pushState = changeState('pushState');
+    history.replaceState = changeState('replaceState');
+}
+interceptHistory();
+
+window.addEventListener('pushstate', () => {
+    onPageChange();
+});
+
+window.addEventListener('replacestate', () => {
+    onPageChange();
+});
 
 
 

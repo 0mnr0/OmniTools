@@ -94,6 +94,8 @@ function CreateVideoAvatar(src) {
 function ReplaceAnyAvatars() {
 	const entries = Object.entries(AvatarsData);
 	if (entries.length === 0) return;
+	log(AvatarsData);
+	
 	if (document.querySelector("span.reviews-container") !== null) return;
 
 	for (const [originalAvatar, customUser] of entries) {
@@ -108,7 +110,7 @@ function ReplaceAnyAvatars() {
 			document.querySelectorAll(imgSelector).forEach(el => {
 				el.style.display = '';
 				CreateBirthDayBadge(el, isBirthday);
-				el.src = newAvatar; // после этого элемент перестанет подходить под селектор
+				el.src = newAvatar;
 			});
 			document.querySelectorAll(bgSelector).forEach(el => {
 				el.style.display = '';
@@ -118,7 +120,7 @@ function ReplaceAnyAvatars() {
 		} else {
 			const replaceWithVideo = el => {
 				if (el.nextElementSibling && el.nextElementSibling.classList.contains('customAvatar')) return;
-				const video = CreateVideoAvatar(newAvatar); // отдельный <video> на каждый элемент
+				const video = CreateVideoAvatar(newAvatar); 
 				el.style.display = 'none';
 				el.after(video);
 				console.log(isBirthday);
