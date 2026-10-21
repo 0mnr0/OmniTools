@@ -513,7 +513,7 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 					</div>
 					
 					<div class="Comment">
-						<h4> Добавить комментарий: </h4>
+						<h4 class="Supermode" id="tellMeWhyyy"> Добавить комментарий: </h4>
 						
 						<textarea id="cmnt"></textarea>
 						
@@ -578,6 +578,8 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 		let fileInputTitle = Homework.find("div.fileInput form label.input-file span");
 		let ResetFileUploader = Homework.find("div.fileInput span.fileUploaderReset");
 		let RestoredFile = Homework.find('div.HwActions span.FileRestored');
+		let tellMeWhyyy = Homework.find('div.Comment .Supermode#tellMeWhyyy');
+		
 		
 		
 		Homework.find('div.HwActions span.FileTeach').onclick = () => {
@@ -626,9 +628,16 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 		
 		
 		let workDenial = false;
+		function UpdateTellMeWhyText () {
+			tellMeWhyyy.textContent = workDenial ? " Причина отклонения: " : " Добавить комментарий: ";
+			tellMeWhyyy.setAttribute("describingDenial", workDenial ? "true" : "")
+		}
+		
 		if (!ApplyOrDeny) {
 			ResetActionTitle.parentElement.onclick = () => {
 				workDenial = !workDenial;
+				UpdateTellMeWhyText();
+				
 				if (workDenial) {
 					SendAction.classList.add('denial');
 					SendAction.textContent = "Удалить работу";

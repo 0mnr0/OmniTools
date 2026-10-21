@@ -509,8 +509,9 @@ div.CustomHWDiv div.content div.SetMark div.list {
 }
 
 div.CustomHWDiv div.content div.Comment {
-    margin-top: 16px;
-	margin-bottom: 40px;
+    margin-top: 36px;
+    margin-bottom: 40px;
+    padding-top: 0px;
 }
 
 div.CustomHWDiv div.content div.Comment textarea {
@@ -753,6 +754,10 @@ div.CustomHWDiv div.content div.Comment div.fileInput .input-file span::before {
     height: 10px;
     margin-left: -10px;
     margin-right: 5px;
+}
+
+div.CustomHWDiv div.content div.Comment h4#tellMeWhyyy[describingdenial="true"] {
+    text-decoration: underline
 }
 
 div.CustomHWDiv div.content div.Comment div.fileInput span.fileUploaderReset {
