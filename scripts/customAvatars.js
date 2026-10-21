@@ -66,14 +66,12 @@ function isVideoFile(str) {
 }
 
 function CreateBirthDayBadge(element, isBirthday) {
-	log(element.parentElement, element.parentElement.find(':scope > img.birthdayBadge') === null)
 	if (isBirthday && element.parentElement && element.parentElement.find(':scope > img.birthdayBadge') === null) {
 		let birthdayBadge = document.createElement('img');
 		birthdayBadge.className = 'birthdayBadge';
 		birthdayBadge.title = 'По нашим данным у ученика сегодня день рождения';
 		birthdayBadge.src = getIcon('/icons/birthday.png');
 		element.parentElement.appendChild(birthdayBadge);
-		console.log(birthdayBadge)
 	}
 }
 
@@ -94,7 +92,6 @@ function CreateVideoAvatar(src) {
 function ReplaceAnyAvatars() {
 	const entries = Object.entries(AvatarsData);
 	if (entries.length === 0) return;
-	log(AvatarsData);
 	
 	if (document.querySelector("span.reviews-container") !== null) return;
 
@@ -123,7 +120,6 @@ function ReplaceAnyAvatars() {
 				const video = CreateVideoAvatar(newAvatar); 
 				el.style.display = 'none';
 				el.after(video);
-				console.log(isBirthday);
 				CreateBirthDayBadge(video, isBirthday);
 			};
 			document.querySelectorAll(`img[src="${original}"]`).forEach(replaceWithVideo);

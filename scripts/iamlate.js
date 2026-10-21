@@ -20,7 +20,7 @@ let missPresentsLoaded = false;
 let lastParsedPresents = null;
 let isTimeMissLoaded = false;
 function RunPresentsCode() {
-	if (cityId === null) return; // Not Loaded Yet
+	if (lastCityId === null) return; // Not Loaded Yet
 	let groupName = document.querySelector('.presents .group span.groupName.ng-binding');
 	let tabList = document.querySelectorAll('.presents .pars li');
 	let activeTab = document.querySelector('.presents .pars li.active');
@@ -47,17 +47,19 @@ function RunPresentsCode() {
 	
 	
 	if (!missPresentsLoaded || lastSelectedGroup === null || lastParsedPresents === null) {
-		fetchJournal('https://omni.top-academy.ru/presents/get-presents', 'POST',
+		fetcher('https://omni.top-academy.ru/presents/get-presents', 'POST',
 			{
 				date: today,
 				lenta: currentPos
 			}
 		).then(res => {
+			if (!res.ok) {return}
+			const payload = res.data;
 			missPresentsLoaded = true;
-			let groupId = res.cur_group;
+			let groupId = payload.cur_group;
 			lastSelectedGroup = groupId;
-			lastParsedPresents = res;
-			LoadMissedTable(Number(groupId), res);
+			lastParsedPresents = payload;
+			LoadMissedTable(Number(groupId), payload);
 		})
 		.catch((error) => {
 			missPresentsLoaded = false;
@@ -72,13 +74,14 @@ function RunPresentsCode() {
 }
 
 function LoadMissedTable(groupId, presentsRes) {
-	fetchData(`/api/late/get`, 'POST', {
-		cityId: cityId, // cityId
+	fetcher(ServerURL+`/api/late/get`, 'POST', {
+		cityId: lastCityId, // cityId
 		groupId: groupId   // groupId
 	}).then(res => {
-		if (!res.success) return;
+		if (!res.ok) return;
+		const payload = res.data;
 		
-		let studentDisplayedList = document.querySelectorAll(".table-wrapper.wrapper-students tbody tr.presents_stud")
+		let studentDisplayedList = findAll(".table-wrapper.wrapper-students tbody tr.presents_stud")
 		
 		for (let i = 0; i < studentDisplayedList.length; i++) {
 			let parsedStudent = presentsRes.students[i];
@@ -87,7 +90,7 @@ function LoadMissedTable(groupId, presentsRes) {
 			let displayedStudentName = displayedStudent.querySelector('td.name p');
 			if (displayedStudentName === undefined) return; // Empty lesson
 			if (parsedStudent.fio_stud === displayedStudentName.textContent) {
-				let IamLate = GetInfoForStud(res, Number(parsedStudent.id_stud), Number(groupId))
+				let IamLate = GetInfoForStud(payload, Number(parsedStudent.id_stud), Number(groupId))
 				if (IamLate === null) {continue}
 				
 				let lateMark = GenerateLateMark(IamLate);
@@ -131,7 +134,6 @@ function GenerateLateMark(StudInfo) {
 }
 
 function GetInfoForStud(ApiLateRes, stud_id, group_id) {
-	
 	for (let stud of ApiLateRes.values) {
 		if (stud.studentId === stud_id && stud.groupId === group_id)
 			{ return stud }

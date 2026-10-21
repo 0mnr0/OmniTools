@@ -893,6 +893,43 @@ div.inMenuButton.Injected img {
 }
 
 
+.table-wrapper.wrapper-students table td.name p.timeMissUp {
+	top: -14px;
+	position: relative
+}
+	
+.table-wrapper.wrapper-students span.timeMiss {
+    width: auto;
+    position: absolute;
+    padding: 4px 8px;
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-all;
+    color: white;
+    font-weight: 500;
+    border-radius: 10px;
+    font-size: 14px;
+    left: 5px;
+    bottom: 5px;
+}
+	
+div.review-card, div.review-card section.review-editor {
+	position: relative;
+}
+	
+.table-wrapper.wrapper-students span.timeMiss.miss15 {
+	background: #a38800;
+}
+.table-wrapper.wrapper-students span.timeMiss.miss30 {
+	background: #af6900;
+}
+.table-wrapper.wrapper-students span.timeMiss.missunk {
+	background: #b54300;
+}
+.table-wrapper.wrapper-students span.timeMiss.colorUnknown {
+	background: #595959;
+}
+
 .presents .number .user-photo__presents:hover span img {display: none}
 .presents .number .user-photo__presents {z-index: 3; transition: all .6s; background-position: center; position: relative; top: 0px ; left: 0px}
 .presents .number .user-photo__presents:hover { scale: 2.25; z-index: 10; border-radius: 10px }
@@ -965,6 +1002,13 @@ div.inMenuButton.Injected span {left: 2px; position: relative}
 	}
 	.wrapper-students table.table tr {margin-bottom: 0px; margin-right: 0px}
 	.wrapper-students table.table tbody {gap: 15px; justify-content: center; padding: 15px}
+	
+	.presents .number video.customAvatar {margin-right: 8px}
+	.table-wrapper.wrapper-students span.timeMiss {
+		position: relative; left: 0px; bottom: 0px
+	}
+	
+	.table-wrapper.wrapper-students table td.name p.timeMissUp {top: 0px}
 }
 
 
