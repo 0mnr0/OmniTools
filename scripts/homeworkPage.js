@@ -92,7 +92,7 @@ function OpenCustomHomeworkWindow() {
 						<option value="" selected>Все группы</option>
 					</select>
 					
-					<input id="searchName" placeholder="ФИО Ученика"></input>
+					<input id="searchName" placeholder="ФИО Ученика" autocomplete="off"></input>
 					
 					<select id="dateSelector">
 						<option value="oldest" selected>Сначала старые</option>
@@ -507,7 +507,7 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 					
 					<div class="SetMark">
 						<h4> Оставить оценку: </h4>
-						<div class="list">
+						<div class="list noselect">
 							${marksData.code}
 						</div>
 					</div>
@@ -745,8 +745,15 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 		let MarkElements = Homework.findAll("div.SetMark > div.list > span[mark]")
 		MarkElements.forEach(mark => {
 			mark.onclick = () => {
-				MarkElements.forEach(m => m.classList.remove('active'))
-				mark.classList.add('active')
+				let hadMark = mark.classList.contains('active');
+				if (hadMark) {
+					mark.classList.remove('active')
+				} else {
+					MarkElements.forEach(m => m.classList.remove('active'))
+					mark.classList.add('active')
+				}
+				
+				
 			}
 		})
 		
