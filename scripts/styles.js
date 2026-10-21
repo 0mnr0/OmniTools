@@ -328,6 +328,17 @@ div.CustomHWDiv div.content div.hwPreview span.loaderStatus span.icon {
 
 
 div.CustomHWDiv div.content div.hwBlock div.info span { width: 100%; display: inline-block; margin-bottom: 1px; padding: 3px 0px }
+div.CustomHWDiv div.content div.hwBlock div.info span#commentCharCounter {
+    position: absolute;
+    width: fit-content;
+    right: 0px;
+    top: 0px;
+    font-size: 75%;
+    padding: 0px;
+    padding-right: 2px;
+    opacity: 0.75;
+}
+
 div.CustomHWDiv div.content div.hwBlock div.info span b { font-weight: bold }
 div.CustomHWDiv div.content div.hwBlock div.info span b[500], div.CustomHWDiv div.content div.hwBlock div.info span b.500 { font-weight: 500 }
 div.CustomHWDiv div.content div.hwBlock div.info span.fioStud {

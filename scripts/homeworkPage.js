@@ -2,6 +2,7 @@ let HomeworkDialog = null;
 let Marks = [];
 let PreviewFrames = [];
 
+
 let lastData = {
 	InjectedPanel: null,
 	Win: null,
@@ -13,9 +14,9 @@ let HWLimit = PAGE_SIZE; // сколько карточек сейчас раз�
 let HWEntries = [];
 let HWSort = "oldest";
 let HWFilter = { group: "", name: "" };
-let ActiveReview = {
-	
-}
+let ActiveReview = {}
+
+const maxCommentLen = 1000; // максимальный рамзер комментария
 
 function MatchesFilter(hw) {
 	if (HWFilter.group && hw.group !== HWFilter.group) return false;
@@ -514,6 +515,7 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 					
 					<div class="Comment">
 						<h4 class="Supermode" id="tellMeWhyyy"> Добавить комментарий: </h4>
+						<span id="commentCharCounter">0/${maxCommentLen}</span>
 						
 						<textarea id="cmnt"></textarea>
 						
@@ -579,7 +581,7 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 		let ResetFileUploader = Homework.find("div.fileInput span.fileUploaderReset");
 		let RestoredFile = Homework.find('div.HwActions span.FileRestored');
 		let tellMeWhyyy = Homework.find('div.Comment .Supermode#tellMeWhyyy');
-		
+		let commentCharCounter = Homework.find('div.Comment span#commentCharCounter');
 		
 		
 		Homework.find('div.HwActions span.FileTeach').onclick = () => {
@@ -626,6 +628,13 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 			ResetFileUploader.style.display = '';
 		}
 		
+		textArea.oninput = () => {
+			if (textArea.value.length > maxCommentLen) {
+				textArea.value = textArea.value.substring(0, maxCommentLen);
+			}
+			commentCharCounter.textContent = `${textArea.value.length}/${maxCommentLen}`
+		}
+		
 		
 		let workDenial = false;
 		function UpdateTellMeWhyText () {
@@ -663,6 +672,7 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 					}
 						
 					if (workDenial) { // DENY
+					
 						let result = await SendWorkDenial(hw.id, textArea.value, uploadId);
 						console.log(result);
 						if (result.ok && (result.data === "true" || result.data === true)) {
@@ -996,9 +1006,3 @@ function SendWorkApply(studDz, mark, comment, comment_attach) {
 	const SendingPayload = { HomeworkForm: studDz }
 	return fetcher("https://omni.top-academy.ru/homework/save-homework", "POST", SendingPayload);
 }
-
-
-
-// TODO:
-// - Проверка длины comment (до 1000 символов)
-// - Менять "Добавить комментарий" на "Почему отклоняете?" когда отклоняем

@@ -56,4 +56,4 @@ async function sessionUpdate(attempt = 0) {
   }
 }
 
-setTimeout(() => sessionUpdate(0), 1200);
+setTimeout(() => sessionUpdate(0), 12000);
