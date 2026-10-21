@@ -644,6 +644,8 @@ div.CustomHWDiv div.hwPreview.studentPreview.asClient {
 }
 
 div.CustomHWDiv div.hwPreviewStat {
+	opacity: 0.75;
+	color: white;
     display: flex;
     position: absolute;
     gap: 4px;
@@ -841,7 +843,9 @@ div.CustomHWDiv .previewProgress.done {
 	background: green;
 }
 
-
+div.CustomHWDiv .topLine select {
+	cursor: pointer;
+}
 
 div.CustomHWDiv .topLine.filters select, div.CustomHWDiv .topLine.filters input#searchName {
     border-radius: 12px;
@@ -889,6 +893,7 @@ div.CustomHWDiv div.showMore {
 div.CustomHWDiv div.showMore button.showMoreBtn {
     padding: 10px 12px;
     border: none;
+	color: white;
     background: #22aa90;
     border-radius: 12px;
 }

@@ -379,6 +379,8 @@ const darkThemeCssContent = `
 		filter: brightness(1);
 	}
 	
+	div.CustomHWDiv div.hwPreviewStat {opacity: 1}
+	
 	.dossier__students_who_need_help.ng-scope {margin-top: 40px; color: var(--accent-text)}
 	.table-video-reports thead tr td, .table-video-reports thead tr, .table-video-reports tbody tr td {border: solid 1px #438f72}
 	.table-video-reports tbody tr td {background: var(--accent-2);}
