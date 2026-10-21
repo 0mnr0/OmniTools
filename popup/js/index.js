@@ -4,6 +4,14 @@ const SettingsPane = find('.settingsPane');
 let UserSettings = {};
 
 
+
+async function UpdateSize() {
+	let res = await chrome.runtime.sendMessage({ __idbBridge: true, method: "getSize", args: [] });
+	if (!res.ok) {res = {result: {count: 0, kb: 0}}} // db was cleared
+	let dbSize = res.result;
+	UpdateSizeCounters(dbSize.kb);
+}
+
 (async () => {
 	
 	function GenerateSwitch(SettingName) {
@@ -16,16 +24,6 @@ let UserSettings = {};
 		`
 	}
 	
-	
-	
-	async function UpdateSize() {
-		let res = await chrome.runtime.sendMessage({ __idbBridge: true, method: "getSize", args: [] });
-		if (!res.ok) {res = {result: {count: 0, kb: 0}}} // db was cleared
-		let dbSize = res.result;
-		UpdateSizeCounters(dbSize.kb);
-	}
-	
-
 	
 	document.runSettingBing = async () => {
 		SettingsPane.innerHTML = await GenerateSettingsCode();
@@ -112,6 +110,7 @@ let UserSettings = {};
 		setGitListener();
 		MadeWithController.init();
 		TypesRegister();
+		MaxCacheMemoryController();
 		UpdateTypes('functions')
 		CreateStyle('EnableTransitions', '* { transition: all .3s, scrollbar-color 0s, scrollbar-width 0s; }');
 		setInterval(UpdateSize, 2000);
@@ -121,6 +120,23 @@ let UserSettings = {};
 function notifySettingsChange(){
 	chrome.runtime.sendMessage({type: "OmniTools.events.SettingsChange"}, () => {});
 	onSettingsChanged();
+}
+
+function MaxCacheMemoryController() {
+	const allOptions = findAll('div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption');
+	allOptions.forEach(option => {
+		option.addEvent('click', async () => {
+			const targetMemory = option.getAttribute('mem');
+			if (targetMemory < 30) {
+				console.warn("Min cache size: 30");
+				return
+			}
+			
+			await Settings.set("MaxCacheSize", targetMemory);
+			log('RUN!')
+			UpdateSize();
+		})
+	})
 }
 
 const getCleanDomain = function(url) {

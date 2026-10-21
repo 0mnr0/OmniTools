@@ -27,7 +27,10 @@
 		
 		'CacheControl': 'Контроль кэша',
 		'MemoryControl': 'Кэш',
+		'MB': 'МБ',
 		'MegaBytes_Took': 'мб. занято',
+		'MaxCacheSize': 'Максимальный размер кэша',
+		'recommended': 'Рекомендуется',
 		
 		'delete': `Удалить`,
 		'ProjectOnGitHub': `Проект на GitHub`,

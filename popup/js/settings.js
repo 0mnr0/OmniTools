@@ -181,6 +181,31 @@ const GetDatapack = {
 					</div>
 				</div>
 				
+
+				<div class="MemoryUsageControl">
+					<h4 data-i18n="MaxCacheSize">  </h4>
+					
+					<div class="MemoryUsageControlList">
+						<div class="UsageControlOption" mem=80>
+							<span> 80 </span>
+							<span data-i18n="MB"></span>
+						</div>
+						<div class="UsageControlOption" mem=140>
+							<span> 140 </span>
+							<span data-i18n="MB"></span>
+						</div>
+						<div class="UsageControlOption recommended" mem=180>
+							<span> 180 </span>
+							<span data-i18n="MB"></span>
+							<span data-i18n="recommended" class="recommended"></span>
+						</div>
+						<div class="UsageControlOption" mem=250>
+							<span> 250 </span>
+							<span data-i18n="MB"></span>
+						</div>
+					</div>
+				</div>
+				
 				<button id="resetCache"> reset cache <button>
 			</div>
 			
@@ -247,7 +272,7 @@ const UpdateSizeCounters = (kb) => {
 	let UsageBar = find('div.CacheControl div.MemoryUsageStats div.Line');
 	
 	
-	let maxSize = UserSettings.MaxCacheSize ? UserSettings.MaxCacheSize : 30; // MB
+	let maxSize = Number(UserSettings.MaxCacheSize ? UserSettings.MaxCacheSize : 30); // MB
 	let barWidth = ((kb/1024)/maxSize) * 100;
 	
 	H1Usage.textContent = (kb/1024).toFixed(2)
@@ -288,13 +313,7 @@ const TypesRegister = () => {
 }
 
 const onSettingsChanged = async () => {
-	let AllowContextMenu_Record = await Settings.get('AllowContextMenu.Record');
-	RemoveStyle('AllowContextMenu_Record')
-	if (!AllowContextMenu_Record) {
-		CreateStyle('AllowContextMenu_Record', `
-			.SettingLine.ExportAsSetting {display: none}
-		`)
-	}
+
 }
 onSettingsChanged();
 
