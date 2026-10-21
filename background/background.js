@@ -129,7 +129,7 @@ BrowserContext.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 	if (msg.type === "OmniTools.events.SettingsChange") {
 		console.log("Settings changed!");
 	    (async () => {
-			const tabs = await BrowserContext.tabs.query({url: "*://omni.top-academy.com/*"});
+			const tabs = await BrowserContext.tabs.query({url: "*://omni.top-academy.ru/*"});
 			await SetupDefault();
 
 			for (const tab of tabs) {
