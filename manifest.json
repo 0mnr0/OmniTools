@@ -49,6 +49,7 @@
   "web_accessible_resources": [
 	  {
 		"resources": [
+			"icons/cancel.svg",
 			"icons/general.svg",
 			"icons/arrow_left.svg",
 			"icons/settings.svg",
@@ -56,11 +57,12 @@
 			"icons/wand.svg",
 			"icons/code.svg",
 			"icons/filter.svg",
-			"icons/birthday.png",
 			"icons/fullscreen.svg",
+			"icons/attach_file.svg",
 			"icons/fullscreen_close.svg",
-			"icons/cancel.svg",
-			"icons/close.svg"
+			"icons/close.svg",
+			
+			"icons/birthday.png"
 		],
 		"matches": ["https://omni.top-academy.ru/*"]
 	  }

@@ -519,7 +519,7 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 						
 						<div class="fileInput">
 							<form method="post" enctype="multipart/form-data">
-								<label class="input-file">
+								<label class="input-file" style="--attach-file-icon-url: url('${getIcon('/icons/attach_file.svg')}')">
 									<input type="file" id="fileUploader">		
 									<span>Выберите файл</span>
 								</label>

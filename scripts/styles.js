@@ -739,6 +739,21 @@ div.CustomHWDiv div.content div.Comment div.fileInput .input-file span {
     word-wrap: anywhere;
 }
 
+div.CustomHWDiv div.content div.Comment div.fileInput .input-file span::before {
+    position: relative;
+    background: var(--attach-file-icon-url);
+    background-size: 100%;
+    background-position: center;
+    overflow: visible;
+    scale: 1.75;
+    rotate: 30deg;
+    content: "";
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-left: -10px;
+    margin-right: 5px;
+}
 
 div.CustomHWDiv div.content div.Comment div.fileInput span.fileUploaderReset {
     text-align: end;
