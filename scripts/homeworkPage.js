@@ -501,7 +501,7 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 							
 						}
 						
-						<div class="StudentResponse ${unableToDownload ? "visible" : ""}">
+						<div class="StudentResponse ${hw.answer_text ? "visible" : ""}">
 							${hw.answer_text}
 						</div>
 					</div>
