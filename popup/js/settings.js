@@ -1,96 +1,6 @@
-const Settings = {
-	  get(key, defValue) {
-		return new Promise(resolve => {
-		  chrome.storage.local.get(key, res => {
-			if (res[key] === undefined) {resolve(defValue); return}
-			resolve(res[key]);
-		  });
-		});
-	  },
-
-	  set(key, value) {
-		return new Promise(resolve => {
-		  chrome.storage.local.set({ [key]: value }, resolve);
-		  notifySettingsChange();
-		});
-	  },
-
-	  delete(key) {
-		return new Promise(resolve => {
-		    chrome.storage.local.remove(key, resolve);
-		    notifySettingsChange();
-		});
-	  },
-
-	  clear() {
-		return new Promise(resolve => {
-		    chrome.storage.local.clear(resolve);
-			notifySettingsChange();
-		});
-	  },
-
-	  async isKeyExists(key) {
-		return new Promise(resolve => {
-		  chrome.storage.local.get(key, res => {
-			resolve(Object.prototype.hasOwnProperty.call(res, key));
-		  });
-		});
-	  },
-	  
-	  getAll() {
-		return new Promise(resolve => {
-		  chrome.storage.local.get(null, res => {
-			resolve(res);
-		  });
-		});
-	  } 
-	};
-
-
-
-
 const findInput = (settingName) => {
 	find(`input[SettingName="${settingName}"]`).click()
 }
-
-const GetDatapackData = () => {
-	return UserSettings["@DataPack"];
-}
-
-
-const GetDatapack = {
-	Images: () => {
-		let data = GetDatapackData();
-		if (!data) {return []};
-	
-		let HTMLCode = ''
-		for (imgCode of data.sequence) {
-			HTMLCode += `
-				<img src="${imgCode}">
-			`
-		}; return HTMLCode
-		
-	},
-	ImagesNum: () => {
-		let data = GetDatapackData();
-		if (!data) {return 0;} else {return data.sequence.length}
-	},
-	SoundsNum: () => {
-		let data = GetDatapackData();
-		if (!data) {return 0;} else {return data.sounds.length}
-	},
-	AnimationLen: () => {
-		let data = GetDatapackData();
-		if (!data) {return 0;} else {return data.animLength}
-	},
-	FirstImage: () => {
-		let data = GetDatapackData();
-		return data.sequence[0]
-	}
-};
-
-
-
 
 (async() => {
 	UserSettings = await Settings.getAll();
@@ -177,36 +87,37 @@ const GetDatapack = {
 						
 				
 					<div class="Line">
-						<span id="Took"></span>
+						<span id="Took" title="Cache Size"></span>
 					</div>
 				</div>
 				
 
 				<div class="MemoryUsageControl">
-					<h4 data-i18n="MaxCacheSize">  </h4>
+					<h5 data-i18n="MaxCacheSize"></h5>
 					
 					<div class="MemoryUsageControlList">
 						<div class="UsageControlOption" mem=80>
 							<span> 80 </span>
 							<span data-i18n="MB"></span>
 						</div>
-						<div class="UsageControlOption" mem=140>
-							<span> 140 </span>
+						<div class="UsageControlOption" mem=150>
+							<span> 150 </span>
 							<span data-i18n="MB"></span>
 						</div>
-						<div class="UsageControlOption recommended" mem=180>
-							<span> 180 </span>
+						<div class="UsageControlOption recommended" mem=200>
+							<span> 200 </span>
 							<span data-i18n="MB"></span>
 							<span data-i18n="recommended" class="recommended"></span>
 						</div>
-						<div class="UsageControlOption" mem=250>
-							<span> 250 </span>
+						<div class="UsageControlOption" mem=300>
+							<span> 300 </span>
 							<span data-i18n="MB"></span>
 						</div>
 					</div>
 				</div>
 				
-				<button id="resetCache"> reset cache <button>
+				<button id="resetOldCache" cacheReset data-i18n="ResetOldCache"> reset cache </button>
+				<button id="resetAllCache" all cacheReset data-i18n="ResetAllCache"> hard cache reset </button>
 			</div>
 			
 			
@@ -275,8 +186,17 @@ const UpdateSizeCounters = (kb) => {
 	let maxSize = Number(UserSettings.MaxCacheSize ? UserSettings.MaxCacheSize : 30); // MB
 	let barWidth = ((kb/1024)/maxSize) * 100;
 	
-	H1Usage.textContent = (kb/1024).toFixed(2)
-	UsageBar.find('#Took').style.width = `${barWidth}%`
+	H1Usage.textContent = (kb/1024).toFixed(2);
+	const tookEl = UsageBar.find('#Took');
+	tookEl.style.width = `${barWidth}%`
+	if (barWidth > 2.9 && barWidth < 8) {
+		tookEl.classList.add('mini')
+	} else {
+		tookEl.classList.remove('mini')
+	}
+	
+	log(barWidth > 2.9 ? (barWidth.toFixed(1)+'%') : '')
+	tookEl.textContent = barWidth > 2.9 ? (barWidth.toFixed(1)+'%') : '';
 	UsageBar.classList.add("hidden");
 	
 	
@@ -387,34 +307,11 @@ const MadeWithController = {
 		}
 	}
 	
+	
+	
 }
 
 
-const runDataPackGeneration = function() { //data-i18n
-	return `
-						<div class="removeSavedDataPack">
-							<img src="icons/delete.svg">
-							<span data-i18n="delete">${TranslateAssistant.translate.get('delete')}</span>
-						</div>
-						<div class="AvailableDataPack" packname="@DataPack">
-							<div class="FullWidthpreview">
-								<img src="${GetDatapack.FirstImage()}"</img>
-							</div>
-							<div class="PreviewData">
-								<span class="packName"> Data Pack </span>
-								<div class="ImagePreview"> ${GetDatapack.Images()} </div>
-								
-								
-							</div>
-							
-							<div class="PreviewData TextType">
-								<span data-i18n="howmanysounds"> Sounds: <span>${GetDatapack.SoundsNum()} | </span> <span data-i18n="howmanyimages"> Images: <span>${GetDatapack.ImagesNum()}</span> </span> </span>
-								<span data-i18n="howlong"> Length: <span>${GetDatapack.AnimationLen()}ms</span></span>
-							</div>
-							
-						</div>
-						`	
-}
 
 
 

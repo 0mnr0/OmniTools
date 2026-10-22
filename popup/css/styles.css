@@ -749,6 +749,31 @@ div.CacheControl {
 	padding: 10px
 }
 
+div.SettingSection.CacheControl {
+	display: flex;
+	flex-direction: column;
+	gap: 10px
+}
+
+.SettingSection.CacheControl button[cacheReset] {
+	padding: 14px 10px;
+	background: #3d3d3d;
+	border-radius: 10px
+}
+
+
+.SettingSection.CacheControl button[cacheReset][all] {
+	background: #a92424;
+}
+
+.SettingSection.CacheControl button[cacheReset]:hover {
+	background: #5e5e5e;
+}
+
+.SettingSection.CacheControl button[cacheReset][all]:hover {
+	background: #cc2d2d;
+}
+
 div.CacheControl h1 { font-size: 180%; }
 div.CacheControl h2 { font-size: 160%; }
 div.CacheControl h3 { font-size: 140%; }
@@ -772,7 +797,7 @@ div.CacheControl div.MemoryUsageStats div.Line {
 
 div.CacheControl div.MemoryUsageStats span.UsageLine {
     display: flex;
-	margin-top: 10px;
+	margin-top: 6px;
     align-items: flex-end;
 }
 
@@ -781,17 +806,31 @@ div.CacheControl div.MemoryUsageStats span.UsageLine span {
 }
 
 div.CacheControl div.MemoryUsageStats div.Line.hidden {
-	display: none;
+	height: 0px;
 }
 
 div.CacheControl div.MemoryUsageStats div.Line span#Took {
     position: absolute;
     height: 100%;
-    border-radius: 12px;
+    border-radius: 6px;
+    font-size: 60%;
+    padding: 0px;
+    vertical-align: middle;
+    text-align: center;
+    display: inline-grid;
     background: #9b633a;
-    outline: solid 6px #1a1a1a;
+    outline: solid 4px #1a1a1a;
     width: 0%;
-    transition: all .5s ease-out;
+    transition: all .35s ease-out;
+}
+
+div.CacheControl div.MemoryUsageStats div.Line span#Took.mini {
+	font-size: 40%;
+}
+
+
+div.CacheControl div.MemoryUsageControl {
+    margin: 24px 0px;
 }
 
 
@@ -1060,6 +1099,10 @@ div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption {
     border-radius: 12px;
 }
 
+div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption.active {
+	outline: solid 2px lime !important;
+}
+
 div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption.Recommended {
 	padding-bottom: 5px;
 	
@@ -1073,6 +1116,7 @@ div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption.Recomme
 
 div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption:hover {
 	box-shadow: inset 0px 0px 6px 0px #ffffff;
+	width: 125%;
 	outline: solid 2px white;
 }
 

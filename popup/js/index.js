@@ -102,8 +102,11 @@ async function UpdateSize() {
 		
 		
 
-		find("button#resetCache").onclick = () => {
-			indexedDB.deleteDatabase("HWCacheDB")
+		find("button#resetAllCache").onclick = async () => {
+			await clearIndexedDB("HWCacheDB")
+			Toast.create("Готово", 3000, {});
+			UpdateActiveCacheChoice();
+			UpdateSize();
 		}
 		
 		
@@ -111,11 +114,24 @@ async function UpdateSize() {
 		MadeWithController.init();
 		TypesRegister();
 		MaxCacheMemoryController();
+		UpdateActiveCacheChoice();
 		UpdateTypes('functions')
 		CreateStyle('EnableTransitions', '* { transition: all .3s, scrollbar-color 0s, scrollbar-width 0s; }');
 		setInterval(UpdateSize, 2000);
 	}
 })();
+
+function UpdateActiveCacheChoice() {
+	let currentCacheSize = UserSettings.MaxCacheSize;
+	let cacheField = find(`div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption[mem="${currentCacheSize}"]`);
+	findAll(`div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption`).forEach(field => {
+		field.classList.remove('active')
+	})
+	if (cacheField) {
+		cacheField.classList.add('active')
+	}
+	
+}
 
 function notifySettingsChange(){
 	chrome.runtime.sendMessage({type: "OmniTools.events.SettingsChange"}, () => {});
@@ -133,8 +149,10 @@ function MaxCacheMemoryController() {
 			}
 			
 			await Settings.set("MaxCacheSize", targetMemory);
+			UserSettings.MaxCacheSize = Number(targetMemory);
 			log('RUN!')
 			UpdateSize();
+			UpdateActiveCacheChoice();
 		})
 	})
 }

@@ -30,6 +30,8 @@
 		'MB': 'МБ',
 		'MegaBytes_Took': 'мб. занято',
 		'MaxCacheSize': 'Максимальный размер кэша',
+		'ResetOldCache': 'Почистить неактуальный кэш',
+		'ResetAllCache': 'Почистить весь кэш',
 		'recommended': 'Рекомендуется',
 		
 		'delete': `Удалить`,
