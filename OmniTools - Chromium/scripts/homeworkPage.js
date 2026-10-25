@@ -823,10 +823,10 @@ async function RemoveCard(Card) {
 	if (entry) {
 		if (entry.card) {
 			if (entry.card.teach_url) {
-				await DBStore.deleteHWID("HWC", teach_url);
+				await DBStore.deleteHWID("HWC", entry.card.teach_url);
 			}
 			if (entry.card.url) {
-				await DBStore.deleteHWID("HWC", url);
+				await DBStore.deleteHWID("HWC", entry.card.url);
 			}
 		}
 		

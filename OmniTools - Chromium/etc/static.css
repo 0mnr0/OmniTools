@@ -11,19 +11,20 @@ html {
 div.OmniToolsExtensionToast {
 	transition: all .8s;
 	position: fixed;
-	padding: 14px;
-	background: #22222260;
-	backdrop-filter: blur(8px) brightness(1.45);
+	padding: 10px;
+	background: #292929;
 	z-index: 10000000000000;
 	interpolate-size: allow-keywords;
 	opacity: 0;
-	border-radius: 12px;
+	border-radius: 16px;
 	right: 8px;
 	bottom: -60px;
+	width: auto;
+	max-width: 450px;
 	overflow: hidden;
 	display: flex;
 	flex-direction: column;
-	max-width: 33%;
+	border: solid 2px #ffffffc7;
 	min-width: 140px;
 }
 
@@ -35,12 +36,13 @@ div.OmniToolsExtensionToast button.close {
 	width: 100%;
 	margin-top: 10px;
 	opacity: 0.85;
-	font-size: larger;
+	font-size: 100%;
 	border: none;
 	position: relative;
-	font-weight: 300;
-	border-radius: 12px;
-    padding: 6px 0px;
+	font-weight: 100;
+	border-radius: 6px;
+    padding: 10px 0px;
+	font-family: 'Roboto';
     display: flex;
     justify-content: center;
     align-items: center;

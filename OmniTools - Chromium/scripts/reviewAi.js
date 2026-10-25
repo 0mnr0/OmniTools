@@ -19,17 +19,19 @@ function placeAiGenButton() {
 	AIGenButton.id="AIGenButton";
 	AIGenButton.style=`--ai-icon-url: url('${getIcon('/icons/wand.svg')}')`;
 	AIGenButton.innerHTML="<span> Сгенерировать отзыв </span>";
+	AIGenButton.disabled = true;
 	
 	if (aiReviewAnimationWasShown) {
 		AIGenButton.classList.add('end');
 		AIGenButton.classList.add('mini');
 		placement.classList.add('moveSendButton');
+		AIGenButton.disabled = false;
 	} else {
 		setTimeout(() => {
 			AIGenButton.classList.add('mini');
 			placement.classList.add('moveSendButton');
-			setTimeout(() => {AIGenButton.classList.add('end');}, 1000)
-		}, 5000);
+			setTimeout(() => {AIGenButton.classList.add('end'); AIGenButton.disabled = false; }, 800)
+		}, 2500);
 	}
 	
 	placement.prepend(AIGenButton);
@@ -78,7 +80,6 @@ function GenerateAiCallback(fromButton, AIGenText) {
 		}
 		let value = objects[1].textContent;
 		
-		console.log(BlockDefinitionNames[index] + value)
 		return BlockDefinitionNames[index] + value
 	}
 	
@@ -107,7 +108,6 @@ function GenerateAiCallback(fromButton, AIGenText) {
 	
 	let LoyalAI = CurrentSettings.LoyalAI;
 	
-	log("LoyalAI: ", LoyalAI)
 	let Prompt = `
 		Привет!
 		Я преподаватель в колледже и мне нужно составить простой и краткий отзыв для ученика (около 3х предложений).

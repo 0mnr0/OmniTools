@@ -85,13 +85,18 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 		}
 
 		function setLocalContent(LocalContent, isImage, URL) {
-			if (LocalContent.startsWith("image")) {
-				IMAGEContent.src = URL;
-				IMAGEContent.style.display = '';
-			} else {
-				VIDEOContent.src = URL;
-				VIDEOContent.style.display = '';
-			}
+			const el = LocalContent.startsWith("image") ? IMAGEContent : VIDEOContent;
+
+			el.addEventListener(isImage ? 'load' : 'loadeddata', () => {
+				DestroyLoader();
+			}, { once: true });
+
+			el.addEventListener('error', () => {
+				FailedToPreview(Preview);
+			}, { once: true });
+
+			el.src = URL;
+			el.style.display = '';
 
 			Preview.classList.add('asClient');
 			IFrame.style.display = 'none';
@@ -146,7 +151,14 @@ async function RunHomeworkPreview(HWList, modalWindow) {
 			}
 
 
-			const info = await getMedia(URLContent);
+			let info;
+			try {
+				info = await withTimeout(getMedia(URLContent), 10000, 'getMedia');
+			} catch (err) {
+				if (!(err instanceof TimeoutError)) console.error(err);
+				FailedToPreview(Preview);
+				return;
+			}
 			let haveFileExtData = info.fileext !== null && typeof info.fileext === 'string' && info.fileext.startsWith('.');
 			const previewedFileType = haveFileExtData ? info.fileext : "media";
 			
