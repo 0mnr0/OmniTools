@@ -102,18 +102,14 @@ async function UpdateSize() {
 		
 		
 
-		find("button#resetAllCache").onclick = async () => {
-			await clearIndexedDB("HWCacheDB")
-			Toast.create("Готово", 3000, {});
-			UpdateActiveCacheChoice();
-			UpdateSize();
-		}
+		
 		
 		
 		setGitListener();
 		MadeWithController.init();
 		TypesRegister();
 		MaxCacheMemoryController();
+		RegCacheCleaners();
 		UpdateActiveCacheChoice();
 		UpdateTypes('functions')
 		CreateStyle('EnableTransitions', '* { transition: all .3s, scrollbar-color 0s, scrollbar-width 0s; }');
@@ -150,11 +146,42 @@ function MaxCacheMemoryController() {
 			
 			await Settings.set("MaxCacheSize", targetMemory);
 			UserSettings.MaxCacheSize = Number(targetMemory);
-			log('RUN!')
 			UpdateSize();
 			UpdateActiveCacheChoice();
 		})
 	})
+}
+
+function RegCacheCleaners() {
+	const clearOld = find('div.CacheControl button#resetOldCache')
+	const clearAll = find('div.CacheControl button#resetAllCache')
+	
+	
+	clearOld.onclick = async () => {
+		clearOld.disabled = true;
+		let res = await clearOldCacheFunc("HWCacheDB");
+		
+		if (res > 0) {			
+			Toast.create(TranslateAssistant.translate.get('DoneAndCleared') + res, 3000, {});
+		} else {
+			Toast.create(TranslateAssistant.translate.get('DoneAndNotCleared'), 3000, {});
+		}
+		UpdateActiveCacheChoice();
+		UpdateSize();
+		clearOld.disabled = false;
+	}
+	
+	clearAll.onclick = async () => {
+		clearAll.disabled = true;
+		let res = confirm(TranslateAssistant.translate.get('ResetAllCacheConfirm'));
+		if (res) {
+			await eraseIndexedDB("HWCacheDB")
+			Toast.create(TranslateAssistant.translate.get('Done'), 3000, {});
+			UpdateActiveCacheChoice();
+			UpdateSize();
+		}
+		clearAll.disabled = false;
+	}
 }
 
 const getCleanDomain = function(url) {

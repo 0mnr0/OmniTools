@@ -46,8 +46,9 @@ const Settings = {
 	  } 
 	};
 	
-	
-async function clearIndexedDB(dbName) {
+
+
+async function eraseIndexedDB(dbName) {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open(dbName);
 
@@ -80,4 +81,8 @@ async function clearIndexedDB(dbName) {
       });
     };
   });
+}
+
+async function clearOldCacheFunc(dbName) {
+    return DBStore.deleteExpired();
 }

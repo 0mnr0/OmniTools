@@ -16,13 +16,13 @@ const IDBSettings = {
 
 			request.onupgradeneeded = (event) => {
 				const db = event.target.result;
-				const tx = event.target.transaction; // versionchange-транзакция
+				const tx = event.target.transaction;
 
 				if (!db.objectStoreNames.contains(this.STORE_NAME)) {
-					db.createObjectStore(this.STORE_NAME); // БЕЗ keyPath
+					db.createObjectStore(this.STORE_NAME);
 				}
 
-				// Миграция: {key, value} -> put(value, key)
+
 				if (db.objectStoreNames.contains(this.OLD_STORE_NAME)) {
 					const oldStore = tx.objectStore(this.OLD_STORE_NAME);
 					const newStore = tx.objectStore(this.STORE_NAME);
@@ -68,7 +68,7 @@ const IDBSettings = {
 	async set(key, value) {
 		const { tx, store } = await this._tx("readwrite");
 		return new Promise((resolve, reject) => {
-			store.put(value, key);          // ключ отдельным аргументом
+			store.put(value, key);
 			tx.oncomplete = () => resolve();
 			tx.onerror = () => reject(tx.error);
 		});
@@ -115,21 +115,32 @@ const IDBSettings = {
 		});
 	},
 
+	_sizeOf(key, value) {
+		const enc = (this._enc ??= new TextEncoder());
+		let bytes = enc.encode(String(key)).length;
+		if (value instanceof Blob) bytes += value.size;
+		else if (value instanceof ArrayBuffer) bytes += value.byteLength;
+		else bytes += enc.encode(JSON.stringify(value) ?? "").length;
+		return bytes;
+	},
+
 	async getSize() {
-		const all = await this.getAll();
-		const enc = new TextEncoder();
-		let bytes = 0;
-		let count = 0;
-
-		for (const [key, value] of Object.entries(all)) {
-			bytes += enc.encode(key).length;
-			if (value instanceof Blob) bytes += value.size;
-			else if (value instanceof ArrayBuffer) bytes += value.byteLength;
-			else bytes += enc.encode(JSON.stringify(value)).length;
-			count++;
-		}
-
-		return { count, kb: +(bytes / 1024).toFixed(2) };
+		const { store } = await this._tx("readonly");
+		return new Promise((resolve, reject) => {
+			let bytes = 0, count = 0;
+			const req = store.openCursor();
+			req.onsuccess = (e) => {
+				const cursor = e.target.result;
+				if (!cursor) {
+					resolve({ count, kb: +(bytes / 1024).toFixed(2) });
+					return;
+				}
+				bytes += this._sizeOf(cursor.key, cursor.value);
+				count++;
+				cursor.continue();
+			};
+			req.onerror = () => reject(req.error);
+		});
 	},
 
 	async ensureUID(uid) {
@@ -147,30 +158,112 @@ const IDBSettings = {
 		return entry;
 	},
 
-	// --- HWID-кэш ---
-	// Раньше все URL одного uid ("HWC") хранились ВЛОЖЕННО в один общий
-	// документ (entry.HWS[hwidName]), и setHWID делал read-modify-write
-	// всего документа. При параллельной обработке нескольких ДЗ
-	// (teacher/student разных заданий одновременно) это давало классическую
-	// гонку: два setHWID читали один и тот же документ, и кто записывал
-	// вторым - затирал изменения первого (в частности, часто пропадал кэш
-	// именно для teach_url).
-	//
-	// Теперь каждая пара (uid, hwidName) - это отдельная запись в
-	// IndexedDB под составным ключом, так что записи разных URL друг друга
-	// не перезатирают.
+
+	async deleteExpired(days = 3) {
+		const threshold = Date.now() - days * 24 * 60 * 60 * 1000;
+		const { tx, store } = await this._tx("readwrite");
+
+		return new Promise((resolve, reject) => {
+			let deleted = 0;
+			const req = store.openCursor();
+
+			req.onsuccess = (e) => {
+				const cursor = e.target.result;
+				if (!cursor) return;
+
+				const d = cursor.value?.date;
+				const ts = d == null ? NaN : new Date(d).getTime();
+
+				if (!Number.isNaN(ts) && ts <= threshold) {
+					cursor.delete();
+					deleted++;
+				}
+				cursor.continue();
+			};
+
+			req.onerror = () => reject(req.error);
+			tx.oncomplete = () => resolve(deleted);
+			tx.onerror = () => reject(tx.error);
+			tx.onabort = () => reject(tx.error);
+		});
+	},
+
+
 	_hwidKey(uid, hwidName) {
 		return `${uid}::HW::${hwidName}`;
 	},
+	
+	async _putWithEviction(key, value, maxBytes) {
+		const { tx, store } = await this._tx("readwrite");
+
+		return new Promise((resolve, reject) => {
+			const newSize = this._sizeOf(key, value);
+			let total = 0;
+			let oldSizeOfKey = 0;
+			const candidates = [];
+
+			const req = store.openCursor();
+			req.onsuccess = (e) => {
+				const cursor = e.target.result;
+
+				if (cursor) {
+					const size = this._sizeOf(cursor.key, cursor.value);
+					total += size;
+
+					if (cursor.key === key) {
+						oldSizeOfKey = size;
+					} else {
+						const d = cursor.value?.date;
+						const ts = d == null ? NaN : new Date(d).getTime();
+						if (!Number.isNaN(ts)) candidates.push({ key: cursor.key, size, ts });
+					}
+					cursor.continue();
+					return;
+				}
+
+				if (newSize > maxBytes) {
+					console.warn(`[cache] entry (${newSize} B) is bigger than MaxCacheSize (${maxBytes} B)`);
+				}
+
+				let need = total - oldSizeOfKey + newSize - maxBytes;
+				if (need > 0) {
+					candidates.sort((a, b) => a.ts - b.ts);
+					for (const c of candidates) {
+						if (need <= 0) break;
+						store.delete(c.key);
+						need -= c.size;
+					}
+					if (need > 0) {
+						console.warn("[cache] not enough evictable entries, cache is still over limit");
+					}
+				}
+
+				store.put(value, key);
+			};
+
+			req.onerror = () => reject(req.error);
+			tx.oncomplete = () => resolve();
+			tx.onerror = () => reject(tx.error);
+			tx.onabort = () => reject(tx.error);
+		});
+	},
 
 	async setHWID(uid, hwidName, { displayAs = "text", content = "", type } = {}) {
-		const value = { displayAs, content };
-		
+		const value = { displayAs, content, date: new Date() };
+
 		if (type !== undefined && type !== null) {
 			value.type = type;
 		}
-		
-		await this.set(this._hwidKey(uid, hwidName), value);
+
+		const key = this._hwidKey(uid, hwidName);
+
+		const maxMB = typeof UserSettings !== "undefined" ? Number(UserSettings.MaxCacheSize) : 0;
+
+		if (Number.isFinite(maxMB) && maxMB > 0) {
+			await this._putWithEviction(key, value, maxMB * 1024 * 1024);
+		} else {
+			await this.set(key, value);
+		}
 		return value;
 	},
 
@@ -196,7 +289,6 @@ const IDBSettings = {
 
 	async deleteUID(uid) {
 		await this.delete(uid);
-		// заодно чистим все HWID-записи, привязанные к этому uid
 		const hws = await this.getAllHWS(uid);
 		for (const hwidName of Object.keys(hws)) {
 			await this.deleteHWID(uid, hwidName);
@@ -214,6 +306,7 @@ const IDBSettings = {
 			"get", "set", "delete", "clear", "isKeyExists", "getAll",
 			"ensureUID", "setUIDData", "setHWID", "getHWID",
 			"deleteHWID", "getAllHWS", "deleteUID", "getSize",
+			"deleteExpired"
 		]);
 
 		chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {

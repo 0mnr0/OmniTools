@@ -160,17 +160,10 @@ const findInput = (settingName) => {
 				<span class="madeWith"></span>
 			</div>
 				
-				
-			
-			
-			
-			
 			
 			<div class="SettingSection changeLog">
 				${LastChangeLogs}
 			</div>
-			
-		
 		`
 	}
 	

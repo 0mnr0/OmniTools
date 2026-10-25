@@ -761,6 +761,25 @@ div.SettingSection.CacheControl {
 	border-radius: 10px
 }
 
+.SettingSection.CacheControl button[cacheReset][disabled] {
+	animation: contrastAnim 3s infinite;
+	cursor: progress
+}
+
+@keyframes contrastAnim {
+	0% {
+		filter: contrast(1)
+	}
+	
+	50% {
+		filter: contrast(0.5)
+	}
+	
+	100% {
+		filter: contrast(1)
+	}
+}
+
 
 .SettingSection.CacheControl button[cacheReset][all] {
 	background: #a92424;

@@ -676,11 +676,11 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 						let result = await SendWorkDenial(hw.id, textArea.value, uploadId);
 						console.log(result);
 						if (result.ok && (result.data === "true" || result.data === true)) {
-							RemoveCard(Homework);
+							await RemoveCard(Homework);
 							Toast.create(result.data, 3500, {});
 						} else if (result.ok) {
 							Toast.create(result.data, 3500, {});
-							RemoveCard(Homework);
+							await RemoveCard(Homework);
 						}
 						return;
 						
@@ -695,7 +695,7 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 							Toast.create(result.data?.success, 4000, {});
 						}
 						if (result.ok && result.status === 200) {
-							RemoveCard(Homework);
+							await RemoveCard(Homework);
 						}
 					}
 				} catch(e) {
@@ -713,13 +713,14 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 				fetcher('https://omni.top-academy.ru/homework/approve-request', 'POST', {
 					id: `${hw.id}`,
 					type: 0
-				}).then(res => {
-					onAppealResult(res, true);
-				}).catch(err => {
-					onAppealResult(res, false);
+				}).then(async (res) => {
+					await onAppealResult(res, true);
+				}).catch(async(err) => {
+					console.warn(err);
+					await onAppealResult(res, false);
 				})
 			}
-			HomeworkApply.onclick = () => {
+			HomeworkApply.onclick = async () => {
 				SetCardStatus(Homework, BUSY)
 				fetcher('https://omni.top-academy.ru/homework/approve-request', 'POST', {
 					id: `${hw.id}`,
@@ -741,16 +742,16 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 						console.warn(err);
 						SetCardStatus(Homework, FREE)
 					})
-				}).catch(err => {
-					onAppealResult(res, false);
+				}).catch(async (err) => {
+					await onAppealResult(res, false);
 					SetCardStatus(Homework, FREE)
 				})
 			}
 		}
 			
-		function onAppealResult(res, isSucsess) {
+		async function onAppealResult(res, isSucsess) {
 			if (res.ok) {
-				RemoveCard(Homework);
+				await RemoveCard(Homework);
 			}
 			if (res.body) {
 				Toast.create(res.body.success, 3500, {});
@@ -816,9 +817,19 @@ function ReplaceEntryData(entry, newHw) {
 	entry.hw = newHw;
 }
 
-function RemoveCard(Card) {
+async function RemoveCard(Card) {
 	const entry = HWEntries.find(e => e.card && e.card.block === Card);
+	
 	if (entry) {
+		if (entry.card) {
+			if (entry.card.teach_url) {
+				await DBStore.deleteHWID("HWC", teach_url);
+			}
+			if (entry.card.url) {
+				await DBStore.deleteHWID("HWC", url);
+			}
+		}
+		
 		HWEntries = HWEntries.filter(e => e !== entry);
 
 		const list = ActiveReview.data?.[ActiveReview.type];
