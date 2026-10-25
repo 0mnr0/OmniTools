@@ -15,7 +15,7 @@ function onDomChange() {
 		warningAlertShown = true;
 		Toast.create(
 			"Для этого обновления расширение было переведено на независмые popup окна. Если вы испытываете проблемы - пожалуйста, напишите мне в <a href='https://dsvl0.t.me' target='_blank'>Telegram</a>",
-			-1, {closeText: "Закрыть"}
+			5500, {closeText: "Закрыть"}
 		);
 	}
 		
