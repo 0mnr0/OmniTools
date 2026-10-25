@@ -88,7 +88,7 @@ div.NowInFirefox {
     align-items: center;
     justify-content: center;
     border: solid 2px #444;
-    margin-bottom: 32px;
+    margin-bottom: 10px;
 }
 
 div.NowInFirefox:hover {

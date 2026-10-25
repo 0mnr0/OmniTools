@@ -244,7 +244,7 @@ const darkThemeCssContent = `
 		border-color: var(--accent-red) !important
 	}
 	
-	input.form-control {
+	input.form-control, input.form-control:focus {
 		background: var(--accent-input-bg) !important;
 		color: var(--accent-text);
 	}
