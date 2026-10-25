@@ -1134,9 +1134,8 @@ div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption.Recomme
 }
 
 div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption:hover {
-	box-shadow: inset 0px 0px 6px 0px #ffffff;
-	width: 125%;
-	outline: solid 2px white;
+	width: 120%;
+	outline: solid 2px #ffffffbd;
 }
 
 div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption.select {

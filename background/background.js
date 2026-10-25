@@ -98,9 +98,14 @@ const Settings = {
 	};
 
 
+let UserSettings = {};
 
 const DefaultValues = {
-	// SettingName: value,
+	MaxCacheSize: 200,
+	DarkTheme: true,
+	ImproveSiteStyle: true,
+	LoadingIndicatorFix: true,
+	AiLearning: true
 };
 
 
@@ -108,7 +113,7 @@ const DefaultValues = {
 
 
 async function SetupDefault () {
-	const UserSettings = await Settings.getAll();
+	UserSettings = await Settings.getAll();
 	
 	const DefaultValuesKeys = Object.keys(DefaultValues);
 	for (let i = 0; i < DefaultValuesKeys.length; i++) {
@@ -141,6 +146,7 @@ BrowserContext.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 					log(e);
 				}
 			}
+			UserSettings = await Settings.getAll()
 		})();
 		sendResponse({ ok: true });
 		return false;

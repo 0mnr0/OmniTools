@@ -300,7 +300,6 @@ const IDBSettings = {
 	registerBridge() {
 		if (this._bridgeRegistered) return;
 		this._bridgeRegistered = true;
-		console.log("[bridge] registerBridge() called");
 
 		const ALLOWED_METHODS = new Set([
 			"get", "set", "delete", "clear", "isKeyExists", "getAll",
@@ -321,14 +320,11 @@ const IDBSettings = {
 				return false;
 			}
 
-			console.log("[bridge] calling method:", method, "with args:", args);
 			this[method](...args)
 				.then((result) => {
-					console.log("[bridge] resolved:", result);
 					sendResponse({ ok: true, result });
 				})
 				.catch((err) => {
-					console.log("[bridge] rejected:", err);
 					sendResponse({ ok: false, error: String(err?.message ?? err) });
 				});
 
