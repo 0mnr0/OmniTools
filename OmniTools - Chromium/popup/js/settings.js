@@ -35,6 +35,7 @@ const findInput = (settingName) => {
 					<div class="SettingLine">
 						${GetSwitch('DoSessionUpdate')} 
 						<p data-i18n="DoSessionUpdate.Desc"></p>
+						<p style="font-weight: 800" data-i18n="DoSessionUpdate.Desc2"></h>
 					</div>
 				</div>
 				
@@ -131,6 +132,7 @@ const findInput = (settingName) => {
 				<div class="SettingLine">
 					${GetSwitch('AiLearning')} 
 					<p data-i18n="AiLearning.Desc"></p>
+					<p style="font-weight: 800" data-i18n="AiLearning.Desc2"></h>
 				</div>
 				
 			</div>
