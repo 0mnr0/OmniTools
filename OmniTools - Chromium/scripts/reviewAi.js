@@ -161,6 +161,7 @@ function GenerateAiCallback(fromButton, AIGenText) {
 		}
 		
 	}).catch((err) => {
+		console.warn(err);
 		parseFail();
 	});
 	

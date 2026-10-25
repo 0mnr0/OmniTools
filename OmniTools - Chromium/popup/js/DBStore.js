@@ -4,11 +4,11 @@ const DBStore = new Proxy({}, {
 	get(_target, method) {
 		return (...args) => {
 			return new Promise((resolve, reject) => {
-				chrome.runtime.sendMessage(
+				BrowserContext.runtime.sendMessage(
 					{ __idbBridge: true, method, args },
 					(response) => {
-						if (chrome.runtime.lastError) {
-							reject(new Error(chrome.runtime.lastError.message));
+						if (BrowserContext.runtime.lastError) {
+							reject(new Error(BrowserContext.runtime.lastError.message));
 							return;
 						}
 						if (!response) {

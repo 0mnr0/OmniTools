@@ -27,7 +27,7 @@ async function downloadFile(url, fileName) {
   try {
     const r = await awaitWithTimeout(
       5000,
-      chrome.runtime.sendMessage({ type: "DownloadFile", url, filename: fileName })
+      BrowserContext.runtime.sendMessage({ type: "DownloadFile", url, filename: fileName })
     );
     if (!r?.ok) throw new Error(r?.error || "Пустой ответ от background");
   } catch (e) {

@@ -5,7 +5,6 @@
   "author": "savelijln0@gmail.com",
   "manifest_version": 3,
   "permissions": [
-		"cookies",
 		"storage",
 		"downloads",
 		"webRequest"

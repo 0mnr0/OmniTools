@@ -1,4 +1,6 @@
 // THIS File running in background script
+const BrowserContext = typeof browser !== "undefined" ? browser : chrome;
+
 
 const IDBSettings = {
 	DB_NAME: "HWCacheDB",
@@ -63,6 +65,13 @@ const IDBSettings = {
 			req.onsuccess = () => resolve(req.result === undefined ? defValue : req.result);
 			req.onerror = () => reject(req.error);
 		});
+	},
+	
+	async _getMaxBytes() {
+		const BC = BrowserContext;
+		const res = await new Promise(r => BC.storage.local.get("MaxCacheSize", r));
+		const mb = Number(res.MaxCacheSize);
+		return Number.isFinite(mb) && mb > 0 ? mb * 1024 * 1024 : 0;
 	},
 
 	async set(key, value) {
@@ -257,10 +266,9 @@ const IDBSettings = {
 
 		const key = this._hwidKey(uid, hwidName);
 
-		const maxMB = typeof UserSettings !== "undefined" ? Number(UserSettings.MaxCacheSize) : 0;
-
-		if (Number.isFinite(maxMB) && maxMB > 0) {
-			await this._putWithEviction(key, value, maxMB * 1024 * 1024);
+		const maxBytes = await this._getMaxBytes();
+		if (maxBytes > 0) {
+			await this._putWithEviction(key, value, maxBytes);
 		} else {
 			await this.set(key, value);
 		}
@@ -308,7 +316,7 @@ const IDBSettings = {
 			"deleteExpired"
 		]);
 
-		chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+		BrowserContext.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 			if (!msg || msg.__idbBridge !== true) {
 				return false;
 			}

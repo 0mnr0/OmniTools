@@ -36,26 +36,11 @@ function phpUnserialize(str) {
     return match ? { [match[1]]: parseInt(match[2]) } : null;
 }
 
-function getCityID(callback) {
-    chrome.cookies.get({ url: `https://${DOMAIN}`, name: COOKIE_NAME }, (cookie) => {
-        if (!cookie) {
-            console.log("Куки не найдены");
-            callback(null);
-            return;
-        }
-
-        let parsedData = phpUnserialize(decodeURIComponent(cookie.value));
-        let cityID = parsedData?.city_id || null;
-        console.log("CityID:", cityID);
-        callback(cityID);
-    });
-}
-
 
 const Settings = {
 	  get(key, defValue) {
 		return new Promise(resolve => {
-		  chrome.storage.local.get(key, res => {
+		  BrowserContext.storage.local.get(key, res => {
 			if (res[key] === undefined) {resolve(defValue); return}
 			resolve(res[key]);
 		  });
@@ -64,25 +49,25 @@ const Settings = {
 
 	  set(key, value) {
 		return new Promise(resolve => {
-		  chrome.storage.local.set({ [key]: value }, resolve);
+		  BrowserContext.storage.local.set({ [key]: value }, resolve);
 		});
 	  },
 
 	  delete(key) {
 		return new Promise(resolve => {
-		  chrome.storage.local.remove(key, resolve);
+		  BrowserContext.storage.local.remove(key, resolve);
 		});
 	  },
 
 	  clear() {
 		return new Promise(resolve => {
-		  chrome.storage.local.clear(resolve);
+		  BrowserContext.storage.local.clear(resolve);
 		});
 	  },
 
 	  async isKeyExists(key) {
 		return new Promise(resolve => {
-		  chrome.storage.local.get(key, res => {
+		  BrowserContext.storage.local.get(key, res => {
 			resolve(Object.prototype.hasOwnProperty.call(res, key));
 		  });
 		});
@@ -90,7 +75,7 @@ const Settings = {
 	  
 	  getAll() {
 		return new Promise(resolve => {
-		  chrome.storage.local.get(null, res => {
+		  BrowserContext.storage.local.get(null, res => {
 			resolve(res);
 		  });
 		});
@@ -152,14 +137,11 @@ BrowserContext.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 		return false;
 	}
 	
-	if (msg.type === "getCityID") {
-        getCityID((cityID) => sendResponse({ cityID }));
-        return true; 
-    }
-	
     if (msg.type === 'OPEN_POPUP') {
-		chrome.action.openPopup().catch(console.error);
-    }	
+		const actionApi = BrowserContext.action ?? BrowserContext.browserAction;
+		actionApi.openPopup().catch(console.error);
+		return false;
+	}
 	
 	if (msg.type === "VersionBumper") {
         sendResponse({ status: BrowserContext.runtime.getManifest() });
@@ -167,11 +149,11 @@ BrowserContext.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     }
 
 	if (msg.type === "DownloadFile") {
-		chrome.downloads.download(
+		BrowserContext.downloads.download(
 			{ url: msg.url, filename: msg.filename, conflictAction: "uniquify" },
 			(id) => {
-				if (chrome.runtime.lastError) {
-					sendResponse({ ok: false, error: chrome.runtime.lastError.message });
+				if (BrowserContext.runtime.lastError) {
+					sendResponse({ ok: false, error: BrowserContext.runtime.lastError.message });
 				} else {
 					sendResponse({ ok: true, id });
 				}

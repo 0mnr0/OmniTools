@@ -1,0 +1,55 @@
+{
+  "manifest_version": 2,
+  "background": {
+	"scripts": ["background/background.js"],
+	"type": "module"
+  },
+  "permissions": [
+	  "https://journalui.ru/*",
+	  
+	  "https://omni.top-academy.ru/*",
+	  "https://fs.top-academy.ru/*",
+	  "https://fsapi.top-academy.ru/*",
+	  "https://ms-api.top-academy.ru/*",
+	  "https://storage.yandexcloud.net/*",
+	  "https://s3.twcstorage.ru/*",
+	  "storage",
+	  "tabs",
+	  "downloads"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+	    "id": "savelijln0@gma1l.com",
+        "strict_min_version": "140.0",
+	    "data_collection_permissions": {
+		    "required": [
+				"personallyIdentifyingInfo",
+				"websiteActivity"
+			]
+	    }
+    }
+  },
+  "web_accessible_resources": [
+        "icons/cancel.svg",
+        "icons/general.svg",
+        "icons/arrow_left.svg",
+        "icons/settings.svg",
+        "icons/search.svg",
+        "icons/wand.svg",
+        "icons/code.svg",
+        "icons/filter.svg",
+        "icons/fullscreen.svg",
+        "icons/attach_file.svg",
+        "icons/fullscreen_close.svg",
+        "icons/close.svg",
+        "icons/birthday.png"
+  ],
+  "action": null,
+  "host_permissions": null,
+  "browser_action": {
+	  "default_popup": "popup/settings.html",
+	  "default_icon": {
+		"128": "OmniTools_128x128.png"
+	  }
+  }
+}

@@ -16,9 +16,13 @@
 }
 
 
+
+
 span {display: flex; align-items: center}
 
 html {overflow: auto; width: fit-content; padding: 0px} /* allow scroll in window if with or height is too big */ 
+
+
 
 body {
 	background: #0a0a0a;
@@ -30,6 +34,9 @@ body {
 	flex-direction: column;
 	overflow: hidden;
 }
+
+body.FF div.pane.topPane {border-start-start-radius: 18px; border-start-end-radius: 18px}
+body.FF div.settingsPane {border-end-end-radius: 18px}
 
 .flex {display: flex}
 .translateCenter {

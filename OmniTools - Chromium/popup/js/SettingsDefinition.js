@@ -1,7 +1,7 @@
 const Settings = {
 	  get(key, defValue) {
 		return new Promise(resolve => {
-		  chrome.storage.local.get(key, res => {
+		  BrowserContext.storage.local.get(key, res => {
 			if (res[key] === undefined) {resolve(defValue); return}
 			resolve(res[key]);
 		  });
@@ -10,28 +10,28 @@ const Settings = {
 
 	  set(key, value) {
 		return new Promise(resolve => {
-		  chrome.storage.local.set({ [key]: value }, resolve);
+		  BrowserContext.storage.local.set({ [key]: value }, resolve);
 		  notifySettingsChange();
 		});
 	  },
 
 	  delete(key) {
 		return new Promise(resolve => {
-		    chrome.storage.local.remove(key, resolve);
+		    BrowserContext.storage.local.remove(key, resolve);
 		    notifySettingsChange();
 		});
 	  },
 
 	  clear() {
 		return new Promise(resolve => {
-		    chrome.storage.local.clear(resolve);
+		    BrowserContext.storage.local.clear(resolve);
 			notifySettingsChange();
 		});
 	  },
 
 	  async isKeyExists(key) {
 		return new Promise(resolve => {
-		  chrome.storage.local.get(key, res => {
+		  BrowserContext.storage.local.get(key, res => {
 			resolve(Object.prototype.hasOwnProperty.call(res, key));
 		  });
 		});
@@ -39,7 +39,7 @@ const Settings = {
 	  
 	  getAll() {
 		return new Promise(resolve => {
-		  chrome.storage.local.get(null, res => {
+		  BrowserContext.storage.local.get(null, res => {
 			resolve(res);
 		  });
 		});

@@ -1,12 +1,16 @@
 const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
-const BrowserContext = (typeof chrome === 'object') ? chrome : browser;
+const BrowserContext = (typeof chrome === 'object') ? browser : chrome;
 const SettingsPane = find('.settingsPane');
 let UserSettings = {};
 
 
+if (isFirefox) {
+	document.body.classList.add('FF')
+}
+
 
 async function UpdateSize() {
-	let res = await chrome.runtime.sendMessage({ __idbBridge: true, method: "getSize", args: [] });
+	let res = await BrowserContext.runtime.sendMessage({ __idbBridge: true, method: "getSize", args: [] });
 	if (!res.ok) {res = {result: {count: 0, kb: 0}}} // db was cleared
 	let dbSize = res.result;
 	UpdateSizeCounters(dbSize.kb);
@@ -130,7 +134,7 @@ function UpdateActiveCacheChoice() {
 }
 
 function notifySettingsChange(){
-	chrome.runtime.sendMessage({type: "OmniTools.events.SettingsChange"}, () => {});
+	BrowserContext.runtime.sendMessage({type: "OmniTools.events.SettingsChange"}, () => {});
 	onSettingsChanged();
 }
 
@@ -202,7 +206,7 @@ function ClearAllSettingTypes() {
 
 
 
-const manifestData = chrome.runtime.getManifest();
+const manifestData = BrowserContext.runtime.getManifest();
 if (manifestData && manifestData.version) {
 	let versionDisplay = find('span.Extension.version');
 	
