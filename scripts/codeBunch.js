@@ -4,14 +4,36 @@ const DeveloperHash = "82cb119234503";
 let lastCityId = null;
 let CurrentSettings = {};
 
-function downloadFile(url, fileName) {
+function downloadFileOld(url, fileName) {
   const a = document.createElement('a');
   a.href = url;
   if (fileName) { a.download = fileName; }
-  a.style.display = 'none'; 
+  a.style.display = 'none';
+  a.setAttribute('target', '_blank');
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
+}
+
+function awaitWithTimeout(ms, promise) {
+  let timer;
+  const timeoutPromise = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error("Превышено время ожидания (Timeout)")), ms);
+  });
+  return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timer));
+}
+
+async function downloadFile(url, fileName) {
+  try {
+    const r = await awaitWithTimeout(
+      5000,
+      chrome.runtime.sendMessage({ type: "DownloadFile", url, filename: fileName })
+    );
+    if (!r?.ok) throw new Error(r?.error || "Пустой ответ от background");
+  } catch (e) {
+    console.warn(e);
+    downloadFileOld(url, fileName);
+  }
 }
 
 function getIcon(path) {

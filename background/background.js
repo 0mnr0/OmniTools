@@ -160,5 +160,19 @@ BrowserContext.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 		return false;
     }
 
+	if (msg.type === "DownloadFile") {
+		chrome.downloads.download(
+			{ url: msg.url, filename: msg.filename, conflictAction: "uniquify" },
+			(id) => {
+				if (chrome.runtime.lastError) {
+					sendResponse({ ok: false, error: chrome.runtime.lastError.message });
+				} else {
+					sendResponse({ ok: true, id });
+				}
+			}
+		);
+		return true;
+	}
+  
 	return false;
 });
