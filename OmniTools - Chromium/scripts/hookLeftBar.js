@@ -17,6 +17,12 @@ function createInMenuButton() {
 		<span> Настройки расширения </span>
 	`
 	inMenuButton.onclick = () => {
+		let isFullScreen = (window.screenTop && window.screenY) !== 0;
+		if (isFullScreen && !isFirefox) {
+			Toast.create("Chromium не умеет открывать popup пока включен полноэкранный режим", 2000, {})
+			return
+		} 
+		
 		let overlay = document.createElement('div')
 		overlay.style=`
 			width: 100%;
@@ -36,6 +42,5 @@ function createInMenuButton() {
 	}
 	
 	placement.appendChild(inMenuButton);
-	console.log(inMenuButton);
 }
 

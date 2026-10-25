@@ -86,6 +86,8 @@ async function UpdateSize() {
 				
 				settingType.onclick = () => {
 					let newDivide = settingType.getAttribute('SettingLinkedTo')
+					if (newDivide.toLowerCase() === "none") {return}
+					
 					ClearAllSettingTypes();
 					UpdateSize();
 					findAll('div.SettingSection').forEach(SettingDisplayingType => {
@@ -115,6 +117,7 @@ async function UpdateSize() {
 		MaxCacheMemoryController();
 		RegCacheCleaners();
 		UpdateActiveCacheChoice();
+		setOnFirefoxListener();
 		UpdateTypes('functions')
 		CreateStyle('EnableTransitions', '* { transition: all .3s, scrollbar-color 0s, scrollbar-width 0s; }');
 		setInterval(UpdateSize, 2000);
@@ -131,6 +134,13 @@ function UpdateActiveCacheChoice() {
 		cacheField.classList.add('active')
 	}
 	
+}
+
+function setOnFirefoxListener() {
+	let targetDiv = find('div.leftPane div.bottomOne div.NowInFirefox')
+	targetDiv.onclick = () => {
+		window.open('https://addons.mozilla.org/ru/firefox/addon/omni-tools/', target='_blank')
+	}
 }
 
 function notifySettingsChange(){

@@ -1,4 +1,8 @@
-/* For curious enthusiasts: the settings window for Omni Tools was ported from another project of mine. Some references to it may also be present here. */
+/* 
+For curious enthusiasts:
+	The settings window for Omni Tools was ported from another project of mine.
+	Some references to it may also be present here.
+*/
 
 * {font-family: "Comfortaa", sans-serif; color: white; position: relative;}
 * {
@@ -78,6 +82,35 @@ img.patPatLoader {
 	scale: 0.8;
 }
 
+div.NowInFirefox {
+    display: flex;
+	justify-content: center;
+    align-items: center;
+    justify-content: center;
+    border: solid 2px #444;
+    margin-bottom: 32px;
+}
+
+div.NowInFirefox:hover {
+	border-color: gray;
+}
+
+body.FF div.NowInFirefox {
+	display: none;
+}
+
+div.NowInFirefox span {
+    white-space: normal;
+	text-align: center;
+}
+
+body div.leftPane div.bottomOne > div.NowInFirefox img {
+    width: 40px;
+    object-fit: contain;
+    height: 100%;
+    margin: 0;
+    padding-left: 10px;
+}
 
 div.SettingSection.OtherTab {
     height: calc(100% - 35px);
