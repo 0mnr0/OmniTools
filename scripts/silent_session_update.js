@@ -29,6 +29,10 @@ async function sessionUpdate(attempt = 0) {
     scheduleNext();
     return;
   }
+  
+  if (location.href.includes('/login/')) {
+	return; // page will be auto-rebooted after login
+  }
 
   console.debug("Running Session Update!");
 
