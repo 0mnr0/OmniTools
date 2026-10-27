@@ -410,6 +410,10 @@ const darkThemeCssContent = `
 		filter: none !important;
 	}
 	
+	body div.CustomHWDiv div.WindowHelper {
+		color: white; --basic-outline-color: white;
+	}
+	
 	section.review-card-panel section.review-editor button#AIGenButton span {color: var(--accent-text) !important;}
 `
 

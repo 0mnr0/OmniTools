@@ -19,6 +19,7 @@
   "content_scripts": [
     {
 		"js": [
+			"scripts/libs/KeyBoardController.js",
 			"scripts/libs/flubber.js",
 			"scripts/libs/M3Loader.js",
 			"scripts/libs/LightCore.js",
@@ -57,6 +58,7 @@
 			"icons/wand.svg",
 			"icons/code.svg",
 			"icons/filter.svg",
+			"icons/help.svg",
 			"icons/fullscreen.svg",
 			"icons/attach_file.svg",
 			"icons/fullscreen_close.svg",

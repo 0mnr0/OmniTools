@@ -131,3 +131,43 @@ const CSSImprove = `
 	.internal-wrap-global md-input-container .md-placeholder, .internal-wrap-global md-input-container label {transition: all .2s}
 `
 
+const CustomHwWindowHelper = `
+	<h2> Рекомендации по работе с этим окном ДЗ </h2>
+	<span type=divider></span>
+	<div class="Shortcuts">
+		<h4 title> Горячие клавишы </h4>
+		
+		<div class="ShortcutInfo">
+			<div class="SCPreview">
+				<span class="SCDemoKey"> SHIFT </span>
+				<span class="SCDemoPlus"> + </span>
+				<span class="SCDemoKey"> W </span>
+			</div>
+			<span> — Удерживая эти клавишы, поставьте оценку, и работа автоматически отправится </span>		
+		</div>
+		
+		<div class="ShortcutInfo">
+			<div class="SCPreview">
+				<span class="SCDemoKey"> SHIFT </span>
+				<span class="SCDemoPlus"> + </span>
+				<span class="SCDemoKey"> F </span>
+			</div>
+			<span> — Удерживая эти клавишы, наведитесь мышкой на работу, и вы автоматически поставите ей максимальную оценку </span>		
+		</div>
+		
+		
+	</div>
+	
+	<button class="HelperGoBack"> Назад </button>
+			
+`
+
+
+KeyboardController.when(
+	["shift", "w"],
+	() => {document.body.classList.add("ShiftW")}
+)
+KeyboardController.after(
+	["shift", "w"],
+	() => {document.body.classList.remove("ShiftW")}
+)

@@ -145,6 +145,7 @@ div.CustomHWDiv m3loader svg {
 
 div.CustomHWDiv div.topPanel {
 	transition: all .2s;
+	interpolate-size: allow-keywords;
 	margin-bottom: 6px;
 }
 
@@ -222,6 +223,8 @@ div.CustomHWDiv div.content {
 	padding-top: 10px;
 	padding-right: 10px;
 	width: 100%;
+	transition: all .5s;
+	interpolate-size: allow-keywords;
 	overflow: auto
 }
 
@@ -403,6 +406,12 @@ div.CustomHWDiv.fullscreen .topLine{
 	margin-bottom: 5px
 }
 
+div.CustomHWDiv.fullscreen.tellMeAboutThis div.WindowHelper {
+	margin: 0px;
+	margin-bottom: 3px;
+	border-radius: 6px
+}
+
 div.CustomHWDiv div.content div.hwBlock div.info .b500 {
     font-weight: 500
 }
@@ -516,7 +525,22 @@ div.CustomHWDiv div.content div.SetMark div.list {
     display: flex;
 	gap: 3px;
 	margin-top: 5px;
-	width: fit-content
+	width: fit-content;
+	top: 0px;
+	transition: all .2s;
+}
+
+div.CustomHWDiv div.content div.hwBlock div.SetMark {
+	transition: all .2s;
+}
+
+div.CustomHWDiv div.content div.hwBlock.DenialActive div.SetMark {
+	opacity: 0.66;
+}
+
+
+body.ShiftW div.CustomHWDiv div.content div.hwBlock:not(.DenialActive) div.SetMark div.list {
+	top: 5px;
 }
 
 div.CustomHWDiv div.content div.Comment {
@@ -576,6 +600,27 @@ div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span[oub
 
 div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span:hover:not(.active) {
 	border-color: #22aa90
+}
+
+body.ShiftW div.CustomHWDiv div.content div.hwBlock:not(.DenialActive) div.info div.SetMark > div.list span {
+	animation: MarkShaking .45s infinite;
+}
+body.ShiftW div.CustomHWDiv div.content div.hwBlock:not(.DenialActive) div.info div.SetMark > div.list span:hover {
+	border-top: solid 3px #22aa90;
+}
+
+@keyframes MarkShaking {
+	0% {
+		transform: translateY(0px);
+	}
+	
+	50% {
+		transform: translateY(3px);
+	}
+	
+	100% {
+		transform: translateY(0px);
+	}
 }
 
 div.CustomHWDiv div.content div.hwBlock div.Tools {
@@ -753,6 +798,104 @@ div.CustomHWDiv div.content div.Comment div.fileInput .input-file span {
     word-wrap: anywhere;
 }
 
+div.CustomHWDiv div.WindowHelper {
+	--basic-outline-color: black;
+    display: flex;
+    flex-direction: column;
+	color: black;
+    gap: 10px;
+	interpolate-size: allow-keywords;
+	height: 0px;
+	overflow: hidden;
+	transition: all .5s;
+	margin: 0px;
+	padding: 0px 15px;
+	opacity: 0;
+	outline: solid 10px transparent;
+}
+
+div.CustomHWDiv.tellMeAboutThis {
+	div.WindowHelper {
+		height: 100%;
+		opacity: 1;
+		margin: -5px;
+		border-radius: 10px;
+		padding: 15px 15px;
+		outline: solid 20px var(--basic-outline-color) !IMPORTANT;
+	}
+	
+	div.topPanel {
+		div.topLine {height: 0px}
+		opacity: 0;
+		height: 0px;
+		margin: 0px;
+		pointer-events: none;
+		z-index: -11
+	}
+	
+	div.content {
+		div.hwBlock {max-height: 0px; min-height: 0px; padding: 0px; margin: 0px; opacity: 0}
+		
+		padding: 0px;
+		opacity: 0;
+		height: 0px;
+		pointer-events: none
+	}
+}
+
+div.CustomHWDiv div.WindowHelper {
+	h1 {font-size: 200%}
+	h2 {font-size: 180%}
+	h3 {font-size: 160%}
+	h4 {font-size: 140%}
+	h5 {font-size: 120%}
+}
+
+div.CustomHWDiv div.WindowHelper button.HelperGoBack {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: gray;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+div.CustomHWDiv div.WindowHelper div.Shortcuts h4[title] {
+    margin-bottom: 15px;
+}
+
+div.CustomHWDiv div.WindowHelper div.ShortcutInfo {
+    margin: 15px 0px;
+	display: flex;
+	align-items: center;
+}
+
+
+div.CustomHWDiv div.WindowHelper div.SCPreview {
+    display: flex;
+    height: fit-content;
+	margin: 0px 10px;
+	font-size: 140%;
+    gap: 10px;
+}
+
+div.CustomHWDiv div.WindowHelper div.SCPreview span {
+	display: flex; align-items: center; justify-content: center;
+}
+div.CustomHWDiv div.WindowHelper div.SCPreview span.SCDemoKey {
+	background: #0000008a;
+	padding: 10px;
+	border-radius: 10px;
+	
+}
+
+div.CustomHWDiv span[type=divider] {
+    width: 100%;
+    height: 1px;
+    background: #808080ad;
+}
+
 div.CustomHWDiv div.content div.Comment div.fileInput .input-file span::before {
     position: relative;
     background: var(--attach-file-icon-url);
@@ -800,6 +943,8 @@ div.CustomHWDiv .topLine {
     display: flex;
     gap: 10px;
     margin-top: -4px;
+	height: auto;
+	interpolate-size: allow-keywords;
     margin-bottom: 4px;
     align-items: center;
 }

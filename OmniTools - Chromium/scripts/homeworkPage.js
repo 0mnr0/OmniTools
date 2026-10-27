@@ -70,6 +70,7 @@ function OpenCustomHomeworkWindow() {
 	let Win = document.createElement('div');
 	Win.className = "CustomHWDiv absoluteCenter";
 	let code = `
+		<div class="WindowHelper">${CustomHwWindowHelper}</div>
 		<div class="topPanel">
 			<div class="topLine">
 				<img id="back" src="${getIcon('/icons/arrow_left.svg')}">
@@ -81,6 +82,7 @@ function OpenCustomHomeworkWindow() {
 				<select id="reviewTypes" disabled style="display: none"> Секунду... </select>
 				
 				<div class="backGuestures">		
+					<img id="helpMe" src="${getIcon('/icons/help.svg')}" title="Рекомандации по работе">
 					<img id="filter" src="${getIcon('/icons/filter.svg')}">
 					<img id="fullscreen" src="${getIcon('/icons/fullscreen.svg')}">
 					<img id="close" src="${getIcon('/icons/cancel.svg')}">
@@ -137,6 +139,19 @@ function OpenCustomHomeworkWindow() {
 			document.head.parentElement.classList.add("no-scrollbar");
 			fullscreenBtn.src = getIcon("/icons/fullscreen_close.svg");
 		}
+	}
+	
+	let helpMeButton = Win.find('div.topPanel div img#helpMe')
+	helpMeButton.onclick = () => {
+		if (Win.classList.contains("tellMeAboutThis")) {
+			Win.classList.remove("tellMeAboutThis");
+		} else {
+			Win.classList.add("tellMeAboutThis");
+		}
+	}
+	let helpMeReturnButton = Win.find('div.WindowHelper button.HelperGoBack')
+	helpMeReturnButton.onclick = () => {
+		Win.classList.remove("tellMeAboutThis");
 	}
 	
 	let filterBtn = Win.find('div.topPanel div img#filter');
@@ -356,7 +371,7 @@ function GenMarks(AddOutOfBounds = false) {
 	var data = {code: ""}
 	for (let i = 0; i < Marks.length; i++) {
 		data.code += `
-			<span mark=${i+1}> ${i+1} </span>
+			<span mark=${i+1} style="animation-delay: ${(i+1)/25}s"> ${i+1} </span>
 		`
 	}
 	if (AddOutOfBounds) {
@@ -648,11 +663,13 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 				UpdateTellMeWhyText();
 				
 				if (workDenial) {
+					Homework.classList.add('DenialActive');
 					SendAction.classList.add('denial');
 					SendAction.textContent = "Удалить работу";
 					ResetActionTitle.textContent = "Отмена";
 					ResetActionImage.src = CloseIco;
 				} else {
+					Homework.classList.remove('DenialActive');
 					SendAction.classList.remove('denial');
 					SendAction.textContent = "Сохранить";
 					ResetActionTitle.textContent = "Удалить работу";
@@ -770,10 +787,12 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 					mark.classList.remove('active')
 				} else {
 					MarkElements.forEach(m => m.classList.remove('active'))
-					mark.classList.add('active')
-				}
-				
-				
+					mark.classList.add('active');
+					
+					if (KeyboardController.isShiftPressed && KeyboardController.isKeyPressed("W") && !workDenial) {
+						SendAction.click()
+					}
+				}				
 			}
 		})
 		
