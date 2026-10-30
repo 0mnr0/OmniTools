@@ -56,9 +56,20 @@
 			
 			<div class="bottomOne">
 			
-				<div class="NowInFirefox" SettingLinkedTo="None">
-					<img src="icons/firefox.webp">
-					<span data-i18n="NowInFireFox"></span>
+				
+			
+				<div class="ServerStatuses" SettingLinkedTo="None" Loading>
+					<span class="LoadingServStat" data-i18n="JustASecond"></span>
+					
+					<div class="Global PingStatus" topOne>
+						<img class="PingIco" src="icons/ping_icon.svg">
+						<span data-i18n="GlobalServerState"></span>
+					</div>
+					<div class="Omni PingStatus" bottomOne>
+						<img class="PingIco" src="icons/ping_icon.svg" pingDelay>
+						<span data-i18n="Omni"></span>
+					</div>
+						
 				</div>
 			
 				<div class="OtherTab" SettingLinkedTo="OtherTab">

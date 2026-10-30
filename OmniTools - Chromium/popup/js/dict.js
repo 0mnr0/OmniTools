@@ -1,6 +1,9 @@
 ﻿const DICT = {
 	'en': {
+		'Omni': "Omni",
+		'GlobalServerState': "All Servers",
 		'GeneralSettings': "Settings",
+		'JustASecond': "Second",
 		'ServerChoise': "Servers",
 		'OtherTab': 'Other',
 		
@@ -58,6 +61,9 @@
 	
 	
 	'ru': {
+		'Omni': "Omni",
+		'GlobalServerState': "Все сервера",
+		'JustASecond': "Секунду",
 		'GeneralSettings': "Настройки",
 		'ServerChoise': "Сервера",
 		'OtherTab': 'Другое',
@@ -104,7 +110,7 @@
 		'Done': 'Готово',
 		'DoneAndCleared': 'Готово! Объектов удалено: ',
 		'DoneAndNotCleared': 'Нечего очищать :(',
-		'NowInFireFox': 'Теперь и в FireFox',
+		'NowInFireFox': 'OmniTools в FireFox',
 		'AboutThisProject_P1': `Этот проект был создан НЕ преподавателем, а учеником с помощью учительского аккаунта. Я не могу обеспечивать полноценное тестирование кода в условиях работы от чужого лица.`,
 		'AboutThisProject_P2': `Если вы видите что в расширении что-то не работает вы можете написать мне в Telegram, но в нек-ых случаях для исправления ошибки мне потребуются авторизационные данные. Либо, если вы обладаете навыками Web разработки, приветствуются Pull Request в GitHub репозиторий :)`,
 		'ContactDev': 'Написать разработчику'

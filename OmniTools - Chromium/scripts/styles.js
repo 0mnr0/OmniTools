@@ -1024,13 +1024,6 @@ div.CustomHWDiv .topLine.filters.visible {
     margin-top: 7px;
 }
 
-div.CustomHWDiv .topLine.filters div.line {
-    display: flex;
-    width: 100%;
-    gap: 10px;
-}
-
-
 div.CustomHWDiv div.showMore {
     width: fit-content;
 }
@@ -1043,6 +1036,58 @@ div.CustomHWDiv div.showMore button.showMoreBtn {
     border-radius: 12px;
 }
 
+div.moreActions {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    padding: 5px;
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+    transition: all .6s;
+    interpolate-size: allow-keywords;
+    width: fit-content;
+    border-radius: 16px;
+	justify-content: flex-end;
+    background: var(--accent-1);
+}
+
+div.moreActions:hover {
+	width: auto;
+	
+	[expandable] {
+		width: auto;
+		margin-left: 0px;
+		filter: none;
+		opacity: 1;
+		
+		button.showMoreBtn {
+			scale: 1 !important;
+		}
+	}
+}
+
+div.moreActions [expandable] {
+    transition: all .4s;
+    interpolate-size: allow-keywords;
+    width: 0px;
+    display: flex;
+    white-space: nowrap;
+    margin-left: -10px;
+    gap: 4px;
+	filter: blur(4px);
+	border-radius: 10px;
+    overflow: hidden;
+}
+
+div.CustomHWDiv div.moreActions div.showMore button.showMoreBtn {
+	scale: 0.75;
+	transition: all .4s
+}
+
+div.moreActions img[more-icon] {
+    margin: 0px 4px;
+}
 
 div.inMenuButton.Injected {
     width: 100%;

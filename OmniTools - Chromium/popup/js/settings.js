@@ -146,6 +146,12 @@ const findInput = (settingName) => {
 				</div>
 				
 				
+				<div class="ProjectOnStores flex github ProjList">
+					<div class="NowInFirefox">
+						<img src="icons/firefox.webp">
+						<span data-i18n="NowInFireFox"></span>
+					</div>
+				</div>
 				<div class="flex github">
 					<img src="icons/github.svg">
 					<span data-i18n="ProjectOnGitHub"></span>

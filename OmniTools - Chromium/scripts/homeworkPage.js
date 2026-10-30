@@ -102,14 +102,21 @@ function OpenCustomHomeworkWindow() {
 						<option value="newest">Сначала новые</option>
 					</select>
 				</div>
-				<div class="line showMore">
-					<button class="showMoreBtn show30" show=30> Показать ещё 30 </button>
-					<button class="showMoreBtn showAll" show=all> Показать все </button>
-				</div>
 			</div>
 			
 		</div>
+		
 		<div class="content"></div>
+		<div class="moreActions">
+			<div class="showMore" expandable>
+				<button class="showMoreBtn show30" show=30> Показать ещё 30 </button>
+				<button class="showMoreBtn showAll" show=all> Показать все </button>
+			</div>
+			<span divider expandable></span>
+			<button class="SendAllMarked" expandable> Отправить все оценки </button>
+			
+			<img src="${getIcon('/icons/more.svg')}" more-icon>
+		</div>
 		
 		<m3loader></m3loader>
 	`;

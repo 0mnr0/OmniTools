@@ -4,19 +4,20 @@ For curious enthusiasts:
 	Some references to it may also be present here.
 */
 
-* {font-family: "Comfortaa", sans-serif; color: white; position: relative;}
 * {
-  -webkit-touch-callout: none;
-    -webkit-user-select: none;
-     -khtml-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none; 
-            user-select: none; 
-}
-
-* {
-  scrollbar-color: #cdbeb1 transparent;
-  scrollbar-width: thin;
+	font-family: "Comfortaa", sans-serif;
+	color: white;
+	position: relative;
+	
+    -webkit-touch-callout: none;
+		-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+				-ms-user-select: none; 
+					user-select: none; 
+					
+	scrollbar-color: #cdbeb1 transparent;
+	scrollbar-width: thin;
 }
 
 
@@ -82,13 +83,31 @@ img.patPatLoader {
 	scale: 0.8;
 }
 
+div.ProjectOnStores.flex.github {
+    padding: 0px;
+    display: flex;
+    background: transparent;
+    justify-content: space-around;
+}
+
 div.NowInFirefox {
     display: flex;
-	justify-content: center;
-    align-items: center;
     justify-content: center;
-    border: solid 2px #444;
-    margin-bottom: 10px;
+    align-items: center;
+    max-height: 40px;
+    justify-content: center;
+	cursor: pointer;
+}
+
+div.flex.github div.NowInFirefox img {
+    height: 36px;
+    aspect-ratio: 1/1;
+	margin-right: 10px;
+    width: auto;
+    object-fit: contain;
+    padding: 4px;
+    max-width: none;
+    min-width: auto;
 }
 
 div.NowInFirefox:hover {
@@ -122,7 +141,7 @@ span.madeWith {
     justify-content: center;
     position: absolute;
     bottom: -35px;
-    padding: 5px 0px0px;
+    padding: 5px 0px;
     opacity: 0.65;
     font-size: small;
 }
@@ -216,11 +235,8 @@ div.settingsPane {
     flex-direction: column;
     overflow: hidden;
     overflow-y: auto;
-}
-
-div.settingsPane {
-  scrollbar-color: #cdbeb1 transparent;
-  scrollbar-width: none;
+    scrollbar-color: #cdbeb1 transparent;
+    scrollbar-width: none;
 }
 
 div.TypeRoulette {
@@ -1184,6 +1200,121 @@ div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption.select 
 
 
 
+body div.leftPane div.ServerStatuses {
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+	gap: 3px;
+	padding: 10px 0px;
+    overflow: hidden;
+}
+
+div.ServerStatuses span.LoadingServStat {
+    position: absolute;
+	display: flex;
+	justify-content: center;
+	backdrop-filter: blur(4px);
+    margin: 10px 0px;
+	height: calc(100% - 20px);
+	border-radius: 13px;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    color: white;
+    z-index: 3;
+	animation: FadeAndFade infinite 3s;
+}
 
 
+div.leftPane div.ServerStatuses:hover span {
+	font-weight: 300;
+}
+div.leftPane div.ServerStatuses:hover div.PingStatus:hover span {
+	font-weight: 600;
+}
+
+div.ServerStatuses.WasLoaded {
+	
+	div.PingStatus {
+		z-index: 3;
+	}
+	
+	span.LoadingServStat {
+		z-index: 1;
+		color: transparent;
+		font-size: 0px;
+		background: #8b8b8b2e;
+		animation-duration: 2s;
+	}
+}
+
+div.ServerStatuses span.LoadingServStat.hidden {
+    height: 0px;
+    opacity: 0;
+	color: transparent;
+    overflow: hidden;
+    top: 50%;
+}
+
+div.ServerStatuses.WasLoaded span.LoadingServStat.hidden.Pinging {
+	height: calc(100% - 20px);
+    opacity: 1;
+	color: transparent;
+    overflow: hidden;
+    top: 0%;
+}
+
+div.ServerStatuses div.PingStatus {
+    display: flex;
+    justify-content: flex-start;
+    border-radius: 12px;
+    background: #2d2d2dd4;
+    padding: 6px 4px;
+	
+	img {
+		animation: pingAnim 2s infinite;
+		margin-right: 5px !important;
+	}
+	img[pingDelay] {
+		animation-delay: .5s;
+	}
+}
+
+div.ServerStatuses div.PingStatus[topOne] {
+	border-end-start-radius: 6px;
+	border-end-end-radius: 6px;
+}
+
+div.ServerStatuses div.PingStatus[bottomOne] {
+	border-start-start-radius: 6px;
+	border-start-end-radius: 6px;
+}
+
+@keyframes pingAnim {
+	0% {
+		scale: 1;
+	}
+	
+	50% {
+		scale: 1.3;
+	}
+	
+	100% {
+		scale: 1;
+	}
+}
+
+@keyframes FadeAndFade {
+	0% {
+		backdrop-filter: contrast(0.9) blur(4px);
+	}
+	
+	50% {
+		backdrop-filter: contrast(0.8) blur(5px);
+	}
+	
+	100% {
+		backdrop-filter: contrast(0.9) blur(4px);
+	}
+}
 
