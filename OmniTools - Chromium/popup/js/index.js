@@ -238,6 +238,7 @@ function regPingStatus() {
 		UpdateIcons(OmniStatus, AverageStatus);
 		ParentPingDiv.classList.add('WasLoaded');
 		PingingSpan.classList.add('Hidden');
+		PingingSpan.classList.remove('Pinging');
 	}
 
 

@@ -4,6 +4,13 @@ For curious enthusiasts:
 	Some references to it may also be present here.
 */
 
+@font-face {
+  font-family: "Comfortaa";
+  src: url("../font.ttf") format("truetype"); 
+  font-weight: 300 700;
+  font-style: normal;
+}
+
 * {
 	font-family: "Comfortaa", sans-serif;
 	color: white;
