@@ -807,39 +807,40 @@ div.CustomHWDiv div.WindowHelper {
 	interpolate-size: allow-keywords;
 	height: 0px;
 	overflow: hidden;
-	transition: all .5s;
+	transition: all .5s, z-index 0s;
 	margin: 0px;
 	padding: 0px 15px;
 	opacity: 0;
-	outline: solid 10px transparent;
+	height: 0px;
+	background: transparent;
+	position: absolute;
+	top: -10px;
+	margin: 0px;
+	left: 0px;
+	width: 100%;
+	color: transparent;
+	z-index: 10;
+	outline: solid 0px transparent;
 }
 
 div.CustomHWDiv.tellMeAboutThis {
 	div.WindowHelper {
-		height: 100%;
+		height: calc(100% - 10px);
+		width: calc(100% - 10px);
 		opacity: 1;
-		margin: -5px;
+		color: var(--accent-text);
+		background: var(--accent-2);
+		z-index: 16;
+		margin: 5px;
+		top: 0px;
 		border-radius: 10px;
 		padding: 15px 15px;
-		outline: solid 20px var(--basic-outline-color) !IMPORTANT;
+		outline: solid 5px var(--basic-outline-color) !IMPORTANT;
+		position: absolute;
 	}
 	
-	div.topPanel {
-		div.topLine {height: 0px}
-		opacity: 0;
-		height: 0px;
-		margin: 0px;
-		pointer-events: none;
-		z-index: -11
-	}
-	
-	div.content {
-		div.hwBlock {max-height: 0px; min-height: 0px; padding: 0px; margin: 0px; opacity: 0}
-		
-		padding: 0px;
-		opacity: 0;
-		height: 0px;
-		pointer-events: none
+	div.content, div.topPanel {
+		filter: blur(10px);
 	}
 }
 
@@ -1036,6 +1037,7 @@ div.CustomHWDiv .topLine.filters div.line {
 }
 
 div.CustomHWDiv div.moreActions button {
+	transition: all .25s;
     padding: 10px 0px;
     border: none;
 	color: white;
@@ -1094,8 +1096,8 @@ div.CustomHWDiv div.moreActions:hover button {
 	padding: 10px 12px;
 }
 
-div.CustomHWDiv div.moreActions button.SendAllMarked[len="0"],{
-div.CustomHWDiv div.moreActions button.SendAllMarked[disabled]{
+div.CustomHWDiv div.moreActions button.SendAllMarked[len="0"],
+div.CustomHWDiv div.moreActions button.SendAllMarked[disabled] {
 	filter: grayscale(1);
 	pointer-events: none;
 	cursor: default;
