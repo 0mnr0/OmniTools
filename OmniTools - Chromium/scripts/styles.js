@@ -559,14 +559,18 @@ div.CustomHWDiv div.content div.Comment textarea {
     width: 100%;
 	min-height: 100px;
 	margin: 6px 0px;
+	transition: all .2s;
 	border-radius: 12px 12px 0px 0px;
 	padding: 6px
+}
+
+div.CustomHWDiv div.content div.Comment textarea:focus {
+	border-color: white;
 }
 
 div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span {
     width: auto;
     height: 38px;
-	transition: all .2s;
     aspect-ratio: 1/1;
     display: flex;
     align-items: center;
@@ -577,7 +581,55 @@ div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span {
     font-weight: 300;
     border-radius: 10px;
     cursor: pointer;
+	left: 0px;
+	transition: all .25s;
+	outline: solid 0px transparent !important;
     padding: 4px;
+}
+
+body div.CustomHWDiv div.content div.hwBlock div.info div.SetMark > div.list span.AutoSendingRequest {
+	left: 7px;
+	scale: 1.25;
+	border: solid 0px transparent;
+	outline: solid 1px #808080 !important;
+	background: conic-gradient(from 0deg, #22aa9094 var(--percentage), transparent var(--percentage));
+	animation: RoundRadialGradient .85s linear;
+}
+
+body.ShiftW div.CustomHWDiv div.content div.hwBlock:not(.DenialActive) div.info div.SetMark > div.list span.AutoSendingRequest {
+	animation: ShakingRoundRadialGradient .85s linear;
+}
+
+@property --percentage {
+  syntax: '<percentage>';
+  inherits: false;
+  initial-value: 0%;
+}
+
+@keyframes RoundRadialGradient {
+	from {
+		--percentage: 0%;
+	}
+	to {
+		--percentage: 100%;
+	}
+}
+
+@keyframes ShakingRoundRadialGradient {
+	0% {
+		transform: translateY(0px);
+		--percentage: 0%;
+	}
+	
+	50% {
+		transform: translateY(3px);
+		--percentage: 50%;
+	}
+	
+	100% {
+		transform: translateY(0px);
+		--percentage: 100%;
+	}
 }
 
 div.CustomHWDiv div.content div.hwBlock div.info span b {

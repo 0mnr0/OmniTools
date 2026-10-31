@@ -150,16 +150,16 @@ const CustomHwWindowHelper = `
 				<span class="SCDemoPlus"> + </span>
 				<span class="SCDemoKey"> W </span>
 			</div>
-			<span> — Удерживая эти клавишы, поставьте оценку, и работа автоматически отправится </span>		
+			<span> — Удерживая эти клавишы, поставьте оценку, и работа автоматически отправится с выбранной отметкой </span>		
 		</div>
 		
 		<div class="ShortcutInfo">
 			<div class="SCPreview">
 				<span class="SCDemoKey"> SHIFT </span>
 				<span class="SCDemoPlus"> + </span>
-				<span class="SCDemoKey"> X </span>
+				<span class="SCDemoKey"> F </span>
 			</div>
-			<span> — Удерживая эти клавишы, наведитесь мышкой на предпросмотр учтобы увеличить его</span>		
+			<span> — Удерживая эти клавишы, наведитесь мышкой на работу чтобы поставить максимальную оценку</span>		
 		</div>
 		
 		
@@ -169,7 +169,7 @@ const CustomHwWindowHelper = `
 			
 `
 
-
+// SHIFT + W
 KeyboardController.when(
 	["shift", "w"],
 	() => {document.body.classList.add("ShiftW")}
@@ -178,3 +178,17 @@ KeyboardController.after(
 	["shift", "w"],
 	() => {document.body.classList.remove("ShiftW")}
 )
+
+
+// SHIFT + F
+KeyboardController.when(
+	["shift", "F"],
+	() => { HwFastMarkStart();},
+	{ onDownEvent: true, ignoreInInput: true }
+)
+KeyboardController.after(
+	["shift", "F"],
+	() => {log(1); HwFastMarkStop();},
+	{ onReleaseEvent: true }
+)
+

@@ -6,7 +6,8 @@ let PreviewFrames = [];
 let lastData = {
 	InjectedPanel: null,
 	Win: null,
-	M3: null
+	M3: null,
+	LastHovered: null
 }
 
 let PAGE_SIZE = 30;
@@ -398,8 +399,9 @@ function UpdateNameFilter(state, filterName) {
 function GenMarks(AddOutOfBounds = false) {
 	var data = {code: ""}
 	for (let i = 0; i < Marks.length; i++) {
+		const isHighest = i === Marks.length - 1;
 		data.code += `
-			<span mark=${i+1} style="animation-delay: ${(i+1)/25}s"> ${i+1} </span>
+			<span mark=${i+1} style="animation-delay: ${(i+1)/25}s" ${isHighest ? "highest" : ''}> ${i+1} </span>
 		`
 	}
 	if (AddOutOfBounds) {
@@ -470,6 +472,40 @@ function LoadNextCards(count) {
 
 	let PreviewList = batch.map(hw => CreateHomeworkCard(hw));
 	RunHomeworkPreview(PreviewList, lastData.Win);
+}
+
+function HwFastMarkStart() {
+	const lastHover = lastData.LastHovered;
+	if (!lastHover || (lastHover && lastHover.classList.contains('DenialActive')) || (lastHover && lastHover.classList.contains('busy'))) {
+		log("Nothing To Hover!");
+		return
+	}
+	let TopMark = GetHighestMark(lastData.LastHovered);
+	if (!TopMark) {log('Highest Mark Not Found!'); return}
+	lastData.MarkAutoSendingRequest = TopMark;
+	
+	TopMark.classList.add('AutoSendingRequest');
+	let timeout = setTimeout(() => {
+		TopMark.classList.remove('AutoSendingRequest');
+		lastData.MarkAutoSendingRequestTimeout = null;
+		lastData.MarkAutoSendingRequest = null;
+		if (!TopMark) return;
+		TopMark.click();
+	}, 1000);
+	lastData.MarkAutoSendingRequestTimeout = timeout;
+	
+}
+function HwFastMarkStop() {
+	if (lastData.MarkAutoSendingRequestTimeout) {
+		clearTimeout(lastData.MarkAutoSendingRequestTimeout)
+	}
+	if (lastData.MarkAutoSendingRequest) {
+		lastData.MarkAutoSendingRequest.classList.remove('AutoSendingRequest');
+	}
+}
+
+function GetHighestMark(SearchDiv) {
+	return SearchDiv.find('div.info div.SetMark div.list span[highest]');
 }
 
 function GenerateBadgeList(hw, isDev=false) {
@@ -611,6 +647,15 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 		if (ApplyOrDeny) {
 			Homework.classList.add("ApplyOrDeny");
 		}
+		
+		Homework.onEvent('mouseenter', () => {
+			lastData.LastHovered = Homework;
+			log('new enter');
+		})
+		Homework.onEvent('mouseleave', () => {
+			lastData.LastHovered = null;
+		})
+		
 		Homework.innerHTML = block
 		let Preview = Homework.find("div.preview");
 		let SendAction = Homework.find("div.Tools button.HWSend");

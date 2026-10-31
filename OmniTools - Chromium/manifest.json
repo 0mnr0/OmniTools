@@ -25,7 +25,6 @@
 			"scripts/libs/LightCore.js",
 			"scripts/libs/UniqueColor.js",
 			"scripts/libs/toaster.js",
-			"scripts/libs/purify.min.js",
 			"scripts/libs/fileQualifier.js",
 			"scripts/libs/DBStore.js",
 			"scripts/libs/hashLib.js",

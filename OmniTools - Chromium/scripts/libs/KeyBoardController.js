@@ -87,6 +87,18 @@
     return KeyboardPressedKeys.some((k) => k.toLowerCase() === lower);
   }
 
+  // true, если текущий фокус находится в <input> или <textarea>
+  // (учитываем и открытый shadow DOM).
+  function isInInput() {
+    let el = document.activeElement;
+    while (el && el.shadowRoot && el.shadowRoot.activeElement) {
+      el = el.shadowRoot.activeElement;
+    }
+    if (!el || !el.tagName) return false;
+    const tag = el.tagName.toUpperCase();
+    return tag === "INPUT" || tag === "TEXTAREA";
+  }
+
   // ---------- when / after ----------
 
   function toPredicate(cond, fnName) {
@@ -121,7 +133,22 @@
       rule.active = ok;
 
       // when: комбинация только что собралась; after: только что распалась
-      const fire = rule.mode === "after" ? wasActive && !ok : ok && !wasActive;
+      let fire = rule.mode === "after" ? wasActive && !ok : ok && !wasActive;
+
+      // onDownEvent (только when): реагируем только на переходы, вызванные
+      // нажатием клавиши (keydown). События keyup и reset() игнорируются.
+      if (fire && rule.onDownEvent && !(e && e.type === "keydown")) fire = false;
+
+      // onReleaseEvent (только after): реагируем только на переходы, вызванные
+      // отпусканием клавиши (keyup). События keydown и reset() (потеря фокуса,
+      // e === undefined) игнорируются.
+      if (fire && rule.onReleaseEvent && !(e && e.type === "keyup")) fire = false;
+
+      // ignoreInInput: не вызываем callback, пока фокус в <input>/<textarea>.
+      // Состояние правила (rule.active) при этом уже обновлено, так что после
+      // выхода из поля оно сработает только на следующем переходе.
+      if (fire && rule.ignoreInInput && isInInput()) fire = false;
+
       if (!fire) continue;
 
       if (rule.preventDefault && e && e.type === "keydown") e.preventDefault();
@@ -155,7 +182,10 @@
       predicates: list.map((c) => toPredicate(c, mode)),
       callback,
       once: !!opts.once,
+      onDownEvent: mode === "when" && !!opts.onDownEvent,
+      onReleaseEvent: mode === "after" && !!opts.onReleaseEvent,
       preventDefault: mode === "when" && !!opts.preventDefault,
+      ignoreInInput: !!opts.ignoreInInput,
       active: false,
     };
 
@@ -180,9 +210,13 @@
    *   Функции, возвращающие boolean, и/или строки с названиями клавиш:
    *   "f", "shift", "ctrl", "leftShift", "space", "enter" ...
    * @param {(e: KeyboardEvent) => void} callback
-   * @param {{ once?: boolean, preventDefault?: boolean }} [options]
+   * @param {{ once?: boolean, preventDefault?: boolean, onDownEvent?: boolean, ignoreInInput?: boolean }} [options]
    *   once — сработать один раз и отписаться;
-   *   preventDefault — отменить действие браузера для keydown, собравшего комбинацию.
+   *   ignoreInInput — (по умолчанию false) не вызывать callback, если фокус
+   *   находится в <input> или <textarea>;
+   *   preventDefault — отменить действие браузера для keydown, собравшего комбинацию;
+   *   onDownEvent — (по умолчанию false) срабатывать только когда переход состояния
+   *   вызван нажатием клавиши (keydown); отпускание клавиши и потеря фокуса игнорируются.
    * @returns {() => void} функция отписки
    */
   function when(conditions, callback, options) {
@@ -199,7 +233,12 @@
    *
    * @param {Array<Function|string>|Function|string} conditions  как у when
    * @param {(e?: KeyboardEvent) => void} callback
-   * @param {{ once?: boolean }} [options]
+   * @param {{ once?: boolean, onReleaseEvent?: boolean, ignoreInInput?: boolean }} [options]
+   *   once — сработать один раз и отписаться;
+   *   ignoreInInput — (по умолчанию false) не вызывать callback, если фокус
+   *   находится в <input> или <textarea>;
+   *   onReleaseEvent — (по умолчанию false) срабатывать только когда комбинация распалась
+   *   из-за отпускания клавиши (keyup); потеря фокуса (reset) и keydown игнорируются.
    * @returns {() => void} функция отписки
    */
   function after(conditions, callback, options) {
