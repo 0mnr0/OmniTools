@@ -112,9 +112,9 @@ function OpenCustomHomeworkWindow() {
 			<div class="showMore" expandable>
 				<button class="showMoreBtn show30" show=30> Показать ещё 30 </button>
 				<button class="showMoreBtn showAll" show=all> Показать все </button>
+				<span divider expandable></span>
 			</div>
 			<span class="bottomOverlay"></span>
-			<span divider expandable></span>
 			<button class="SendAllMarked" expandable len=0> Отправить все оценки </button>
 			
 			<img src="${getIcon('/icons/more.svg')}" more-icon>

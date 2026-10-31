@@ -414,6 +414,15 @@ const darkThemeCssContent = `
 		color: white; --basic-outline-color: white;
 	}
 	
+	body div.CustomHWDiv.tellMeAboutThis div.WindowHelper {
+		background: var(--accent-2);
+		color: var(--accent-text);
+	}
+	
+	body div.moreActions {
+		background: var(--accent-1);
+	}
+	
 	section.review-card-panel section.review-editor button#AIGenButton span {color: var(--accent-text) !important;}
 `
 

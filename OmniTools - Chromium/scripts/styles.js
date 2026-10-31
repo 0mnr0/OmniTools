@@ -854,7 +854,6 @@ div.CustomHWDiv div.WindowHelper {
 	--basic-outline-color: black;
     display: flex;
     flex-direction: column;
-	color: black;
     gap: 10px;
 	interpolate-size: allow-keywords;
 	height: 0px;
@@ -880,11 +879,12 @@ div.CustomHWDiv.tellMeAboutThis {
 		height: calc(100% - 10px);
 		width: calc(100% - 10px);
 		opacity: 1;
-		color: var(--accent-text);
+		color: black;
 		background: var(--accent-2);
 		z-index: 16;
 		margin: 5px;
 		top: 0px;
+		background: #f5f5f5;
 		border-radius: 10px;
 		padding: 15px 15px;
 		outline: solid 5px var(--basic-outline-color) !IMPORTANT;
@@ -1111,7 +1111,7 @@ div.moreActions {
     width: fit-content;
     border-radius: 12px;
     justify-content: flex-end;
-    background: var(--accent-1);
+    background: #292929;
 }
 
 div.moreActions .bottomOverlay {
@@ -1169,6 +1169,10 @@ div.moreActions [expandable] {
     overflow: hidden;
 }
 
+div.moreActions div.showMore span[divider] {
+	margin-left: 6px;
+	margin-right: 0px
+}
 
 div.moreActions span[divider] {
 	min-width: 1px;
