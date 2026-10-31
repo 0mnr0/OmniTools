@@ -423,6 +423,16 @@ const darkThemeCssContent = `
 		background: var(--accent-1);
 	}
 	
+	body .binding_materials .binding-materials-table .number, body .binding_materials .binding-materials-table pre {
+		color: var(--accent-text);
+	}
+	body .binding_materials .binding-materials-table pre {opacity: 0.85}
+	.binding_materials .binding-materials-table tr {background: var(--accent-2)}
+	
+	.binding_materials .binding-materials-table .cutted_wrap span {
+		color: black;
+	}
+	
 	section.review-card-panel section.review-editor button#AIGenButton span {color: var(--accent-text) !important;}
 `
 

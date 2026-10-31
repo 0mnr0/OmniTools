@@ -1123,6 +1123,20 @@ div.moreActions .bottomOverlay {
     z-index: -1;
 }
 
+.binding_materials .binding-materials-table tr {position: relative}
+.binding_materials .binding-materials-table .number {
+	font-size: 125%;
+	color: #000000ac;
+	z-index: 2;
+	top: 5px;
+	right: 10px;
+	text-align: right;
+	position: absolute;
+	width: fit-content !important;
+}
+.binding_materials .binding-materials-table pre {background: transparent}
+.binding_materials .materials-table td.transcription {max-width: 90%; margin-bottom: 16px;}
+
 div.moreActions:hover {
 	width: auto;
 	opacity: 1;

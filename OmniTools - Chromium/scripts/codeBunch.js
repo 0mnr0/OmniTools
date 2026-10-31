@@ -128,6 +128,18 @@ const CSSImprove = `
 		height: 100% !important
 	}
 	
+	.binding_materials .binding-materials-table pre {
+		font-size: 13px;
+	}
+	
+	@media (max-width: 1200px) {
+		.binding_materials .binding-materials-table .cutted_wrap {
+			width: fit-content; min-width: 30%; margin-bottom: 0px;
+		}
+	}
+	
+	.binding_materials .binding-materials-table tr {border-radius: 10px;}
+	
 	.hw-md_single_stud-work__answer-text { max-width: 100%; line-break: anywhere }
 	.internal-wrap-global md-input-container .md-placeholder, .internal-wrap-global md-input-container label {transition: all .2s}
 `
