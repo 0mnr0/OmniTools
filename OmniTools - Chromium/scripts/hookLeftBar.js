@@ -16,29 +16,16 @@ function createInMenuButton() {
 		<img src="${getIcon("/icons/settings.svg")}">
 		<span> Настройки расширения </span>
 	`
-	inMenuButton.onclick = () => {
-		let isFullScreen = (window.screenTop && window.screenY) !== 0;
-		if (isFullScreen && !isFirefox) {
-			Toast.create("Chromium не умеет открывать popup пока включен полноэкранный режим", 2000, {})
-			return
-		} 
-		
-		let overlay = document.createElement('div')
-		overlay.style=`
-			width: 100%;
-			height: 100%;
-			top: 0px;
-			transition: all .2s;
-			position: fixed;
-			left: 0px;
-			z-index: 99999999999999;
-		`
-		document.body.after(overlay);
-		setTimeout(() => {overlay.style.background = "#11111190"}, 10)
-		setTimeout(() => {overlay.style.background = ""}, 1500)
-		setTimeout(() => {overlay.remove()}, 1800)
-		
-		BrowserContext.runtime.sendMessage({ type: 'OPEN_POPUP' });
+	inMenuButton.onclick = async () => {
+		try {
+			const response = await BrowserContext.runtime.sendMessage({ type: 'OPEN_SETTINGS_TAB' });
+			if (!response?.ok) {
+				throw new Error(response?.error || "Не удалось открыть настройки расширения");
+			}
+		} catch (error) {
+			console.error(error);
+			Toast.create("Не удалось открыть настройки расширения", 2500, {});
+		}
 	}
 	
 	placement.appendChild(inMenuButton);

@@ -136,6 +136,20 @@ BrowserContext.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 		sendResponse({ ok: true });
 		return false;
 	}
+
+    if (msg.type === 'OPEN_SETTINGS_TAB') {
+		(async () => {
+			try {
+				await BrowserContext.tabs.create({
+					url: BrowserContext.runtime.getURL("popup/settings.html")
+				});
+				sendResponse({ ok: true });
+			} catch (error) {
+				sendResponse({ ok: false, error: String(error) });
+			}
+		})();
+		return true;
+	}
 	
     if (msg.type === 'OPEN_POPUP') {
 		const actionApi = BrowserContext.action ?? BrowserContext.browserAction;
