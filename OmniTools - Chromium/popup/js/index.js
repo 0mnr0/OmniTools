@@ -352,7 +352,7 @@ const manifestData = BrowserContext.runtime.getManifest();
 if (manifestData && manifestData.version) {
 	let versionDisplay = find('span.Extension.version');
 	
-	versionDisplay.textContent = "2.0.0 Beta2";
+	versionDisplay.textContent = "2.0.0 Beta3";
 	versionDisplay.onclick = () => {
 		// return; // i dont want to show that afwul design
 		ClearAllSettingTypes();
@@ -371,11 +371,11 @@ if (manifestData && manifestData.version) {
 }
 
 function setGitListener() {
-	find('div.github').onclick = () => {
-		window.open('https://github.com/0mnr0/OmniTools/tree/main-v2')
+	find('div.OpenGitHub').onclick = () => {
+		window.open('https://github.com/0mnr0/OmniTools/tree/main-v2', '_blank')
 	}
 	find('div.github.tg').onclick = () => {
-		window.open('https://dsvl0.t.me/')
+		window.open('https://dsvl0.t.me/', '_blank')
 	}
 }
 

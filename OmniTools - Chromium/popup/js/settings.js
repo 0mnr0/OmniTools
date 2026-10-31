@@ -164,7 +164,7 @@ const findInput = (settingName) => {
 						<span data-i18n="NowInFireFox"></span>
 					</div>
 				</div>
-				<div class="flex github">
+				<div class="flex github OpenGitHub">
 					<img src="icons/github.svg" loading="lazy">
 					<span data-i18n="ProjectOnGitHub"></span>
 				</div>
