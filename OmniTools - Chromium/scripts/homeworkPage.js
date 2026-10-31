@@ -166,7 +166,7 @@ function OpenCustomHomeworkWindow() {
 	lastData.SendAllMarked = SendAllMarked;
 	SendAllMarked.onclick = () => {
 		SendAllMarked.disabled = true;
-		let MarkedAndNotSent = Win.findAll('div.content div.hwBlock[havemark="true"]:not(.DenialActive)');
+		let MarkedAndNotSent = Win.findAll('div.content div.hwBlock[havemark="true"]:not(.DenialActive):not(.busy)');
 		MarkedAndNotSent.forEach(hwMarked => {
 			let mark = GetMark(hwMarked);
 			let targetButton = hwMarked.find('div.Tools button.HWSend');
