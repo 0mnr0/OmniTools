@@ -904,6 +904,9 @@ async function RemoveCard(Card) {
 		}
 	}
 
+	Card.removeAttribute('havemark');
+	Card.classList.add('closed');
+	UpdateSendAllMarkedButton();
 	RefreshReviewCounters();
 	Card.classList.add('closed');
 	setTimeout(() => {
