@@ -352,9 +352,9 @@ const manifestData = BrowserContext.runtime.getManifest();
 if (manifestData && manifestData.version) {
 	let versionDisplay = find('span.Extension.version');
 	
-	versionDisplay.textContent = "2.0.0 Beta1";
+	versionDisplay.textContent = "2.0.0 Beta2";
 	versionDisplay.onclick = () => {
-		return; // i dont want to show that afwul design
+		// return; // i dont want to show that afwul design
 		ClearAllSettingTypes();
 		
 		findAll('div.SettingSection').forEach(SettingDisplayingType => {

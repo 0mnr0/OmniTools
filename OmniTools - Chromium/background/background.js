@@ -89,6 +89,7 @@ const DefaultValues = {
 	MaxCacheSize: 200,
 	DarkTheme: true,
 	ImproveSiteStyle: true,
+	HotKey_OneClickSend: true,
 	LoadingIndicatorFix: true,
 	AiLearning: true
 };

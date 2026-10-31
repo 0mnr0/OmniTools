@@ -873,8 +873,15 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 					MarkElements.forEach(m => m.classList.remove('active'))
 					mark.classList.add('active');
 					
-					if (KeyboardController.isShiftPressed && KeyboardController.isKeyPressed("W") && !workDenial) {
+					if ( CurrentSettings.HotKey_OneClickSend
+							&& KeyboardController.isShiftPressed
+							&& KeyboardController.isKeyPressed("W")
+							&& !workDenial
+						) {
 						SendAction.click()
+						
+					} else if (Number(mark.getAttribute('mark')) > 33000) {
+						Toast.create("Это, по большей части, просто большая шутка. Не рискуйте аккаунтом лишний раз :)", 3800, {}); 
 					}
 				}		
 				UpdateSendAllMarkedButton();

@@ -21,6 +21,7 @@ const findInput = (settingName) => {
 				<div class="TypeRoulette">
 					<option type=functions data-i18n="roulette.type.functions"></option> 
 					<option type=theme data-i18n="roulette.type.theme"></option> 
+					<option type=hotkeys data-i18n="roulette.type.hotkeys"></option> 
 					<option type=other data-i18n="roulette.type.other"></option> 
 				</div>
 						
@@ -36,6 +37,17 @@ const findInput = (settingName) => {
 						${GetSwitch('DoSessionUpdate')} 
 						<p data-i18n="DoSessionUpdate.Desc"></p>
 						<p style="font-weight: 800" data-i18n="DoSessionUpdate.Desc2"></h>
+					</div>
+				</div>
+				
+				<div type=hotkeys class="TypeSelector">
+					<div class="SettingLine">
+						${GetSwitch('HotKey_OneClickSend')} 
+						<p data-i18n="HotKey.OneClickSend.Desc"></p>
+					</div>
+					<div class="SettingLine">
+						${GetSwitch('HotKey_HoldToSetMark')} 
+						<p data-i18n="HotKey.HoldToSetMark.Desc"></p>
 					</div>
 				</div>
 				

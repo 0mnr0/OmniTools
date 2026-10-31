@@ -42,7 +42,15 @@
 		
 		'roulette.type.functions': 'Functions',
 		'roulette.type.theme': 'Decoration',
+		'roulette.type.hotkeys': 'Hot Keys',
 		'roulette.type.other': 'Other',
+		
+		
+		'HotKey_OneClickSend': 'SHIFT + W',
+		'HotKey.OneClickSend.Desc': 'Allow sending a mark with a single tap',
+		
+		'HotKey_HoldToSetMark': 'SHIFT + F',
+		'HotKey.HoldToSetMark.Desc': 'Allow automatic selection of the highest mark',
 		
 		'SettingsWasReloaded': 'The parameters have been applied!',
 		'AboutProject': 'About project',
@@ -103,7 +111,16 @@
 		
 		'roulette.type.functions': 'Функции',
 		'roulette.type.theme': 'Оформление',
+		'roulette.type.hotkeys': 'Комбинации',
 		'roulette.type.other': 'Другое',
+		
+		'HotKey_OneClickSend': 'SHIFT + W',
+		'HotKey.OneClickSend.Desc': 'Разрешить отправку оценки одним нажатием',
+		
+		'HotKey_HoldToSetMark': 'SHIFT + F',
+		'HotKey.HoldToSetMark.Desc': 'Разрешить автоматический выбор наивысшей оценки',
+		
+		
 		
 		'SettingsWasReloaded': 'Параметры применены!',
 		'AboutProject': 'О проекте',

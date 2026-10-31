@@ -172,7 +172,11 @@ const CustomHwWindowHelper = `
 // SHIFT + W
 KeyboardController.when(
 	["shift", "w"],
-	() => {document.body.classList.add("ShiftW")}
+	() => {
+		if (CurrentSettings.HotKey_OneClickSend) {
+			document.body.classList.add("ShiftW")
+		}
+	}
 )
 KeyboardController.after(
 	["shift", "w"],
@@ -183,7 +187,11 @@ KeyboardController.after(
 // SHIFT + F
 KeyboardController.when(
 	["shift", "F"],
-	() => { HwFastMarkStart();},
+	() => { 
+		if (CurrentSettings.HotKey_HoldToSetMark) {
+			HwFastMarkStart();
+		}
+	},
 	{ onDownEvent: true, ignoreInInput: true }
 )
 KeyboardController.after(
