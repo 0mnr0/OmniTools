@@ -412,6 +412,12 @@ div.CustomHWDiv.fullscreen.tellMeAboutThis div.WindowHelper {
 	border-radius: 6px
 }
 
+div.CustomHWDiv div.WindowHelper span.warn {
+    padding: 7px;
+    background: #ff99007a;
+    border-radius: 10px;
+}
+
 div.CustomHWDiv div.content div.hwBlock div.info .b500 {
     font-weight: 500
 }

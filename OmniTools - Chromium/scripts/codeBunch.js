@@ -133,7 +133,14 @@ const CSSImprove = `
 
 const CustomHwWindowHelper = `
 	<h2> Рекомендации по работе с этим окном ДЗ </h2>
+	<span class="warn"> 
+		Это окно является полностью самописным, давая полный контроль над происходящим. Т.к. документаций нет - для разработки использовался реверс инжиниринг.
+		Возможны ошибки в работе окна, если возникают проблемы - сообщите мне в <a href="https://dsvl0.t.me/" target='_blank' >Telegram</a>
+	</span>	
+	
 	<span type=divider></span>
+	
+	
 	<div class="Shortcuts">
 		<h4 title> Горячие клавишы </h4>
 		
@@ -150,9 +157,9 @@ const CustomHwWindowHelper = `
 			<div class="SCPreview">
 				<span class="SCDemoKey"> SHIFT </span>
 				<span class="SCDemoPlus"> + </span>
-				<span class="SCDemoKey"> F </span>
+				<span class="SCDemoKey"> X </span>
 			</div>
-			<span> — Удерживая эти клавишы, наведитесь мышкой на работу, и вы автоматически поставите ей максимальную оценку </span>		
+			<span> — Удерживая эти клавишы, наведитесь мышкой на предпросмотр учтобы увеличить его</span>		
 		</div>
 		
 		
