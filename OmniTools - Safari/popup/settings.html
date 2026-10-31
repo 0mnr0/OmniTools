@@ -1,0 +1,93 @@
+<head>
+
+	<link href="css/bulma.css" rel="stylesheet">
+	<link href="css/styles.css" rel="stylesheet">
+		
+	<script src="js/LightCore.js" defer></script>
+	<script src="js/SettingsDefinition.js" defer></script>
+	<script src="js/changelogs.js" defer></script>
+	<script src="js/dict.js" defer></script>
+	<script src="js/index.js" defer></script>
+	<script src="js/settings.js" defer></script>
+	<script src="js/DBStore.js" defer></script>
+	<script src="js/toast.js" defer></script>
+</head>
+
+
+<body>
+	<div class="pane topPane flex">
+	
+		<span class="Extension version"></span>
+		<div class="translateCenter flex topPaneTitle">
+			<img class="patPatLoader" src="../OmniTools_128x128.png">
+			<span class="Extension Name"> Omni Tools </span>
+		</div>
+		
+	</div>
+	
+	
+	<div class="SettingsDiv flex">
+	
+		<div class="pane leftPane flex">
+			<div class="topOne flex">
+				
+				<div class="General active" SettingLinkedTo="General">
+					<img src="icons/general.svg" loading="lazy">
+					<span data-i18n="GeneralSettings"> General Settings <span>
+				</div>
+				
+				<div class="AiControl" SettingLinkedTo="AiSettingDiv">
+					<img src="icons/robot.svg" loading="lazy">
+					<span data-i18n="AiSettings"> AiSettings <span>
+				</div>
+				
+				<div class="ServerChoose" SettingLinkedTo="ServerChoose">
+					<img src="icons/servers.svg" loading="lazy">
+					<span data-i18n="ServerChoise"> Data Set <span>
+				</div>
+				
+				<div class="CacheControl" SettingLinkedTo="CacheControl">
+					<img src="../icons/hwcache.svg" loading="lazy">
+					<span data-i18n="MemoryControl"> Block List <span>
+				</div>
+			</div>
+			
+			<div class="bottomOne">
+			
+				
+			
+				<div class="ServerStatuses" SettingLinkedTo="None" Loading>
+					<span class="LoadingServStat" data-i18n="JustASecond"></span>
+					
+					<div class="Global PingStatus" topOne>
+						<img class="PingIco" src="icons/ping_icon.svg">
+						<span data-i18n="GlobalServerState"></span>
+					</div>
+					<div class="Omni PingStatus" bottomOne>
+						<img class="PingIco" src="icons/ping_icon.svg" pingDelay>
+						<span data-i18n="Omni"></span>
+					</div>
+						
+				</div>
+			
+				<div class="OtherTab" SettingLinkedTo="OtherTab">
+					<img src="icons/more.svg" loading="lazy">
+					<span data-i18n="OtherTab"> Other <span>
+				</div>
+							
+				<div class="AuthorsTab" SettingLinkedTo="AuthorsTab">
+					<span data-i18n="AboutProject" class="AuthorsTabText"></span>
+				</div>
+				
+				
+				
+			</div>
+		</div>
+		
+		<div class="pane settingsPane flex"></div>
+		
+	</div>
+	
+	
+	
+</body>

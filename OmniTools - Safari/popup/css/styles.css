@@ -1,0 +1,1327 @@
+/* 
+For curious enthusiasts:
+	The settings window for Omni Tools was ported from another project of mine.
+	Some references to it may also be present here.
+*/
+
+@font-face {
+  font-family: "Comfortaa";
+  src: url("../font.ttf") format("truetype"); 
+  font-weight: 300 700;
+  font-style: normal;
+}
+
+* {
+	font-family: "Comfortaa", sans-serif;
+	color: white;
+	position: relative;
+	
+    -webkit-touch-callout: none;
+		-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+				-ms-user-select: none; 
+					user-select: none; 
+					
+	scrollbar-color: #cdbeb1 transparent;
+	scrollbar-width: thin;
+}
+
+
+
+
+span {display: flex; align-items: center}
+
+html {overflow: auto; width: fit-content; padding: 0px} /* allow scroll in window if with or height is too big */ 
+
+
+
+body {
+	background: #0a0a0a;
+	width: 700px;
+	height: 600px;
+	padding: 6px;
+	outline: solid 1px #4a4644;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+body.FF div.pane.topPane {border-start-start-radius: 18px; border-start-end-radius: 18px}
+body.FF div.settingsPane {border-end-end-radius: 18px}
+
+.flex {display: flex}
+.translateCenter {
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	aspect-ratio: 1/1;
+}
+
+div.pane {background: #19191a; border-radius: 10px; border: solid 1px #363738; }
+div.pane:hover {border: solid 1px #646667; }
+
+div.pane.topPane {
+	width: 100%;
+	height: 64px;
+	padding: 2px 0px;
+	margin-bottom: 10px;
+}
+
+div.topPane span { font-size: xx-large; font-weight: 800 }
+div.topPane span.Extension.version {
+    color: gray;
+    font-weight: 400;
+    font-size: smaller;
+    white-space: nowrap;
+    position: absolute;
+    right: 5px;
+    bottom: 2px;
+    padding: 5px;
+    cursor: help;
+    display: flex;
+    align-content: flex-end;
+    flex-wrap: wrap;
+}
+
+img.patPatLoader {
+	z-index: 0;
+	top: 0px;
+	scale: 0.8;
+}
+
+div.ProjectOnStores.flex.github {
+    padding: 0px;
+    display: flex;
+    background: transparent;
+    justify-content: space-around;
+}
+
+div.NowInFirefox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-height: 40px;
+    justify-content: center;
+	cursor: pointer;
+}
+
+div.flex.github div.NowInFirefox img {
+    height: 36px;
+    aspect-ratio: 1/1;
+	margin-right: 10px;
+    width: auto;
+    object-fit: contain;
+    padding: 4px;
+    max-width: none;
+    min-width: auto;
+}
+
+div.NowInFirefox:hover {
+	border-color: gray;
+}
+
+body.FF div.NowInFirefox {
+	display: none;
+}
+
+div.NowInFirefox span {
+    white-space: normal;
+	text-align: center;
+}
+
+body div.leftPane div.bottomOne > div.NowInFirefox img {
+    width: 40px;
+    object-fit: contain;
+    height: 100%;
+    margin: 0;
+    padding-left: 10px;
+}
+
+div.SettingSection.OtherTab {
+    height: calc(100% - 35px);
+}
+span.madeWith {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: -35px;
+    padding: 5px 0px;
+    opacity: 0.65;
+    font-size: small;
+}
+span.madeWith.FF div {
+	top: -1px; /* fix for FireFox */
+}
+
+span.madeWith div {
+    width: auto;
+    display: flex;
+    height: 23px;
+    flex-direction: column;
+    overflow: hidden;
+    margin-left: 6px;
+    top: -2px;
+}
+span.madeWith div span.prev {
+    transform: rotate3d(1, 0, 0, 45deg);
+    opacity: 0.25;
+    margin-top: -16px;
+}
+span.madeWith div span {
+    white-space: nowrap;
+	transition: all 0.55s, transform ease-out 0.5s, margin 0.8s
+}
+span.madeWith div span.displaying {
+    width: fit-content;
+    margin-top: 0px;
+}
+
+span.madeWith div span.next {
+	margin-top: 5px;
+	transform: rotate3d(1, 0, 0, -45deg);
+	opacity: 0.25;
+}
+
+div.SettingsDiv {
+    height: calc(100% - 74px);
+}
+
+
+div.leftPane {
+    width: auto;
+    min-width: 27.5%;
+    display: flex;
+    flex-direction: column;
+    margin-right: 8px;
+    background: none;
+    border: solid 1px transparent !important;
+    white-space: nowrap;
+    justify-content: space-between;
+}
+
+
+div.leftPane > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+div.leftPane > div > div {
+    display: flex;
+    justify-content: flex-start;
+    cursor: pointer;
+    font-weight: 200;
+    gap: 12px;
+    padding: 6px;
+    border-radius: 10px;
+}
+
+div.leftPane > div > div:hover {
+	font-weight: 600
+}
+
+div.leftPane > div > span {
+	text-align: center; top: 1px; font-size: 90%
+}
+
+div.leftPane > div > div.active {
+    font-weight: 900;
+    font-size: 100%;
+    background: linear-gradient(90deg, transparent -5%, #7575759c 100%);
+    background-size: contain;
+}
+
+
+div.settingsPane {
+    height: 100%;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    overflow: hidden;
+    overflow-y: auto;
+    scrollbar-color: #cdbeb1 transparent;
+    scrollbar-width: none;
+}
+
+div.TypeRoulette {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    padding: 0px 6px;
+    margin-top: 6px;
+    border-bottom: solid 1px #8080806e;
+    padding-bottom: 6px;
+    width: -webkit-fill-available;
+    z-index: 3;
+}
+
+
+div.TypeRoulette option {
+    background: #3f3329;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: small;
+    cursor: pointer;
+	gap: 4px;
+	text-align: center;
+    interpolate-size: allow-keywords;
+	width: auto;
+	display: flex;
+	justify-content: center;
+}
+
+div.TypeRoulette option::before {
+    content: "";
+    height: 17.5px;
+    aspect-ratio: 1/1;
+    position: relative;
+    display: block;
+    background-size: contain;
+    background-position: center;
+	background-repeat: no-repeat;
+}
+
+div.TypeRoulette option[type="functions"]::before {background-image: url('../icons/functions.svg'); filter: sepia(0.5) brightness(0.8) grayscale(0.4)}
+div.TypeRoulette option[type="theme"]::before {background-image: url('../icons/theme.svg')}
+div.TypeRoulette option[type="other"]::before {background-image: url('../icons/more.svg')}
+
+div.TypeRoulette option.active {
+    width: 30%;
+    background: #795131;
+	gap: 8px;
+}
+
+.translateCenter.flex.topPaneTitle {
+    width: 100%;
+    justify-content: center;
+}
+
+div.TypeSelector {
+    max-height: fit-content;
+    interpolate-size: allow-keywords;
+}
+
+div.TypeSelector.typeIncompatible {
+    opacity: 0;
+    height: fit-content;
+    max-height: 0px;
+    overflow: hidden;
+}
+
+.TypeSelector.typeIncompatible .SettingLine {
+    margin-bottom: 50px;
+}
+.TypeSelector.typeIncompatible .SettingLine.inlineSetting {
+    margin-top: 50px;
+}
+.SettingLine.ExportAsSetting {
+    display: flex;
+    flex-direction: column;
+}
+.SettingLine.ExportAsSetting span {
+	font-weight: bold;
+}
+
+.SettingLine.ExportAsSetting > div {
+	gap: 2%; width: 100%;
+	justify-content: space-evenly
+}
+.SettingLine.ExportAsSetting div.ExportAs:active {
+	border: solid 0px gray;
+	box-shadow: 0px 3px 3px 0px black !important
+}
+.SettingLine.ExportAsSetting div.ExportAs:hover {
+	box-shadow: 0px 3px 3px 0px #494949;
+}
+.SettingLine.ExportAsSetting div.ExportAs {
+    margin-top: 10px;
+    display: flex;
+    width: 100%;
+    padding: 12px;
+    justify-content: center;
+    background: #2a2a2a;
+	cursor: pointer;
+    border-radius: 10px;
+    border-bottom: solid 2px gray;
+	transition: all .3s, box-shadow .1s, border .03s
+}
+.SettingLine.ExportAsSetting div.ExportAs.active {
+	border-color: lime
+}
+
+
+
+
+div.SettingSection {width: 100%; top: 0px}
+div.SettingLine h2 {margin-bottom: 0px; width: calc(100% - 78px); font-size: 120%; font-weight: bold; top: 2px}
+div.SettingLine p {margin-bottom: 0px; opacity: 0.66; font-weight: 300; margin-top: 6px; font-size: small;}
+.SettingLine {
+	cursor: pointer;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 4px;
+    padding: 8px 6px;
+	gap: 0px 6px;
+	border-bottom: solid 1px #333333b8;
+}
+div.inlineSetting {display: flex; gap: 10px; white-space: nowrap; width: 100%; margin-top: 6px}
+div.inlineSetting.single {margin-bottom: 8px; align-items: center; font-size: larger; font-weight: 800}
+div.inlineSetting label {font-size: smaller;}
+div.inlineSetting label.Percentage {min-width: 35px; text-align: center}
+
+div.SettingSection:not(.Chosen) {position: absolute; left: 0px; top: -20px; z-index: -2; opacity: 0; scale: 1.02; height: 90%; overflow: hidden; width: 100%}
+
+
+div.inlineSetting.volumer::before {
+    width: 1px;
+    content: "";
+    position: absolute;
+    height: 100%;
+    background: #808080bd;
+    border-radius: 2px;
+    z-index: 0;
+    left: calc(25% - 9px);
+}
+
+
+input#zipUploader {
+  display: none;
+}
+
+.zipUpload.failed {
+    background: #433737;
+	color: #ffacac;
+}
+
+.zipUpload {
+    background: #333;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    border-radius: 4px;
+    margin-top: 2px;
+}
+
+div.settingsPane::-webkit-scrollbar {
+    display: none;
+	scrollbar-width: none;
+}
+
+
+
+img.unpackingTexturesProcess {
+	position: absolute;
+	z-index: 5;
+	bottom: 0px;
+	right: 0px;
+	width: 30px;
+	aspect-ratio: auto
+}
+
+.SettingSection.Hidden {
+	z-index: -2;
+}
+
+label.DataPackDescription {font-size: small; text-align: center; color: gray;}
+
+.ImagePreview img {
+	max-width: 30px;
+    height: 30px;
+	object-fit: contain;
+}
+
+.AvailableDataPack {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+	overflow: hidden;
+    border-radius: 12px;
+    border: solid 1px white;
+    padding: 6px 10px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.AvailableDataPack.Active {
+    border: dashed 1px lime;
+    box-shadow: 0px 0px 8px 0px #00ff0073;
+}
+
+.DataPackHTMLPosition {
+    width: calc(100% - 6px);
+}
+
+div.removeSavedDataPack {
+    display: flex;
+    position: absolute;
+    top: 0px;
+    height: 16px;
+    right: 6px;
+	cursor: pointer;
+    font-size: x-small;
+    z-index: 12;
+    padding: 2px 4px;
+    background: #ff0000d9;
+    border-radius: 6px;
+}
+
+div.removeSavedDataPack span {
+	top: 1px
+}
+
+.CookedPacksList {
+    display: flex;
+    padding: 10px;
+    padding-top: 2px;
+    gap: 4px;
+    flex-direction: column;
+}
+
+
+.AvailableDataPack:hover {
+	box-shadow: 0px 0px 8px 0px white
+}
+
+.PreviewData {
+    margin-top: -2px;
+    max-height: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.PreviewData.TextType {
+    display: flex;
+    font-size: x-small;
+    margin-top: 0px;
+    font-weight: 400;
+    top: -4px;
+    max-height: none;
+    opacity: 0.75;
+    flex-direction: column;
+}
+
+.PreviewData .ImagePreview {
+    display: flex;
+    display: none;
+    gap: 4px;
+    max-width: 200px;
+    overflow: hidden;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.FullWidthpreview {
+    position: absolute;
+    width: 17.5%;
+    height: 80%;
+    scale: 1.25;
+    top: 0px;
+    right: 0px;
+    padding: 10px 25px;
+    z-index: 2;
+	border-radius: 10px;
+    padding-left: 0px;
+}
+
+.AvailableDataPack .FullWidthpreview:hover {
+    width: 100%;
+    z-index: 10;
+	backdrop-filter: blur(6px);
+	border-radius: 30px;
+	scale: 1.25 !important;
+    padding: 14px;
+    height: 100%;
+}
+
+.AvailableDataPack.Active .FullWidthpreview:hover {}
+
+.FullWidthpreview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.PackAuthor {
+    position: absolute;
+    right: -5;
+    bottom: -5px;
+}
+
+.PreviewData span.packName {
+    display: inline-block;
+	top: 4px;
+    width: calc(100% - 260px);
+    font-size: medium;
+    white-space: nowrap;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+.PreviewData.TextType span span {
+    margin-left: 4px;
+}
+
+.SettingLine.inlineSetting {
+    border-bottom: none;
+    gap: 0px 10px;
+    background: #333;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 0px;
+    margin-top: 4px;
+}
+
+.SettingSection.BlockList {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 10px;
+}
+
+.SettingSection.BlockList .flex.inputBar {
+    display: flex;
+    gap: 5px;
+    border-bottom: solid 1px #80808078;
+    padding-bottom: 10px;
+}
+
+
+.SettingSection.BlockList .list {
+	display: flex;
+	gap: 3px;
+	flex-direction: column;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+    border-radius: 4px;
+}
+
+.SettingSection.BlockList h2.BlackListDesc {margin-bottom: 0px}
+
+.SettingSection.BlockList .flex.inputBar input {
+	outline: none;
+    background: #2f2f2f;
+    width: 100%;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.SettingSection.BlockList .flex.inputBar input:focus, .SettingSection.BlockList .flex.inputBar img:hover {
+	background: #444;
+}
+
+.SettingSection.BlockList .flex.inputBar img {
+    background: #2f2f2f;
+    width: 34px;
+    aspect-ratio: 1/1;
+    padding: 4px;
+    border-radius: 6px;
+    height: 100%;
+    cursor: pointer;
+}
+
+div.leftPane .AuthorsTab {
+	overflow: hidden;
+    position: relative;
+	text-align: center;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+}
+
+div.leftPane .AuthorsTab span {
+	display: block;
+	width: 100%;
+	text-align: center;
+}
+
+div.leftPane div.bottomOne > div:not(.AuthorsTab) {
+	justify-content: start;
+}
+
+
+div.leftPane div.bottomOne > div:not(.AuthorsTab) img {
+    width: 40px;
+    height: 25px;
+    margin-right: 27px;
+}
+
+
+div.leftPane .AuthorsTab.active {
+	background: linear-gradient(90deg, transparent 60%, #75757557 100%);
+}
+
+.AuthorsTab .avatarlist {
+    display: flex;
+    max-height: 20px;
+    width: 40px;
+    margin-right: 25px;
+    margin-left: -2px;
+    justify-content: center;
+    top: 2px;
+}
+
+.AuthorsTab .avatarlist img {
+    height: 100%;
+    border-radius: 20px;
+    margin-right: -10px;
+}
+
+.AuthorsTab div.avatarlist.bgGradientThing {
+    gap: 0px;
+    position: absolute;
+    max-height: 35px;
+    top: 0px;
+    filter: brightness(1.25) blur(6px);
+    scale: 1.25;
+	opacity: 0;
+    z-index: -1;
+    left: -10px;
+}
+
+.AuthorsTab.active div.avatarlist.bgGradientThing {
+	opacity: 1;
+	left: 25px;
+	scale: 1.5;
+}
+.AuthorsTab .bgGradientThing img {
+    height: 35px;
+    aspect-ratio: 1/1;
+    z-index: -1;
+}
+
+
+.SettingSection.AuthorsTab {
+    display: flex;
+    height: 100%;
+    padding: 10px;
+    text-align: center;
+    flex-direction: column;
+}
+
+.SettingSection.AuthorsTab .AuthorList {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 50px;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+
+div.SettingSection.AuthorsTab .Author {
+    display: flex;
+    flex-direction: column;
+	align-items: center;
+	margin-bottom: 40px;
+}
+
+div.SettingSection.AuthorsTab .Author .AvatarAndName {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+div.SettingSection.AuthorsTab .Author span.ContributorDesc {
+	margin-top: 4px;
+	opacity: 0.75;
+	font-size: small;
+}
+
+div.SettingSection.AuthorsTab .Author a {
+    font-weight: bold;
+    text-decoration: none;
+    font-size: larger;
+    color: white;
+    text-shadow: 0px 0px 2px #ffffff90;
+}
+
+
+div.SettingSection.AuthorsTab .Author .AvatarAndName img {
+	max-height: 40px;
+	border-radius: 10px;
+}
+
+
+
+div.SettingSection.changeLog diff {
+    width: 100%;
+    position: relative;
+    display: block;
+    padding: 10px;
+    font-weight: 800;
+    text-align: center;
+    font-size: larger;
+	border-bottom: solid 1px #8080805c;
+	margin-bottom: 10px;
+}
+
+
+div.SettingSection.changeLog > div {
+    display: flex;
+    margin: 0px 10px;
+    gap: 2px;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+
+div.SettingSection.changeLog > div:before {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+div.SettingSection.changeLog > div.NEW:before { content: "New: "; }
+div.SettingSection.changeLog > div.CHANGED:before { content: "Changed: "; }
+div.SettingSection.changeLog > div.REMOVED:before { content: "Removed: "; }
+
+
+div.SettingSection.changeLog > div.NONE {display: none !important}
+div.SettingSection.changeLog > div.NEW > span { background: linear-gradient(90deg, #00ff0073, transparent); }
+div.SettingSection.changeLog > div.CHANGED > span { background: linear-gradient(90deg, #efff0073, transparent); }
+div.SettingSection.changeLog > div.REMOVED > span { background: linear-gradient(90deg, #ff003b73, transparent); }
+
+div.SettingSection.changeLog > div > span {
+    padding: 4px;
+    border-radius: 10px;
+}
+
+div.TypeRoulette option[type="other"],
+div.leftPane div.bottomOne > div.OtherTab,
+div.leftPane > div > div.ServerChoose
+ {
+	display: none !important;
+}
+
+div.CacheControl {
+	padding: 10px
+}
+
+div.SettingSection.CacheControl {
+	display: flex;
+	flex-direction: column;
+	gap: 10px
+}
+
+.SettingSection.CacheControl button[cacheReset] {
+	padding: 14px 10px;
+	background: #3d3d3d;
+	border-radius: 10px
+}
+
+.SettingSection.CacheControl button[cacheReset][disabled] {
+	animation: contrastAnim 3s infinite;
+	cursor: progress
+}
+
+@keyframes contrastAnim {
+	0% {
+		filter: contrast(1)
+	}
+	
+	50% {
+		filter: contrast(0.5)
+	}
+	
+	100% {
+		filter: contrast(1)
+	}
+}
+
+
+.SettingSection.CacheControl button[cacheReset][all] {
+	background: #a92424;
+}
+
+.SettingSection.CacheControl button[cacheReset]:hover {
+	background: #5e5e5e;
+}
+
+.SettingSection.CacheControl button[cacheReset][all]:hover {
+	background: #cc2d2d;
+}
+
+div.CacheControl h1 { font-size: 180%; }
+div.CacheControl h2 { font-size: 160%; }
+div.CacheControl h3 { font-size: 140%; }
+div.CacheControl h4 { font-size: 120%; }
+
+div.CacheControl div.MemoryUsageStats  {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+div.CacheControl div.MemoryUsageStats div.Line {
+    height: 20px;
+    width: 100%;
+	margin-top: -8px;
+    border-radius: 10px;
+    background: #3d3d3d;
+	position: relative;
+    overflow: hidden;
+}
+
+div.CacheControl div.MemoryUsageStats span.UsageLine {
+    display: flex;
+	margin-top: 6px;
+    align-items: flex-end;
+}
+
+div.CacheControl div.MemoryUsageStats span.UsageLine span {
+	padding: 6px;
+}
+
+div.CacheControl div.MemoryUsageStats div.Line.hidden {
+	height: 0px;
+}
+
+div.CacheControl div.MemoryUsageStats div.Line span#Took {
+    position: absolute;
+    height: 100%;
+    border-radius: 6px;
+    font-size: 60%;
+    padding: 0px;
+    vertical-align: middle;
+    text-align: center;
+    display: inline-grid;
+    background: #9b633a;
+    outline: solid 4px #1a1a1a;
+    width: 0%;
+    transition: all .35s ease-out;
+}
+
+div.CacheControl div.MemoryUsageStats div.Line span#Took.mini {
+	font-size: 40%;
+}
+
+
+div.CacheControl div.MemoryUsageControl {
+    margin: 24px 0px;
+}
+
+
+div.flex.github {
+    background: #000;
+    border-radius: 4px;
+    height: 40px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+	margin-top: 4px;
+	cursor: pointer;
+}
+
+span.AboutThisProject {
+	font-size: 82%;
+}
+
+div.flex.github:hover {background: #333}
+div.flex.github.tg:hover {background: #2b8cbfe8}
+
+div.flex.github.tg { 
+	background: #25a2e096;
+}
+
+div.flex.github img {
+    height: 100%;
+    padding: 2px 10px;
+}
+
+div.leftPane div.bottomOne > div.controls {
+	display: flex;
+	justify-content: center;
+	font-weight: 600;
+	padding: 20px 0px;
+	border: solid 1px #80808096;
+	pointer-events: none;
+}
+
+span#KeyPressDemo, div.leftPane div.bottomOne > div.controls img {
+    border-radius: 8px;
+    border-bottom: solid 2px gray;
+    background: #2a2a2a;
+    padding: 4px;
+    font-size: small;
+}
+
+span#KeyPressDemo, div.leftPane div.bottomOne > div.controls img, div.leftPane div.bottomOne > div.controls span.plus { top: 4px; transition: all .3s .25s, border 0s; }
+
+div.leftPane div.bottomOne > div.controls span#KeyPressDemo.pressed, div.leftPane div.bottomOne > div.controls img#MousePressDemo.pressed {
+	border: none;
+}
+div.leftPane div.bottomOne > div.controls span#KeyPressDemo.done, div.leftPane div.bottomOne > div.controls img#MousePressDemo.done {
+	box-shadow: inset 0px 0px 2px 1px #75ff5cb0;
+}
+
+div.leftPane div.bottomOne > div.controls img {
+	margin: 0px; width: auto; aspect-ratio: 1/1; height: 30px
+}
+
+div.leftPane div.bottomOne > div.controls span.title {
+    position: absolute; font-size: small; font-weight: 400; opacity: 0.8; top: 3px
+}
+
+div.leftPane div.bottomOne > div.controls span.plus {
+    margin: 0px;
+    opacity: 0.7;
+    font-weight: 400;
+}
+
+div.SettingSection.changeLog > div > span:before {
+    width: 30px;
+    height: 20px;
+    content: "";
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+div.SettingSection.changeLog > div.NEW > span:before { background-image: url('../icons/add.svg'); }
+div.SettingSection.changeLog > div.CHANGED > span:before { background-image: url('../icons/edit.svg'); }
+div.SettingSection.changeLog > div.REMOVED > span:before { background-image: url('../icons/block.svg'); }
+
+
+
+/* Container for the toggle */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+}
+
+/* Hide default checkbox */
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The track */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    background-color: #a3a3a3;
+    border-radius: 24px;
+    width: 60px;
+    height: 30px;
+    transition: background-color 0.3s;
+}
+
+/* The circular slider */
+.slider::before {
+    content: "";
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    left: 5px;
+    scale: 1.2;
+    bottom: 5px;
+    background-color: white;
+    border-radius: 50%;
+    transition: all 0.25s cubic-bezier(0.03, 0.97, 0.79, 1.07);
+}
+
+/* Toggled state */
+.toggle-switch input:checked+.slider {
+    background-color: #4caf50;
+}
+
+.toggle-switch input:checked+.slider::before {
+    transform: translateX(25px);
+}
+
+.domainDiv {
+    display: flex;
+    background: #2a2a2a;
+    gap: 4px;
+    padding: 7px;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    padding-left: 10px;
+    max-width: 457px;
+}
+
+.domainDiv span {
+    width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    display: block;
+    text-overflow: ellipsis;
+}
+
+
+.domainDiv img.preview {
+    height: 22px;
+    scale: 1.25;
+    margin-right: 4px;
+    border-radius: 40px;
+    width: 22px;
+    object-fit: contain;
+}
+
+
+.domainDiv img.delete {
+    height: 100%;
+    scale: 0.95;
+    cursor: pointer;
+    max-width: 28px;
+}
+
+.domainDiv img.delete:hover {
+    scale: 1.05;
+}
+
+
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    cursor: pointer;
+    height: 12px !important;
+    top: 4px;
+    outline: none;
+	background: #7E7E7E90;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+/* Track: webkit browsers */
+input[type="range"]::-webkit-slider-runnable-track, input[type="range"]::-moz-range-track  {
+  height: 12px;
+  background: #7e7e7e;
+  border-radius: 16px;
+}
+
+
+/* Thumb: webkit */
+
+input[type="range"]::-moz-range-thumb {
+	box-shadow: -407px 0 0 400px #4caf50;
+	border-radius: 20px;
+	border: solid 2px white;
+	background-color: #4caf50;
+	height: 8px;
+    width: 8px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	  -webkit-appearance: none;
+	  appearance: none; 
+	  height: 12px;
+	  width: 12px;
+	  border: solid 2px white;
+	  background-color: #4caf50;
+	  border-radius: 20px;
+	  box-shadow: -407px 0 0 400px #4caf50;
+}
+
+.toast {
+    background: #333;
+    position: absolute;
+    padding: 4px 8px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    bottom: -40px;
+    right: 4px;
+}
+
+.toast button {
+    background: #222;
+	margin-left: 12px;
+    border: none;
+    padding: 4px 14px;
+    border-radius: 6px;
+    margin-right: -4px;
+}
+
+html div.toast.visible {
+	bottom: 4px;
+	opacity: 1 !important;
+}
+
+div.MemoryUsageControl div.MemoryUsageControlList {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-evenly;
+}
+
+div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5px;
+	cursor: pointer;
+    height: 45px;
+	outline: solid 2px transparent;
+    justify-content: center;
+    background: #333;
+    border-radius: 12px;
+}
+
+div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption.active {
+	outline: solid 2px lime !important;
+}
+
+div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption.Recommended {
+	padding-bottom: 5px;
+	
+	span.recommended {
+		position: absolute;
+		font-size: 60%;
+		bottom: 2px;
+		opacity: 0.75;
+	}
+}
+
+div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption:hover {
+	width: 120%;
+	outline: solid 2px #ffffffbd;
+}
+
+div.MemoryUsageControl div.MemoryUsageControlList div.UsageControlOption.select {
+	outline: solid 2px green;
+}
+
+
+
+body div.leftPane div.ServerStatuses {
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+	gap: 3px;
+	padding: 10px 0px;
+    overflow: hidden;
+}
+
+div.ServerStatuses span.LoadingServStat {
+    position: absolute;
+	display: flex;
+	justify-content: center;
+	backdrop-filter: blur(4px);
+    margin: 10px 0px;
+	height: calc(100% - 20px);
+	border-radius: 13px;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    color: white;
+    z-index: 3;
+	animation: FadeAndFade infinite 3s;
+}
+
+
+div.leftPane div.ServerStatuses:hover span {
+	font-weight: 300;
+}
+div.leftPane div.ServerStatuses:hover div.PingStatus:hover span {
+	font-weight: 600;
+}
+
+div.ServerStatuses.WasLoaded {
+	
+	div.PingStatus {
+		z-index: 3;
+	}
+	
+	span.LoadingServStat {
+		z-index: 1;
+		color: transparent;
+		font-size: 0px;
+		background: #8b8b8b2e;
+		animation-duration: 2s;
+	}
+}
+
+div.ServerStatuses span.LoadingServStat.hidden {
+    height: 0px;
+    opacity: 0;
+	color: transparent;
+    overflow: hidden;
+    top: 50%;
+}
+
+div.ServerStatuses.WasLoaded span.LoadingServStat.hidden.Pinging {
+	height: calc(100% - 20px);
+    opacity: 1;
+	color: transparent;
+    overflow: hidden;
+    top: 0%;
+}
+
+div.ServerStatuses div.PingStatus {
+    display: flex;
+    justify-content: flex-start;
+    border-radius: 12px;
+    background: #2d2d2dd4;
+    padding: 6px 4px;
+	
+	img {
+		animation: pingAnim 2s infinite;
+		margin-right: 5px !important;
+	}
+	img[pingDelay] {
+		animation-delay: .5s;
+	}
+}
+
+div.ServerStatuses div.PingStatus[topOne] {
+	border-end-start-radius: 6px;
+	border-end-end-radius: 6px;
+}
+
+div.ServerStatuses div.PingStatus[bottomOne] {
+	border-start-start-radius: 6px;
+	border-start-end-radius: 6px;
+}
+
+@keyframes pingAnim {
+	0% {
+		scale: 1;
+	}
+	
+	50% {
+		scale: 1.3;
+	}
+	
+	100% {
+		scale: 1;
+	}
+}
+
+@keyframes FadeAndFade {
+	0% {
+		backdrop-filter: contrast(0.9) blur(4px);
+	}
+	
+	50% {
+		backdrop-filter: contrast(0.8) blur(5px);
+	}
+	
+	100% {
+		backdrop-filter: contrast(0.9) blur(4px);
+	}
+}
+

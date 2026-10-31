@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+html {
+	background: #111;
+}
+
+* {
+	transition: background .2s;
+}
+
+div.OmniToolsExtensionToast {
+	transition: all .8s;
+	position: fixed;
+	padding: 10px;
+	background: #292929;
+	z-index: 10000000000000;
+	interpolate-size: allow-keywords;
+	opacity: 0;
+	border-radius: 16px;
+	right: 8px;
+	bottom: -60px;
+	width: auto;
+	max-width: 450px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	border: solid 2px #ffffffc7;
+	min-width: 140px;
+}
+
+
+div.OmniToolsExtensionToast button.close {
+	color: white;
+	cursor: pointer;
+	background: #ff00007d;
+	width: 100%;
+	margin-top: 10px;
+	opacity: 0.85;
+	font-size: 100%;
+	border: none;
+	position: relative;
+	font-weight: 100;
+	border-radius: 6px;
+    padding: 10px 0px;
+	font-family: 'Roboto';
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+div.OmniToolsExtensionToast * {font-family: system-ui;}
+div.OmniToolsExtensionToast span.text {
+    margin: 0px 4px;
+    font-weight: 600;
+    font-size: medium;
+	color: white;
+	width: 100%;
+}
+
+div.OmniToolsExtensionToast.visible {
+	bottom: 8px;
+	opacity: 1;
+	min-width: 160px;
+}
+
+div.OmniToolsExtensionToast span.OmniTools_ProgressBar {
+    position: absolute;
+    height: 3px;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+	transition: all .5s
+}
+
+div.OmniToolsExtensionToast span.OmniTools_ProgressBar span#progressValue {
+    display: block;
+	width: 0%;
+    max-width: 100%;
+    height: 100%;
+	transition: all .2s ease-out;
+}
+
+div.OmniToolsExtensionToast span.OmniTools_ProgressBar.Determinate span#progressValue {
+	position: relative;
+    background: #ffffff;
+	left: 0px
+}
+div.OmniToolsExtensionToast span.OmniTools_ProgressBar.InDeterminate span#progressValue {
+	position: relative;
+    background: #ffffff;
+	left: 0px;
+	animation: indetermanateOmniToolsExportProgressBarCorner 2.4s infinite ease-out;
+	border-radius: 3px
+}
+
+@keyframes indetermanateOmniToolsExportProgressBarCorner {
+	0% {
+		width: 10%;
+		left: -20%;
+	}
+	
+	50% {
+		width: 60%;
+	}
+	
+	100% {
+		width: 20%;
+		left: 120%;
+	}
+}
+
+
+.dithering {
+    --size: 4px;
+    mask-image:
+        linear-gradient(90deg, #000 50%, rgb(0 0 0 / 40%) 0),
+        linear-gradient(#000 50%, rgb(0 0 0 / 40%) 0);
+
+    mask-size: var(--size) var(--size);
+    mask-composite: intersect;
+}
+
+.dithering.strong {
+	mask-image: 
+        linear-gradient(90deg, #000 50%, rgb(0 0 0 / 0%) 0),
+        linear-gradient(#000 50%, rgb(0 0 0 / 0%) 0);
+}
+
+.diagMask {
+  --w: 53px;
+
+  -webkit-mask-image: repeating-linear-gradient(
+    125deg,
+    #000 0 var(--w),
+    transparent var(--w) calc(var(--w) * 2)
+  );
+  mask-image: repeating-linear-gradient(
+    125deg,
+    #000 0 var(--w),
+    transparent var(--w) calc(var(--w) * 2)
+  );
+}

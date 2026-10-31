@@ -1,0 +1,84 @@
+{
+  "name": "Omni Tools",
+  "description": "Just some features for Omni (top-academy)",
+  "version": "1.9.9.1",
+  "author": "savelijln0@gmail.com",
+  "manifest_version": 3,
+  "permissions": [
+		"storage"
+  ],
+  "background": {
+	  "service_worker": "background/background.js",
+	  "type": "module"
+  },
+  "icons": {
+	"128": "OmniTools_128x128.png"
+  },
+  "content_scripts": [
+    {
+		"js": [
+			"scripts/libs/KeyBoardController.js",
+			"scripts/libs/flubber.js",
+			"scripts/libs/M3Loader.js",
+			"scripts/libs/LightCore.js",
+			"scripts/libs/UniqueColor.js",
+			"scripts/libs/toaster.js",
+			"scripts/libs/purify.min.js",
+			"scripts/libs/fileQualifier.js",
+			"scripts/libs/DBStore.js",
+			"scripts/libs/hashLib.js",
+			"scripts/darkTheme.js",
+			"scripts/parsers.js",
+			"scripts/codeBunch.js",
+			"scripts/hookLeftBar.js",
+			"scripts/HomeworkPreview.js",
+			"scripts/styles.js",
+			"scripts/reviewAi.js",
+			"scripts/homeworkPage.js",
+			"scripts/Settings.js",
+			"scripts/silent_session_update.js",
+			"scripts/customAvatars.js",
+			"scripts/iamlate.js",
+			"scripts/pageHook.js"
+		],
+		"css": ["etc/static.css"],
+        "matches": ["https://omni.top-academy.ru/*"]
+    }
+  ],
+  "web_accessible_resources": [
+	  {
+		"resources": [
+			"icons/cancel.svg",
+			"icons/general.svg",
+			"icons/arrow_left.svg",
+			"icons/settings.svg",
+			"icons/search.svg",
+			"icons/wand.svg",
+			"icons/code.svg",
+			"icons/filter.svg",
+			"icons/help.svg",
+			"icons/more.svg",
+			"icons/fullscreen.svg",
+			"icons/attach_file.svg",
+			"icons/fullscreen_close.svg",
+			"icons/close.svg",
+			
+			"icons/birthday.png"
+		],
+		"matches": ["https://omni.top-academy.ru/*"]
+	  }
+  ],
+
+  "action": {
+    "default_popup": "popup/settings.html",
+    "default_icon" : "OmniTools_128x128.png"
+  },
+  "host_permissions": [
+    "https://omni.top-academy.ru/*",
+    "https://fs.top-academy.ru/*",
+    "https://fsapi.top-academy.ru/*",
+    "https://ms-api.top-academy.ru/*",
+	"https://storage.yandexcloud.net/*",
+	"https://s3.twcstorage.ru/*"
+  ]
+}
