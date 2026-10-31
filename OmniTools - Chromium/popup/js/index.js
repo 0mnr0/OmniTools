@@ -1,5 +1,5 @@
 const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
-const BrowserContext = (typeof chrome === 'object') ? browser : chrome;
+const BrowserContext = isFirefox ? browser : (typeof chrome !== "undefined" ? chrome : browser);
 const SettingsPane = find('.settingsPane');
 let UserSettings = {};
 

@@ -5,13 +5,28 @@ import subprocess
 import json
 
 args = sys.argv
-possibleFiles = ["Chromium.output.zip", "Chromium.output.zip.tmp", "FireFox.output.zip", "FireFox.output.zip.tmp"]
+possibleFiles = [
+    "Chromium.output.zip", "Chromium.output.zip.tmp",
+    "FireFox.output.zip", "FireFox.output.zip.tmp",
+    "Safari.output.zip", "Safari.output.zip.tmp"
+]
 SevenZipExecutable = "C:\\Program Files\\7-Zip\\7z.exe"
 isFireFoxStreaming = "--firefox-stream-rebuild" in args
+isSafariStreaming = "--safari-stream-rebuild" in args
+isSafariOnly = "--safari-only" in args
+isFireFoxOnly = "--firefox-only" in args
 
 ChromiumBuildFolder = "OmniTools - Chromium"
 FirefoxPatchFolder = "FireFox Patches"
-buildCacheFolder = "firefox.run.cache" if isFireFoxStreaming else "build.cache"
+SafariPatchFolder = "Safari Patches"
+
+if isFireFoxStreaming:
+    buildCacheFolder = "firefox.run.cache"
+elif isSafariStreaming:
+    buildCacheFolder = "safari.run.cache"
+else:
+    buildCacheFolder = "build.cache"
+
 versionBuilding = "Unknown"
 
 
@@ -22,125 +37,203 @@ def list_files_recursive(start_path='.'):
             filesList.append(os.path.join(root, File))
     return filesList
 
-def cls(): os.system("cls")
-def exists(pth): return os.path.exists(pth)
+def cls():
+    if os.name == 'nt':
+        os.system("cls")
+    else:
+        os.system("clear")
+
+def exists(pth):
+    return os.path.exists(pth)
+
 def setStatus(text):
     cls()
-    print(text+"\n")
-cls()
+    print(text + "\n")
 
-if not exists(SevenZipExecutable):
-    raise "7Zip is not installed!"
+def zipDirectory(src_dir, dest_zip):
+    dest_zip_abs = os.path.abspath(dest_zip)
+    if exists(SevenZipExecutable):
+        subprocess.run(
+            f'"{SevenZipExecutable}" a -mx1 -tzip -r "{dest_zip_abs}" *',
+            shell=True,
+            cwd=src_dir
+        )
+    elif shutil.which("7z"):
+        subprocess.run(
+            f'7z a -mx1 -tzip -r "{dest_zip_abs}" *',
+            shell=True,
+            cwd=src_dir
+        )
+    elif shutil.which("zip"):
+        subprocess.run(
+            f'zip -qr "{dest_zip_abs}" .',
+            shell=True,
+            cwd=src_dir
+        )
+    else:
+        import zipfile
+        with zipfile.ZipFile(dest_zip_abs, 'w', zipfile.ZIP_DEFLATED) as zipf:
+            for root, dirs, files in os.walk(src_dir):
+                for file in files:
+                    fullPath = os.path.join(root, file)
+                    relPath = os.path.relpath(fullPath, src_dir)
+                    zipf.write(fullPath, relPath)
 
 
-
-
-
-
-# Building Chrome patch
-def buildFirefox():
+def applyPatch(targetName, patchFolder, cacheFolder, isStreaming=False):
     global versionBuilding
-    timeScale = 0 if isFireFoxStreaming else 1
-    if isFireFoxStreaming and exists(buildCacheFolder):
-        shutil.rmtree(buildCacheFolder)
+    timeScale = 0 if isStreaming else 1
+    if isStreaming and exists(cacheFolder):
+        shutil.rmtree(cacheFolder)
 
-    setStatus("CHROMIUM - [ DONE ]\nFIREFOX - [ Cloning Chromium ]")
-    shutil.copytree(ChromiumBuildFolder, buildCacheFolder)
+    setStatus(f"TARGET - [ {targetName} ]\nCloning Chromium...")
+    shutil.copytree(ChromiumBuildFolder, cacheFolder)
     time.sleep(0.75 * timeScale)
 
-    setStatus("CHROMIUM - [ DONE ]\nFIREFOX - [ Patching Manifest ]")
-    with open(buildCacheFolder + "\\manifest.json", encoding="UTF-8") as f:
-        chromium = json.load(f)
-    with open(FirefoxPatchFolder + "\\manifest.patch.json", encoding="UTF-8") as f:
-        patch = json.load(f)
+    setStatus(f"TARGET - [ {targetName} ]\nPatching Manifest...")
+    manifest_path = os.path.join(cacheFolder, "manifest.json")
+    patch_path = os.path.join(patchFolder, "manifest.patch.json")
 
-    for k, v in patch.items():
-        if v is None:
-            if k in chromium:
-                del chromium[k]
-        else:
-            chromium[k] = v
+    with open(manifest_path, encoding="UTF-8") as f:
+        manifest = json.load(f)
 
-    with open(buildCacheFolder + "\\manifest.json", "w", encoding="UTF-8") as f:
-        versionBuilding = chromium.get("version")
-        json.dump(chromium, f, ensure_ascii=False, indent=2)
+    if exists(patch_path):
+        with open(patch_path, encoding="UTF-8") as f:
+            patch = json.load(f)
+
+        for k, v in patch.items():
+            if v is None:
+                if k in manifest:
+                    del manifest[k]
+            else:
+                manifest[k] = v
+
+    with open(manifest_path, "w", encoding="UTF-8") as f:
+        versionBuilding = manifest.get("version", "Unknown")
+        json.dump(manifest, f, ensure_ascii=False, indent=2)
 
     time.sleep(1.25 * timeScale)
-    setStatus("CHROMIUM - [ DONE ]\nFIREFOX - [ Executing Build ]")
-    fileList = list_files_recursive(FirefoxPatchFolder)
-    for file in fileList:
-        file = file.replace(f"{FirefoxPatchFolder}\\", "")
-        if file == "manifest.patch.json": continue
-        os.remove(f"{buildCacheFolder}\\{file}")
-        if not isFireFoxStreaming: time.sleep(0.1 * timeScale)
-        shutil.copy(
-            f"{FirefoxPatchFolder}\\{file}",
-            f"{buildCacheFolder}\\{file}"
-        )
-    if isFireFoxStreaming: print("FireFox was ReBuilt!")
+    setStatus(f"TARGET - [ {targetName} ]\nApplying Patched Files...")
+    if exists(patchFolder):
+        fileList = list_files_recursive(patchFolder)
+        for file in fileList:
+            relFile = os.path.relpath(file, patchFolder)
+            if relFile == "manifest.patch.json":
+                continue
+            destFile = os.path.join(cacheFolder, relFile)
+            if exists(destFile):
+                os.remove(destFile)
+            if not isStreaming:
+                time.sleep(0.1 * timeScale)
+            os.makedirs(os.path.dirname(destFile), exist_ok=True)
+            shutil.copy(file, destFile)
+
+    if isStreaming:
+        print(f"{targetName} was ReBuilt!")
+
+
+def buildFirefox(cache=buildCacheFolder, isStreaming=isFireFoxStreaming):
+    applyPatch("FIREFOX", FirefoxPatchFolder, cache, isStreaming=isStreaming)
+
+def buildSafari(cache=buildCacheFolder, isStreaming=isSafariStreaming):
+    applyPatch("SAFARI", SafariPatchFolder, cache, isStreaming=isStreaming)
+
 
 if isFireFoxStreaming:
     buildFirefox()
-    exit(0)
+    sys.exit(0)
 
+if isSafariStreaming:
+    buildSafari()
+    sys.exit(0)
 
+if isSafariOnly:
+    setStatus("SAFARI - [ Executing Build ]")
+    os.makedirs("output", exist_ok=True)
+    safariCache = "build.cache.safari"
+    if exists(safariCache):
+        shutil.rmtree(safariCache)
+    buildSafari(cache=safariCache, isStreaming=False)
 
+    outputSafariDir = os.path.join("output", "Safari")
+    if exists(outputSafariDir):
+        shutil.rmtree(outputSafariDir)
+    shutil.copytree(safariCache, outputSafariDir)
 
+    outputSafariFile = os.path.join("output", f"Safari_{versionBuilding}.zip")
+    if exists(outputSafariFile):
+        os.remove(outputSafariFile)
+    zipDirectory(safariCache, outputSafariFile)
+    shutil.rmtree(safariCache)
+    print(f"Safari build complete: {outputSafariFile} and {outputSafariDir}")
+    sys.exit(0)
 
+if isFireFoxOnly:
+    setStatus("FIREFOX - [ Executing Build ]")
+    os.makedirs("output", exist_ok=True)
+    firefoxCache = "build.cache.firefox"
+    if exists(firefoxCache):
+        shutil.rmtree(firefoxCache)
+    buildFirefox(cache=firefoxCache, isStreaming=False)
+    outputFireFoxFile = os.path.join("output", f"Firefox_{versionBuilding}.zip")
+    if exists(outputFireFoxFile):
+        os.remove(outputFireFoxFile)
+    zipDirectory(firefoxCache, outputFireFoxFile)
+    shutil.rmtree(firefoxCache)
+    print(f"Firefox build complete: {outputFireFoxFile}")
+    sys.exit(0)
 
 
 # FILE CLEANING
-
 setStatus("Cleaning Previous Files...")
 for file in possibleFiles:
-    file = f"output\\{file}"
+    filePath = os.path.join("output", file)
     try:
-        if exists(file): os.remove(file)
+        if exists(filePath):
+            os.remove(filePath)
     except Exception as e:
         print(e)
-if exists("output"): shutil.rmtree("output")
-if exists(buildCacheFolder): shutil.rmtree(buildCacheFolder)
 
-os.mkdir("output")
+if exists("output"):
+    shutil.rmtree("output")
+if exists(buildCacheFolder):
+    shutil.rmtree(buildCacheFolder)
+
+os.makedirs("output", exist_ok=True)
 time.sleep(1)
 
 
-
-# Building Chromium
+# 1. Building Chromium
 setStatus("CHROMIUM - [ Executing Build ]")
-subprocess.run(
-    f'"{SevenZipExecutable}" a -mx1 -tzip -r "output\\Chromium.zip" "{ChromiumBuildFolder}"',
-    shell=True,
-)
+with open(os.path.join(ChromiumBuildFolder, "manifest.json"), encoding="UTF-8") as f:
+    chromium_manifest = json.load(f)
+versionBuilding = chromium_manifest.get("version", "Unknown")
+
+outputChromiumFile = os.path.join("output", f"Chromium_{versionBuilding}.zip")
+zipDirectory(ChromiumBuildFolder, outputChromiumFile)
 time.sleep(1)
 
 
-
+# 2. Building Firefox
+setStatus("CHROMIUM - [ DONE ]\nFIREFOX - [ Executing Build ]")
 buildFirefox()
-
-
-outputFireFoxFile = os.path.abspath(f"output\\Firefox_{versionBuilding}.zip")
-subprocess.run(
-    f'"{SevenZipExecutable}" a -mx1 -tzip -r "{outputFireFoxFile}" *',
-    shell=True,
-    cwd=buildCacheFolder
-)
-
-
-
-try:
-    os.rename(
-        "output\\Chromium.zip", f"output\\Chromium_{versionBuilding}.zip"
-    )
-except Exception as e:
-    print(e)
-
+outputFireFoxFile = os.path.join("output", f"Firefox_{versionBuilding}.zip")
+zipDirectory(buildCacheFolder, outputFireFoxFile)
+shutil.rmtree(buildCacheFolder)
 time.sleep(1)
 
 
-setStatus("CHROMIUM - [ DONE ]\nFIREFOX - [ DONE ]\nCleaning build cache...")
-shutil.rmtree(buildCacheFolder)
-time.sleep(0.25)
-setStatus("CHROMIUM - [ DONE ]\nFIREFOX - [ DONE ]\nBuild Cache cleaned!")
-print("Done.")
+# 3. Building Safari
+setStatus("CHROMIUM - [ DONE ]\nFIREFOX - [ DONE ]\nSAFARI - [ Executing Build ]")
+buildSafari()
+outputSafariFile = os.path.join("output", f"Safari_{versionBuilding}.zip")
+zipDirectory(buildCacheFolder, outputSafariFile)
 
+outputSafariDir = os.path.join("output", "Safari")
+if exists(outputSafariDir):
+    shutil.rmtree(outputSafariDir)
+shutil.copytree(buildCacheFolder, outputSafariDir)
+shutil.rmtree(buildCacheFolder)
+
+setStatus("CHROMIUM - [ DONE ]\nFIREFOX - [ DONE ]\nSAFARI - [ DONE ]\nAll builds complete!")
+print("Done.")

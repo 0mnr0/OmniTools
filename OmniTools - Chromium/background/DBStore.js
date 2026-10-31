@@ -1,5 +1,5 @@
 // THIS File running in background script
-const BrowserContext = typeof browser !== "undefined" ? browser : chrome;
+const BrowserContext = typeof chrome !== "undefined" ? chrome : browser;
 
 
 const IDBSettings = {

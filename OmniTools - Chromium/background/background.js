@@ -3,7 +3,7 @@ import { toTransferable } from "./lib/transfer.js";
 import IDBSettings from "./DBStore.js";
 
 const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
-const BrowserContext = isFirefox ? browser : chrome;
+const BrowserContext = isFirefox ? browser : (typeof chrome !== "undefined" ? chrome : browser);
 const ExtensionVersion = BrowserContext.runtime.getManifest().version;
 const log = console.log;
 IDBSettings.registerBridge();
@@ -140,7 +140,25 @@ BrowserContext.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 	
     if (msg.type === 'OPEN_POPUP') {
 		const actionApi = BrowserContext.action ?? BrowserContext.browserAction;
-		actionApi.openPopup().catch(console.error);
+		if (actionApi?.openPopup) {
+			actionApi.openPopup().catch(() => {
+				BrowserContext.tabs.create({
+					url: BrowserContext.runtime.getURL('popup/settings.html')
+				});
+			});
+		} else {
+			BrowserContext.tabs.create({
+				url: BrowserContext.runtime.getURL('popup/settings.html')
+			});
+		}
+		return false;
+	}
+
+    if (msg.type === 'OPEN_SETTINGS_TAB') {
+		BrowserContext.tabs.create({
+			url: BrowserContext.runtime.getURL('popup/settings.html')
+		});
+		sendResponse({ ok: true });
 		return false;
 	}
 	
@@ -150,6 +168,10 @@ BrowserContext.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     }
 
 	if (msg.type === "DownloadFile") {
+		if (!BrowserContext.downloads?.download) {
+			sendResponse({ ok: false, error: "The downloads API is unavailable in Safari" });
+			return false;
+		}
 		BrowserContext.downloads.download(
 			{ url: msg.url, filename: msg.filename, conflictAction: "uniquify" },
 			(id) => {

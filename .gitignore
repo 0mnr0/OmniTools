@@ -1,4 +1,7 @@
 build.zip
 /build.cache
+/build.cache.*
 /firefox.run.cache
+/safari.run.cache
 /output
+/Safari App
