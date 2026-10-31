@@ -406,12 +406,6 @@ div.CustomHWDiv.fullscreen .topLine{
 	margin-bottom: 5px
 }
 
-div.CustomHWDiv.fullscreen.tellMeAboutThis div.WindowHelper {
-	margin: 0px;
-	margin-bottom: 3px;
-	border-radius: 6px
-}
-
 div.CustomHWDiv div.WindowHelper span.warn {
     padding: 7px;
     background: #ff99007a;
