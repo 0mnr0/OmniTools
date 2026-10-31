@@ -1024,12 +1024,19 @@ div.CustomHWDiv .topLine.filters.visible {
     margin-top: 7px;
 }
 
-div.CustomHWDiv div.showMore {
-    width: fit-content;
+div.CustomHWDiv .topLine.filters div.line {
+	width: 100%;
+	display: flex;
+	gap: 10px;
 }
 
-div.CustomHWDiv div.showMore button.showMoreBtn {
-    padding: 10px 12px;
+div.CustomHWDiv .topLine.filters div.line {
+	width: 100%;
+	display: flex;
+}
+
+div.CustomHWDiv div.moreActions button {
+    padding: 10px 0px;
     border: none;
 	color: white;
     background: #22aa90;
@@ -1038,26 +1045,41 @@ div.CustomHWDiv div.showMore button.showMoreBtn {
 
 div.moreActions {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
-    padding: 5px;
+    bottom: -8px;
+    right: -8px;
+    padding: 0px 5px;
     z-index: 10;
     display: flex;
-    gap: 10px;
+    gap: 0px;
+    min-width: 43px;
     transition: all .6s;
     interpolate-size: allow-keywords;
     width: fit-content;
-    border-radius: 16px;
-	justify-content: flex-end;
+    border-radius: 12px;
+    justify-content: flex-end;
     background: var(--accent-1);
+}
+
+div.moreActions .bottomOverlay {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+    height: 120%;
+    width: 100%;
+    z-index: -1;
 }
 
 div.moreActions:hover {
 	width: auto;
+	opacity: 1;
+	padding: 5px;
+    bottom: 6px;
+    right: 6px;
 	
 	[expandable] {
 		width: auto;
 		margin-left: 0px;
+		margin-right: 10px;
 		filter: none;
 		opacity: 1;
 		
@@ -1067,22 +1089,42 @@ div.moreActions:hover {
 	}
 }
 
+
+div.CustomHWDiv div.moreActions:hover button {
+	padding: 10px 12px;
+}
+
+div.CustomHWDiv div.moreActions button.SendAllMarked[len="0"],{
+div.CustomHWDiv div.moreActions button.SendAllMarked[disabled]{
+	filter: grayscale(1);
+	pointer-events: none;
+	cursor: default;
+}
+
 div.moreActions [expandable] {
     transition: all .4s;
     interpolate-size: allow-keywords;
     width: 0px;
     display: flex;
+	opacity: 0;
+	padding: 0px;
     white-space: nowrap;
-    margin-left: -10px;
     gap: 4px;
 	filter: blur(4px);
 	border-radius: 10px;
     overflow: hidden;
 }
 
-div.CustomHWDiv div.moreActions div.showMore button.showMoreBtn {
+
+div.moreActions span[divider] {
+	min-width: 1px;
+	background: gray;
+}
+
+div.CustomHWDiv div.moreActions div.showMore button {
 	scale: 0.75;
-	transition: all .4s
+	transition: all .4s;
+	border-radius: 10px;
 }
 
 div.moreActions img[more-icon] {

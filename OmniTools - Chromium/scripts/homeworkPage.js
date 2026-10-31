@@ -112,8 +112,9 @@ function OpenCustomHomeworkWindow() {
 				<button class="showMoreBtn show30" show=30> Показать ещё 30 </button>
 				<button class="showMoreBtn showAll" show=all> Показать все </button>
 			</div>
+			<span class="bottomOverlay"></span>
 			<span divider expandable></span>
-			<button class="SendAllMarked" expandable> Отправить все оценки </button>
+			<button class="SendAllMarked" expandable len=0> Отправить все оценки </button>
 			
 			<img src="${getIcon('/icons/more.svg')}" more-icon>
 		</div>
@@ -159,6 +160,26 @@ function OpenCustomHomeworkWindow() {
 	let helpMeReturnButton = Win.find('div.WindowHelper button.HelperGoBack')
 	helpMeReturnButton.onclick = () => {
 		Win.classList.remove("tellMeAboutThis");
+	}
+	
+	let SendAllMarked = Win.find('div.moreActions button.SendAllMarked');
+	lastData.SendAllMarked = SendAllMarked;
+	SendAllMarked.onclick = () => {
+		SendAllMarked.disabled = true;
+		let MarkedAndNotSent = Win.findAll('div.content div.hwBlock[havemark="true"]:not(.DenialActive)');
+		MarkedAndNotSent.forEach(hwMarked => {
+			let mark = GetMark(hwMarked);
+			let targetButton = hwMarked.find('div.Tools button.HWSend');
+			
+			if (!targetButton || !mark) {
+				return
+			}
+			targetButton.click();
+			hwMarked.classList.add('busy');
+		});
+		UpdateSendAllMarkedButton();
+		SendAllMarked.disabled = false;
+		lastData.M3.setUnreachable(false);
 	}
 	
 	let filterBtn = Win.find('div.topPanel div img#filter');
@@ -716,7 +737,16 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 					
 						let result = await SendWorkApply(hw, mark, textArea.value, uploadId);
 						if (result.data?.success !== null) {
-							Toast.create(result.data?.success, 4000, {});
+							if (result.data?.success) {
+								Toast.create(result.data?.success, 4000, {});
+							} else if (result.data?.message) {
+								Toast.create(result.data?.message, 4000, {});
+							}
+							
+							if (!result.ok && isDev && Number(mark) > 33000) { // more than 2byte int
+								Toast.create("Скорее всего оценка применилась, но сервер где то ошибся. Работа будет скрыта, но если она появится снова - поставьте нормальную оценку", 6500, {});
+								await RemoveCard(Homework);
+							}
 						}
 						if (result.ok && result.status === 200) {
 							await RemoveCard(Homework);
@@ -791,15 +821,18 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 			mark.onclick = () => {
 				let hadMark = mark.classList.contains('active');
 				if (hadMark) {
-					mark.classList.remove('active')
+					mark.classList.remove('active');
+					Homework.removeAttribute('havemark');
 				} else {
+					Homework.setAttribute('havemark', true);
 					MarkElements.forEach(m => m.classList.remove('active'))
 					mark.classList.add('active');
 					
 					if (KeyboardController.isShiftPressed && KeyboardController.isKeyPressed("W") && !workDenial) {
 						SendAction.click()
 					}
-				}				
+				}		
+				UpdateSendAllMarkedButton();
 			}
 		})
 		
@@ -807,6 +840,12 @@ function CreateHomeworkCard(hw, overwriteCard=null) {
 	
 	// RunHomeworkPreview(PreviewList, lastData.Win);
 	// lastData.M3.setUnreachable(true);
+}
+
+function UpdateSendAllMarkedButton() {
+	let markedCounter = lastData.Win.findAll('div.hwBlock[havemark="true"]');
+	lastData.SendAllMarked.setAttribute('len', markedCounter.length);
+	lastData.SendAllMarked.textContent = ` Отправить все оценки (${markedCounter.length}) `
 }
 
 function filterRequestObject(TargetCard, requestList, dzId, localDzId, idStud) {
