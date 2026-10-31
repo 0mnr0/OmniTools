@@ -124,6 +124,7 @@ const CSSImprove = `
 	.md-dialog-container {
 		position: fixed;
 		top: 0px !important;
+		z-index: 101;
 		height: 100% !important
 	}
 	
@@ -132,7 +133,7 @@ const CSSImprove = `
 `
 
 const CustomHwWindowHelper = `
-	<h2> Рекомендации по работе с этим окном ДЗ </h2>
+	<h2> Рекомендации по работе с новым окном ДЗ </h2>
 	<span class="warn"> 
 		Это окно является полностью самописным, давая полный контроль над происходящим. Т.к. документаций нет - для разработки использовался реверс инжиниринг.
 		Возможны ошибки в работе окна, если возникают проблемы - сообщите мне в <a href="https://dsvl0.t.me/" target='_blank' >Telegram</a>.

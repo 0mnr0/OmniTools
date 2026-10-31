@@ -2,7 +2,6 @@ const Listeners = {
 	Homework: Homework_DOMChange
 }
 
-let warningAlertShown = false;
 function onDomChange() {
 	let loc = location.href;
 	
@@ -11,12 +10,6 @@ function onDomChange() {
 	if (loc.includes("/login/")) {
 		lastCityId = null;
 		onAccountReset(); // in customAvatars
-	} else if (!warningAlertShown) {
-		warningAlertShown = true;
-		Toast.create(
-			"Расширение было переведено на независмое popup окно для домашних заданий. Если вы испытываете проблемы - пожалуйста, напишите мне в <a href='https://dsvl0.t.me' target='_blank'>Telegram</a>",
-			5500, {closeText: "Закрыть"}
-		);
 	}
 		
 	
